@@ -6,7 +6,7 @@
     app:startDestination="@id/mainHomeFragment">
     <activity
         android:id="@+id/mainActivity"
-        android:name="com.devlee.mymoviediary.presentation.MainActivity"
+        android:name="com.devlee.mymoviediary.presentation.activity.main.MainActivity"
         tools:layout="@layout/activity_main" />
 
     <fragment
