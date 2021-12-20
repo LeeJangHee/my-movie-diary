@@ -1,16 +1,23 @@
 package com.devlee.mymoviediary.presentation.layout
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.core.view.setPadding
 import com.devlee.mymoviediary.databinding.ActivityMainBinding
 import com.devlee.mymoviediary.databinding.LayoutAppbarBinding
+import com.devlee.mymoviediary.databinding.LayoutAppbarTitleBinding
+import com.devlee.mymoviediary.utils.convertDpToPx
 import com.devlee.mymoviediary.utils.gone
+import java.util.*
+import kotlin.collections.ArrayList
 
 class AppToolbarLayout(
     private val context: Context,
@@ -21,41 +28,82 @@ class AppToolbarLayout(
         const val LEFT = 1
     }
 
-    var leftMenu: ArrayList<View> = arrayListOf()
-    var rightMenu: ArrayList<View> = arrayListOf()
+    var leftMenu: Queue<View> = LinkedList()
+    var rightMenu: Queue<View> = LinkedList()
 
     var layoutTitle: RelativeLayout? = null
-    var layoutLeftMenu: LinearLayout? = null
-    var layoutRightMenu: LinearLayout? = null
+
+    private val appbarTitleBinding: LayoutAppbarTitleBinding by lazy {
+        LayoutAppbarTitleBinding.inflate(LayoutInflater.from(context), binding.layoutTitle, true)
+    }
 
     var titleView: View? = null
 
-    fun setTitle(@StringRes title: Int) {
-        setTitle(context.getString(title))
-    }
-
-    fun setTitle(title: String) {
-        if (titleView == null || titleView !is TextView) {
-            titleView = TextView(context)
-
-            // 레이아웃 위치 잡기
-            val lp: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            lp.addRule(RelativeLayout.CENTER_IN_PARENT)
-
-            titleView?.layoutParams = lp
-            // 스타일 적용
-//            (titleView as TextView).setTextAppearance(R.style.)
-            layoutTitle?.addView(titleView)
+    /** 타이틀 메뉴 */
+    fun setTitleView(
+        title: String,
+        leftImage: Int? = null,
+        rightImage: Int? = null,
+        leftClickListener: View.OnClickListener? = null,
+        rightClickListener: View.OnClickListener? = null
+    ) {
+        titleView = appbarTitleBinding.run {
+            this.leftImage = leftImage
+            this.rightImage = rightImage
+            this.title = title
+            appbarTitleLeftImage.setOnClickListener(leftClickListener)
+            appbarTitleRightImage.setOnClickListener(rightClickListener)
+            root
         }
-        (titleView as TextView).text = title
+        if (binding.layoutRightMenu.childCount > 0){
+            binding.layoutRightMenu.removeView(rightMenu.poll())
+        }
+        if (binding.layoutLeftMenu.childCount > 0) {
+            binding.layoutLeftMenu.removeView(leftMenu.poll())
+        }
+        layoutTitle?.addView(titleView)
     }
 
-    fun setImageTitle(@DrawableRes title: Int) {
+    /** image menu */
+    fun setImageMenu(type: Int, @DrawableRes resId: Int, onClickListener: View.OnClickListener? = null) {
+        val padding: Int = 6f.convertDpToPx()
+        val imageView = ImageView(context).apply {
+            setImageResource(resId)
+            setPadding(padding)
+        }
+        if (type == LEFT) {
+            setLeftImageView(imageView, onClickListener)
+        } else {
+            setRightImageView(imageView, onClickListener)
+        }
+    }
 
+    private fun setLeftImageView(view: View, onClickListener: View.OnClickListener?) {
+        view.setOnClickListener(onClickListener)
+        val lp = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        view.layoutParams = lp
+
+        binding.layoutLeftMenu.addView(view,0)
+        leftMenu.add(view)
+    }
+
+    private fun setRightImageView(view: View, onClickListener: View.OnClickListener?) {
+        view.setOnClickListener(onClickListener)
+        val lp = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        view.layoutParams = lp
+
+        binding.layoutRightMenu.addView(view, 0)
+        rightMenu.add(view)
     }
 
     fun gone() {
         binding.root.gone()
+    }
+
+    fun clearView() {
+        binding.layoutRightMenu.removeAllViews()
+        binding.layoutLeftMenu.removeAllViews()
+        binding.layoutTitle.removeAllViews()
     }
 
 

@@ -9,6 +9,6 @@ class MainProfileFragment : BaseFragment<FragmentMainProfileBinding>() {
     override fun getLayoutId(): Int = R.layout.fragment_main_profile
 
     override fun setView() {
-
+        setTitleToolbar(title = "Profile")
     }
 }

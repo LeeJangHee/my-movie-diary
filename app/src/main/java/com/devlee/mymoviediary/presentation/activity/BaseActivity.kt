@@ -1,15 +1,18 @@
 package com.devlee.mymoviediary.presentation.activity
 
 import android.os.Bundle
+import android.view.View
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.viewbinding.ViewBinding
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.ActivityDefaultBinding
 import com.devlee.mymoviediary.databinding.LayoutAppbarBinding
+import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
 
-abstract class BaseActivity<V : ViewBinding> : AppCompatActivity() {
+abstract class BaseActivity<V : ViewBinding> : AppCompatActivity(), BaseFragment.ToolbarControl {
     protected lateinit var binding: V
     private lateinit var defaultBinding: ActivityDefaultBinding
 
@@ -38,4 +41,18 @@ abstract class BaseActivity<V : ViewBinding> : AppCompatActivity() {
     open fun getLayout(): Int = 0
 
     abstract fun setToolbar()
+
+    override fun setToolbarTitle(
+        title: String,
+        leftImage: Int?,
+        rightImage: Int?,
+        leftClickListener: View.OnClickListener?,
+        rightClickListener: View.OnClickListener?
+    ) {
+        appToolbarLayout?.setTitleView(title, leftImage, rightImage, leftClickListener, rightClickListener)
+    }
+
+    override fun setToolbarMenu(type: Int, @DrawableRes resId: Int, onClickListener: View.OnClickListener?) {
+        appToolbarLayout?.setImageMenu(type, resId, onClickListener)
+    }
 }

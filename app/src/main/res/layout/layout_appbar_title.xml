@@ -4,7 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="leftImage"
+            type="Integer" />
+        <variable
+            name="title"
+            type="String" />
+        <variable
+            name="rightImage"
+            type="Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,11 +21,11 @@
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/appbarTitleImage"
+            android:id="@+id/appbarTitleLeftImage"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="?attr/actionBarSize"
             android:layout_marginEnd="8dp"
-            android:src="@mipmap/ic_launcher"
+            bindImage="@{leftImage}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/appbarTitleText"
             app:layout_constraintHorizontal_bias="0.5"
@@ -30,19 +38,20 @@
             android:layout_width="wrap_content"
             android:layout_height="?attr/actionBarSize"
             android:gravity="center_vertical"
-            android:text="Appbar Title"
+            android:text="@{title}"
+            tools:text="Appbar Title"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/appbarTitleButtonImage"
+            app:layout_constraintEnd_toStartOf="@+id/appbarTitleRightImage"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/appbarTitleImage"
+            app:layout_constraintStart_toEndOf="@+id/appbarTitleLeftImage"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/appbarTitleButtonImage"
+            android:id="@+id/appbarTitleRightImage"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="?attr/actionBarSize"
             android:layout_marginStart="8dp"
-            android:src="@mipmap/ic_launcher"
+            bindImage="@{rightImage}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
