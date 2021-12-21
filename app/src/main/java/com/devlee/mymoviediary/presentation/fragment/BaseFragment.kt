@@ -42,11 +42,10 @@ abstract class BaseFragment<V : ViewBinding> : Fragment() {
         title: String,
         leftImage: Int? = null,
         rightImage: Int? = null,
-        leftClickListener: View.OnClickListener? = null,
-        rightClickListener: View.OnClickListener? = null
+        onClickListener: View.OnClickListener? = null
     ) {
         toolbarControl?.let {
-            it.setToolbarTitle(title, leftImage, rightImage, leftClickListener)
+            it.setToolbarTitle(title, leftImage, rightImage, onClickListener)
         }
     }
 
@@ -69,8 +68,7 @@ abstract class BaseFragment<V : ViewBinding> : Fragment() {
             title: String,
             leftImage: Int? = null,
             rightImage: Int? = null,
-            leftClickListener: View.OnClickListener? = null,
-            rightClickListener: View.OnClickListener? = null
+            onClickListener: View.OnClickListener? = null
         )
 
         fun setToolbarMenu(

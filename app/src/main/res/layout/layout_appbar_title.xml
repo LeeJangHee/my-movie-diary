@@ -4,12 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="leftImage"
             type="Integer" />
+
         <variable
             name="title"
             type="String" />
+
         <variable
             name="rightImage"
             type="Integer" />
@@ -17,46 +20,46 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/appbarTitleView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/appbarTitleLeftImage"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_marginEnd="8dp"
             bindImage="@{leftImage}"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/appbarTitleText"
             app:layout_constraintEnd_toStartOf="@+id/appbarTitleText"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/appbarTitleText" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/appbarTitleText"
             android:layout_width="wrap_content"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:text="@{title}"
-            tools:text="Appbar Title"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/appbarTitleRightImage"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/appbarTitleLeftImage"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Appbar Title" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/appbarTitleRightImage"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_marginStart="8dp"
             bindImage="@{rightImage}"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/appbarTitleText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/appbarTitleText"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/appbarTitleText" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

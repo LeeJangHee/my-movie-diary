@@ -7,17 +7,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.core.view.setPadding
-import com.devlee.mymoviediary.databinding.ActivityMainBinding
 import com.devlee.mymoviediary.databinding.LayoutAppbarBinding
 import com.devlee.mymoviediary.databinding.LayoutAppbarTitleBinding
 import com.devlee.mymoviediary.utils.convertDpToPx
 import com.devlee.mymoviediary.utils.gone
-import java.util.*
-import kotlin.collections.ArrayList
 
 class AppToolbarLayout(
     private val context: Context,
@@ -28,8 +23,8 @@ class AppToolbarLayout(
         const val LEFT = 1
     }
 
-    var leftMenu: Queue<View> = LinkedList()
-    var rightMenu: Queue<View> = LinkedList()
+    var leftMenu: ArrayDeque<View> = ArrayDeque()
+    var rightMenu: ArrayDeque<View> = ArrayDeque()
 
     var layoutTitle: RelativeLayout? = null
 
@@ -44,22 +39,22 @@ class AppToolbarLayout(
         title: String,
         leftImage: Int? = null,
         rightImage: Int? = null,
-        leftClickListener: View.OnClickListener? = null,
-        rightClickListener: View.OnClickListener? = null
+        onClickListener: View.OnClickListener? = null
     ) {
         titleView = appbarTitleBinding.run {
             this.leftImage = leftImage
             this.rightImage = rightImage
             this.title = title
-            appbarTitleLeftImage.setOnClickListener(leftClickListener)
-            appbarTitleRightImage.setOnClickListener(rightClickListener)
+            appbarTitleView.setOnClickListener(onClickListener)
             root
         }
-        if (binding.layoutRightMenu.childCount > 0){
-            binding.layoutRightMenu.removeView(rightMenu.poll())
+        if (binding.layoutRightMenu.childCount > 0) {
+            binding.layoutRightMenu.removeAllViews()
+            rightMenu.clear()
         }
         if (binding.layoutLeftMenu.childCount > 0) {
-            binding.layoutLeftMenu.removeView(leftMenu.poll())
+            binding.layoutLeftMenu.removeAllViews()
+            leftMenu.clear()
         }
         layoutTitle?.addView(titleView)
     }
@@ -83,7 +78,7 @@ class AppToolbarLayout(
         val lp = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         view.layoutParams = lp
 
-        binding.layoutLeftMenu.addView(view,0)
+        binding.layoutLeftMenu.addView(view)
         leftMenu.add(view)
     }
 
@@ -104,6 +99,8 @@ class AppToolbarLayout(
         binding.layoutRightMenu.removeAllViews()
         binding.layoutLeftMenu.removeAllViews()
         binding.layoutTitle.removeAllViews()
+        rightMenu.clear()
+        leftMenu.clear()
     }
 
 
