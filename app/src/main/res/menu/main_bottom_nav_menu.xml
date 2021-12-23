@@ -4,18 +4,20 @@
     <item
         android:id="@+id/mainHomeFragment"
         android:icon="@mipmap/ic_launcher"
-        android:title="Home"
-        app:labelVisibilityMode="unlabeled" />
+        android:title="Home" />
+
+    <item
+        android:id="@+id/calendar_nav"
+        android:icon="@mipmap/ic_launcher"
+        android:title="Calender" />
 
     <item
         android:id="@+id/mainCategoryFragment"
         android:icon="@mipmap/ic_launcher"
-        android:title="Category"
-        app:labelVisibilityMode="unlabeled" />
+        android:title="Category" />
 
     <item
         android:id="@+id/mainProfileFragment"
         android:icon="@mipmap/ic_launcher"
-        android:title="Profile"
-        app:labelVisibilityMode="unlabeled" />
+        android:title="Profile" />
 </menu>

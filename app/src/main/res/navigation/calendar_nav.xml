@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/calendar_nav"
+    app:startDestination="@id/mainCalenderFragment">
+
+    <fragment
+        android:id="@+id/mainCalenderFragment"
+        android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.MainCalenderFragment"
+        android:label="MainCalenderFragment"
+        tools:layout="@layout/fragment_main_calender">
+        <action
+            android:id="@+id/action_mainCalenderFragment_to_calenderDayFragment"
+            app:destination="@id/calenderDayFragment" />
+        <action
+            android:id="@+id/action_mainCalenderFragment_to_calenderMonthFragment"
+            app:destination="@id/calenderMonthFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/calenderMonthFragment"
+        android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.calender.CalenderMonthFragment"
+        android:label="fragment_calender_month"
+        tools:layout="@layout/fragment_calender_month" >
+        <action
+            android:id="@+id/action_calenderMonthFragment_to_calenderDayFragment"
+            app:destination="@id/calenderDayFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/calenderDayFragment"
+        android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.calender.CalenderDayFragment"
+        android:label="fragment_calender_day"
+        tools:layout="@layout/fragment_calender_day" />
+</navigation>

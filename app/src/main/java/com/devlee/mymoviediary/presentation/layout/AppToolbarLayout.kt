@@ -70,7 +70,7 @@ class AppToolbarLayout(
             resId != null -> {
                 view = ImageView(context).apply {
                     load(resId) {
-                        scaleType = ImageView.ScaleType.CENTER_INSIDE
+                        size(56f.convertDpToPx())
                         setPadding(padding)
                     }
                     setOnClickListener(onClickListener)

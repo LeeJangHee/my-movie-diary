@@ -45,9 +45,7 @@ abstract class BaseFragment<V : ViewBinding> : Fragment() {
         rightImage: Int? = null,
         onClickListener: View.OnClickListener? = null
     ) {
-        toolbarControl?.let {
-            it.setToolbarTitle(title, leftImage, rightImage, onClickListener)
-        }
+        toolbarControl?.setToolbarTitle(title, leftImage, rightImage, onClickListener)
     }
 
     open fun setMenuToolbar(
@@ -56,9 +54,7 @@ abstract class BaseFragment<V : ViewBinding> : Fragment() {
         @StringRes strId: Int? = null,
         onClickListener: View.OnClickListener? = null
     ) {
-        toolbarControl?.let {
-            it.setToolbarMenu(type, resId, strId, onClickListener)
-        }
+        toolbarControl?.setToolbarMenu(type, resId, strId, onClickListener)
     }
 
     open fun getLayoutId(): Int = 0

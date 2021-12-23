@@ -13,7 +13,11 @@
         android:id="@+id/mainHomeFragment"
         android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.MainHomeFragment"
         android:label="fragment_main_home"
-        tools:layout="@layout/fragment_main_home" />
+        tools:layout="@layout/fragment_main_home" >
+        <action
+            android:id="@+id/action_mainHomeFragment_to_createMyDiaryFragment"
+            app:destination="@id/createMyDiaryFragment" />
+    </fragment>
     <fragment
         android:id="@+id/mainCategoryFragment"
         android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.MainCategoryFragment"
@@ -24,4 +28,10 @@
         android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.MainProfileFragment"
         android:label="fragment_main_profile"
         tools:layout="@layout/fragment_main_profile" />
+    <fragment
+        android:id="@+id/createMyDiaryFragment"
+        android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.create.CreateMyDiaryFragment"
+        android:label="fragment_create_my_diary"
+        tools:layout="@layout/fragment_create_my_diary" />
+    <include app:graph="@navigation/calendar_nav" />
 </navigation>

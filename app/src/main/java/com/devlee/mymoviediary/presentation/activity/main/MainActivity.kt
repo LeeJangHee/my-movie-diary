@@ -26,7 +26,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         binding.mainBottomNav.setupWithNavController(navController)
 
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.mainHomeFragment, R.id.mainCategoryFragment, R.id.mainProfileFragment)
+            setOf(R.id.mainHomeFragment, R.id.mainCalenderFragment, R.id.mainCategoryFragment, R.id.mainProfileFragment)
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
     }
