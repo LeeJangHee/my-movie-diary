@@ -14,7 +14,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Handler().postDelayed(delayInMillis = 3000L) {
+        Handler().postDelayed(delayInMillis = 1000L) {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()

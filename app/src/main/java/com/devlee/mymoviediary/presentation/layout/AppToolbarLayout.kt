@@ -7,8 +7,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.core.view.setPadding
+import coil.load
 import com.devlee.mymoviediary.databinding.LayoutAppbarBinding
 import com.devlee.mymoviediary.databinding.LayoutAppbarTitleBinding
 import com.devlee.mymoviediary.utils.convertDpToPx
@@ -60,35 +63,55 @@ class AppToolbarLayout(
     }
 
     /** image menu */
-    fun setImageMenu(type: Int, @DrawableRes resId: Int, onClickListener: View.OnClickListener? = null) {
+    fun setImageOrTextMenu(type: Int, @DrawableRes resId: Int? = null, @StringRes strId: Int? = null, onClickListener: View.OnClickListener? = null) {
         val padding: Int = 6f.convertDpToPx()
-        val imageView = ImageView(context).apply {
-            setImageResource(resId)
-            setPadding(padding)
+        var view = View(context)
+        when {
+            resId != null -> {
+                view = ImageView(context).apply {
+                    load(resId) {
+                        scaleType = ImageView.ScaleType.CENTER_INSIDE
+                        setPadding(padding)
+                    }
+                    setOnClickListener(onClickListener)
+                }
+            }
+            strId != null -> {
+                view = TextView(context).apply {
+                    setText(strId)
+                    setPadding(padding)
+                    setOnClickListener(onClickListener)
+                }
+            }
         }
+
         if (type == LEFT) {
-            setLeftImageView(imageView, onClickListener)
+            setLeftMenuView(view, onClickListener)
         } else {
-            setRightImageView(imageView, onClickListener)
+            setRightMenuView(view, onClickListener)
         }
     }
 
-    private fun setLeftImageView(view: View, onClickListener: View.OnClickListener?) {
-        view.setOnClickListener(onClickListener)
+    private fun setLeftMenuView(view: View, onClickListener: View.OnClickListener?) {
         val lp = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        view.layoutParams = lp
+        view.applyMenu(lp, onClickListener)
 
         binding.layoutLeftMenu.addView(view)
         leftMenu.add(view)
     }
 
-    private fun setRightImageView(view: View, onClickListener: View.OnClickListener?) {
-        view.setOnClickListener(onClickListener)
+    private fun setRightMenuView(view: View, onClickListener: View.OnClickListener?) {
         val lp = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        view.layoutParams = lp
+        view.applyMenu(lp, onClickListener)
 
-        binding.layoutRightMenu.addView(view, 0)
+        binding.layoutRightMenu.addView(view)
         rightMenu.add(view)
+    }
+
+    /** Menu - LinearLayout set */
+    private fun View.applyMenu(lp: LinearLayout.LayoutParams, onClickListener: View.OnClickListener?) = apply {
+        layoutParams = lp
+        setOnClickListener(onClickListener)
     }
 
     fun gone() {

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
@@ -51,11 +52,12 @@ abstract class BaseFragment<V : ViewBinding> : Fragment() {
 
     open fun setMenuToolbar(
         type: Int,
-        @DrawableRes resId: Int,
+        @DrawableRes resId: Int? = null,
+        @StringRes strId: Int? = null,
         onClickListener: View.OnClickListener? = null
     ) {
         toolbarControl?.let {
-            it.setToolbarMenu(type, resId, onClickListener)
+            it.setToolbarMenu(type, resId, strId, onClickListener)
         }
     }
 
@@ -73,7 +75,8 @@ abstract class BaseFragment<V : ViewBinding> : Fragment() {
 
         fun setToolbarMenu(
             type: Int,
-            @DrawableRes resId: Int,
+            @DrawableRes resId: Int? = null,
+            @StringRes strId: Int? = null,
             onClickListener: View.OnClickListener? = null
         )
     }

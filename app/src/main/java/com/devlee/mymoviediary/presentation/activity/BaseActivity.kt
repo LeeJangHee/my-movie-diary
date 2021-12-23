@@ -3,6 +3,7 @@ package com.devlee.mymoviediary.presentation.activity
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.viewbinding.ViewBinding
@@ -51,7 +52,7 @@ abstract class BaseActivity<V : ViewBinding> : AppCompatActivity(), BaseFragment
         appToolbarLayout?.setTitleView(title, leftImage, rightImage, onClickListener)
     }
 
-    override fun setToolbarMenu(type: Int, @DrawableRes resId: Int, onClickListener: View.OnClickListener?) {
-        appToolbarLayout?.setImageMenu(type, resId, onClickListener)
+    override fun setToolbarMenu(type: Int, @DrawableRes resId: Int?, @StringRes strId: Int?, onClickListener: View.OnClickListener?) {
+        appToolbarLayout?.setImageOrTextMenu(type, resId, strId, onClickListener)
     }
 }

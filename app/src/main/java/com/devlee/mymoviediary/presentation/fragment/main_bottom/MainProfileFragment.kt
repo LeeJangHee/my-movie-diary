@@ -3,6 +3,7 @@ package com.devlee.mymoviediary.presentation.fragment.main_bottom
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.FragmentMainProfileBinding
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
+import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
 
 class MainProfileFragment : BaseFragment<FragmentMainProfileBinding>() {
 
@@ -10,5 +11,6 @@ class MainProfileFragment : BaseFragment<FragmentMainProfileBinding>() {
 
     override fun setView() {
         setTitleToolbar(title = "Profile")
+        setMenuToolbar(type = AppToolbarLayout.RIGHT, strId = R.string.test)
     }
 }
