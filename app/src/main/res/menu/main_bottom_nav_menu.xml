@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/mainHomeFragment"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/bottom_menu_home_icon"
         android:title="Home" />
 
     <item

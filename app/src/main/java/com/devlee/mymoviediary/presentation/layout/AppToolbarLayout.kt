@@ -64,14 +64,13 @@ class AppToolbarLayout(
 
     /** image menu */
     fun setImageOrTextMenu(type: Int, @DrawableRes resId: Int? = null, @StringRes strId: Int? = null, onClickListener: View.OnClickListener? = null) {
-        val padding: Int = 6f.convertDpToPx()
+        val padding: Int = 13f.convertDpToPx()
         var view = View(context)
         when {
             resId != null -> {
                 view = ImageView(context).apply {
                     load(resId) {
-                        size(56f.convertDpToPx())
-                        setPadding(padding)
+                        scaleType = ImageView.ScaleType.CENTER_INSIDE
                     }
                     setOnClickListener(onClickListener)
                 }

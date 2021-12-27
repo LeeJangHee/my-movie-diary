@@ -21,7 +21,7 @@ class CalenderDayFragment : BaseFragment<FragmentCalenderDayBinding>() {
 
     private fun setAppbar() {
         setTitleToolbar("Today")
-        setMenuToolbar(type = AppToolbarLayout.LEFT, resId = R.drawable.ic_arrow_back) {
+        setMenuToolbar(type = AppToolbarLayout.LEFT, resId = R.mipmap.ic_launcher) {
             findNavController().popBackStack()
         }
     }

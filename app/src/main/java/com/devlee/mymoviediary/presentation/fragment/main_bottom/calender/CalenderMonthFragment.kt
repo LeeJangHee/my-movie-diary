@@ -24,7 +24,7 @@ class CalenderMonthFragment : BaseFragment<FragmentCalenderMonthBinding>() {
 
     private fun setAppbar() {
         setTitleToolbar("Month")
-        setMenuToolbar(type = AppToolbarLayout.LEFT, resId = R.drawable.ic_arrow_back) {
+        setMenuToolbar(type = AppToolbarLayout.LEFT, resId = R.mipmap.ic_launcher) {
             findNavController().popBackStack()
         }
         setMenuToolbar(type = AppToolbarLayout.LEFT, resId = R.mipmap.ic_launcher_round) {

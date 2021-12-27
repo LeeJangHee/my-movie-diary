@@ -18,7 +18,7 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
 
     private fun setAppbar() {
         setTitleToolbar(title = "새 게시물")
-        setMenuToolbar(type = AppToolbarLayout.LEFT, resId = R.drawable.ic_arrow_back) {
+        setMenuToolbar(type = AppToolbarLayout.LEFT, resId = R.mipmap.ic_launcher) {
             findNavController().popBackStack()
         }
         setMenuToolbar(type = AppToolbarLayout.RIGHT, strId = R.string.test) {

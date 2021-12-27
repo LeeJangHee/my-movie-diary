@@ -30,6 +30,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:menu="@menu/main_bottom_nav_menu"
-            app:labelVisibilityMode="labeled" />
+            app:labelVisibilityMode="unlabeled" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
