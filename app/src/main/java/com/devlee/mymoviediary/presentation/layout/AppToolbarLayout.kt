@@ -15,6 +15,8 @@ import coil.load
 import com.devlee.mymoviediary.databinding.LayoutAppbarBinding
 import com.devlee.mymoviediary.databinding.LayoutAppbarTitleBinding
 import com.devlee.mymoviediary.utils.convertDpToPx
+import com.devlee.mymoviediary.utils.convertPxToDp
+import com.devlee.mymoviediary.utils.dp
 import com.devlee.mymoviediary.utils.gone
 
 class AppToolbarLayout(
@@ -40,6 +42,7 @@ class AppToolbarLayout(
     /** 타이틀 메뉴 */
     fun setTitleView(
         title: String,
+        subTitle: String? = null,
         leftImage: Int? = null,
         rightImage: Int? = null,
         onClickListener: View.OnClickListener? = null
@@ -48,6 +51,7 @@ class AppToolbarLayout(
             this.leftImage = leftImage
             this.rightImage = rightImage
             this.title = title
+            this.subTitle = subTitle
             appbarTitleView.setOnClickListener(onClickListener)
             root
         }
@@ -64,13 +68,14 @@ class AppToolbarLayout(
 
     /** image menu */
     fun setImageOrTextMenu(type: Int, @DrawableRes resId: Int? = null, @StringRes strId: Int? = null, onClickListener: View.OnClickListener? = null) {
-        val padding: Int = 13f.convertDpToPx()
+        val padding: Int = 13f.dp
         var view = View(context)
         when {
             resId != null -> {
                 view = ImageView(context).apply {
                     load(resId) {
                         scaleType = ImageView.ScaleType.CENTER_INSIDE
+                        setPadding(padding)
                     }
                     setOnClickListener(onClickListener)
                 }

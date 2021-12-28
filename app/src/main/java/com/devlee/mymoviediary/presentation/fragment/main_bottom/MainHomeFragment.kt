@@ -20,10 +20,15 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
     }
 
     private fun setAppbar() {
-        setTitleToolbar(title = "2021. 12", rightImage = R.mipmap.ic_launcher) {
+        setTitleToolbar(title = "12월", subTitle = "BC12의 ", rightImage = R.drawable.down_arrow_icon) {
             Toast.makeText(requireContext(), "click", Toast.LENGTH_SHORT).show()
         }
-        setMenuToolbar(type = AppToolbarLayout.RIGHT, resId = R.mipmap.ic_launcher)
+        setMenuToolbar(type = AppToolbarLayout.LEFT, resId = R.drawable.search_icon) {
+
+        }
+        setMenuToolbar(type = AppToolbarLayout.RIGHT, resId = R.drawable.range_icon) {
+
+        }
     }
 
 }

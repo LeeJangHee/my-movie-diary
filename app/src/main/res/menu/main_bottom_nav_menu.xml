@@ -8,7 +8,7 @@
 
     <item
         android:id="@+id/calendar_nav"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/bottom_menu_calender_icon"
         android:title="Calender" />
 
     <item
