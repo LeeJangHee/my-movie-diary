@@ -18,4 +18,20 @@
 
     <style name="AppTheme.NoTitle" parent="AppTheme">
     </style>
+
+    <!--  기본 글자 색  -->
+    <style name="DefaultTextStyle">
+        <item name="android:textColor">@color/color_1c1c1c</item>
+    </style>
+
+    <!--  AppBar Title Style  -->
+    <style name="MainAppbarTitle" parent="DefaultTextStyle">
+        <item name="android:fontFamily">@font/noto_sans_kr_bold</item>
+        <item name="android:textSize">17dp</item>
+    </style>
+
+    <style name="SubAppbarTitle" parent="DefaultTextStyle">
+        <item name="android:textSize">17dp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_medium</item>
+    </style>
 </resources>

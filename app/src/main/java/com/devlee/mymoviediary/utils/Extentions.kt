@@ -13,3 +13,8 @@ fun View.hide() = run { visibility = View.INVISIBLE }
 fun Float.convertDpToPx() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, Resources.getSystem().displayMetrics).toInt()
 fun Float.convertSpToPx() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, this, Resources.getSystem().displayMetrics).toInt()
 fun Float.convertPxToDp() = (this / Resources.getSystem().displayMetrics.density).toInt()
+
+val Float.dp: Int
+    get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
+val Int.dp: Int
+    get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()

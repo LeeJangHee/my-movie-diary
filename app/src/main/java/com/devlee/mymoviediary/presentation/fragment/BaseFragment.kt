@@ -41,11 +41,12 @@ abstract class BaseFragment<V : ViewBinding> : Fragment() {
 
     open fun setTitleToolbar(
         title: String,
+        subTitle: String? = null,
         leftImage: Int? = null,
         rightImage: Int? = null,
         onClickListener: View.OnClickListener? = null
     ) {
-        toolbarControl?.setToolbarTitle(title, leftImage, rightImage, onClickListener)
+        toolbarControl?.setToolbarTitle(title, subTitle, leftImage, rightImage, onClickListener)
     }
 
     open fun setMenuToolbar(
@@ -64,6 +65,7 @@ abstract class BaseFragment<V : ViewBinding> : Fragment() {
     interface ToolbarControl {
         fun setToolbarTitle(
             title: String,
+            subTitle: String? = null,
             leftImage: Int? = null,
             rightImage: Int? = null,
             onClickListener: View.OnClickListener? = null

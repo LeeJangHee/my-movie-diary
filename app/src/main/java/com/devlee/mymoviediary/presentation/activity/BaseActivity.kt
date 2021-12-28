@@ -45,11 +45,12 @@ abstract class BaseActivity<V : ViewBinding> : AppCompatActivity(), BaseFragment
 
     override fun setToolbarTitle(
         title: String,
+        subTitle: String?,
         leftImage: Int?,
         rightImage: Int?,
         onClickListener: View.OnClickListener?
     ) {
-        appToolbarLayout?.setTitleView(title, leftImage, rightImage, onClickListener)
+        appToolbarLayout?.setTitleView(title, subTitle, leftImage, rightImage, onClickListener)
     }
 
     override fun setToolbarMenu(type: Int, @DrawableRes resId: Int?, @StringRes strId: Int?, onClickListener: View.OnClickListener?) {
