@@ -29,10 +29,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             setOf(R.id.mainHomeFragment, R.id.mainCalenderFragment, R.id.mainCategoryFragment, R.id.mainProfileFragment)
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-    }
 
-    override fun onStart() {
-        super.onStart()
         hideBottomNavTooltip()
     }
 

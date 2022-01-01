@@ -1,7 +1,6 @@
 package com.devlee.mymoviediary.presentation.activity.splash
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import androidx.core.os.postDelayed
