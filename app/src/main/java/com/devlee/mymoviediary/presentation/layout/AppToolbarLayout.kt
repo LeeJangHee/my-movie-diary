@@ -10,12 +10,9 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.core.view.setPadding
 import coil.load
 import com.devlee.mymoviediary.databinding.LayoutAppbarBinding
 import com.devlee.mymoviediary.databinding.LayoutAppbarTitleBinding
-import com.devlee.mymoviediary.utils.convertDpToPx
-import com.devlee.mymoviediary.utils.convertPxToDp
 import com.devlee.mymoviediary.utils.dp
 import com.devlee.mymoviediary.utils.gone
 
@@ -68,14 +65,15 @@ class AppToolbarLayout(
 
     /** image menu */
     fun setImageOrTextMenu(type: Int, @DrawableRes resId: Int? = null, @StringRes strId: Int? = null, onClickListener: View.OnClickListener? = null) {
-        val padding: Int = 13f.dp
+        val paddingHorizontal: Int = 16.dp
+        val paddingVertical: Int = 16.dp
         var view = View(context)
         when {
             resId != null -> {
                 view = ImageView(context).apply {
                     load(resId) {
                         scaleType = ImageView.ScaleType.CENTER_INSIDE
-                        setPadding(padding)
+                        setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
                     }
                     setOnClickListener(onClickListener)
                 }
@@ -83,7 +81,7 @@ class AppToolbarLayout(
             strId != null -> {
                 view = TextView(context).apply {
                     setText(strId)
-                    setPadding(padding)
+                    setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
                     setOnClickListener(onClickListener)
                 }
             }
