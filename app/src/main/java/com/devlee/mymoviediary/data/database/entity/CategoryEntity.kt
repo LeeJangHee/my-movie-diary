@@ -8,6 +8,6 @@ import com.devlee.mymoviediary.utils.Constants.CATEGORY_TABLE
 @Entity(tableName = CATEGORY_TABLE)
 data class CategoryEntity(
     @PrimaryKey(autoGenerate = true)
-    var categoryId: Int,
-    var category: Category
+    val categoryId: Int,
+    val category: Category
 )

@@ -4,14 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.devlee.mymoviediary.databinding.ItemMainListBinding
+import com.devlee.mymoviediary.databinding.ItemMainBinding
 import com.devlee.mymoviediary.utils.MyDiaryDiffUtil
 
-class MainHomeAdapter: RecyclerView.Adapter<MainHomeAdapter.MyViewHolder>() {
+class MainHomeAdapter : RecyclerView.Adapter<MainHomeAdapter.MyViewHolder>() {
 
     private var myDiaryList = emptyList<Int>()
 
-    inner class MyViewHolder(private val binding: ItemMainListBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class MyViewHolder(private val binding: ItemMainBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind() {
             binding.apply {
 
@@ -22,7 +22,7 @@ class MainHomeAdapter: RecyclerView.Adapter<MainHomeAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val binding = ItemMainListBinding.inflate(layoutInflater, parent, false)
+        val binding = ItemMainBinding.inflate(layoutInflater, parent, false)
         return MyViewHolder(binding)
     }
 

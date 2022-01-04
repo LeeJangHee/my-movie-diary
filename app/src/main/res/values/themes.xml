@@ -19,33 +19,51 @@
     <style name="AppTheme.NoTitle" parent="AppTheme">
     </style>
 
+    <style name="AppTheme.Cursor" parent="AppTheme">
+        <item name="colorAccent">@color/color_999999</item>
+    </style>
+
     <!--  기본 글자 색  -->
-    <style name="DefaultTextStyle">
+    <style name="AppTheme.DefaultTextStyle" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/color_1c1c1c</item>
         <item name="android:fontFamily">@font/noto_sans_kr_medium</item>
         <item name="android:textSize">12dp</item>
     </style>
 
+    <style name="AppTheme.DefaultEditStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:textCursorDrawable">@drawable/color_cursor</item>
+        <item name="android:textColorHint">@color/color_b9b9b9</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:background">@null</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_medium</item>
+    </style>
+
     <!--  AppBar Title Style  -->
-    <style name="MainAppbarTitle" parent="DefaultTextStyle">
+    <style name="MainAppbarTitle" parent="AppTheme.DefaultTextStyle">
         <item name="android:fontFamily">@font/noto_sans_kr_bold</item>
         <item name="android:textSize">17dp</item>
     </style>
 
-    <style name="SubAppbarTitle" parent="DefaultTextStyle">
+    <style name="SubAppbarTitle" parent="AppTheme.DefaultTextStyle">
         <item name="android:textSize">17dp</item>
     </style>
 
     <!--  메인 아이템 날짜 Style  -->
-    <style name="MainItemDayTextStyle" parent="DefaultTextStyle">
+    <style name="MainItemDayTextStyle" parent="AppTheme.DefaultTextStyle">
         <item name="android:fontFamily">@font/noto_sans_kr_light</item>
         <item name="android:textColor">@color/color_535353</item>
         <item name="android:textSize">9dp</item>
     </style>
 
     <!--  Category  -->
-    <style name="CategoryTitleStyle" parent="DefaultTextStyle">
+    <style name="CategoryTitleStyle" parent="AppTheme.DefaultTextStyle">
         <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="CategoryEditStyle" parent="AppTheme.DefaultEditStyle">
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+        <item name="android:hint">@string/category_edit_hint_text</item>
         <item name="android:textSize">16dp</item>
     </style>
 </resources>

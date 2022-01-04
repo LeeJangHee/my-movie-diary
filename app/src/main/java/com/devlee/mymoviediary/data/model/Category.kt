@@ -10,7 +10,7 @@ data class Category(
     val title: String,
     val type: Int,
     @ColorInt
-    val color: Int? = null,
+    val color: Int?,
     @DrawableRes
-    val drawableRes: Int? = null
-): Parcelable
+    val drawableRes: Int?
+) : Parcelable

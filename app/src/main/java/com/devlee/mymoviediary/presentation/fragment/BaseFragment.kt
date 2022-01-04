@@ -15,14 +15,14 @@ abstract class BaseFragment<V : ViewBinding> : Fragment() {
     protected val binding get() = _binding!!
 
     private var toolbarControl: ToolbarControl? = null
+    private var progressControl: ProgressControl? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val fa = requireActivity()
-        if (fa is ToolbarControl) {
-            toolbarControl = fa
-        }
+        toolbarControl = fa as ToolbarControl
+        progressControl = fa as ProgressControl
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -62,6 +62,14 @@ abstract class BaseFragment<V : ViewBinding> : Fragment() {
 
     abstract fun setView()
 
+    open fun showProgressDialog() {
+        progressControl?.showProgress()
+    }
+
+    open fun dismissProgressDialog() {
+        progressControl?.dismissProgress()
+    }
+
     interface ToolbarControl {
         fun setToolbarTitle(
             title: String,
@@ -77,6 +85,11 @@ abstract class BaseFragment<V : ViewBinding> : Fragment() {
             @StringRes strId: Int? = null,
             onClickListener: View.OnClickListener? = null
         )
+    }
+
+    interface ProgressControl {
+        fun showProgress()
+        fun dismissProgress()
     }
 
 }

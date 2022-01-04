@@ -1,12 +1,11 @@
 package com.devlee.mymoviediary.data.database
 
-import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
-import androidx.compose.ui.state.ToggleableState
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.devlee.mymoviediary.data.database.entity.CategoryEntity
-import com.devlee.mymoviediary.data.database.entity.MyDiaryEntity
-import com.devlee.mymoviediary.data.model.Category
+import com.devlee.mymoviediary.utils.Resource
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -20,13 +19,8 @@ interface MyDiaryDao {
     @Query("SELECT * FROM category_table")
     fun getCategoryAll(): Flow<List<CategoryEntity>>
 
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    suspend fun insertCategory(
-//        title: String,
-//        type: Int,
-//        @ColorInt color: Int? = null,
-//        @DrawableRes drawableRes: Int? = null
-//    )
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCategory(categoryEntity: CategoryEntity)
 //
 //    @Delete
 //    suspend fun deleteCategory(categoryEntity: CategoryEntity)

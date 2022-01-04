@@ -12,7 +12,9 @@ class MyDiaryRepository(
     /** Category Database */
     fun getCategoryAll() = db.dao().getCategoryAll()
 
-//    suspend fun insertCategory(title: String, type: Int, color: Int) = db.dao().insertCategory(title, type, color)
+    suspend fun insertCategory(categoryEntity: CategoryEntity) {
+        db.dao().insertCategory(categoryEntity)
+    }
 //
 //    suspend fun deleteCategory(categoryEntity: CategoryEntity) = db.dao().deleteCategory(categoryEntity)
 }

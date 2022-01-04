@@ -1,7 +1,7 @@
 package com.devlee.mymoviediary.presentation.fragment.main_bottom
 
 import android.widget.Toast
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.database.MyDiaryDatabase
@@ -15,7 +15,7 @@ import com.devlee.mymoviediary.viewmodels.ViewModelProviderFactory
 
 class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
 
-    val homeViewModel: MyDiaryViewModel by activityViewModels {
+    val homeViewModel: MyDiaryViewModel by viewModels {
         val repository = MyDiaryRepository(MyDiaryDatabase.getInstance(requireActivity()))
         ViewModelProviderFactory(repository)
     }

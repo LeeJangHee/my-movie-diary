@@ -1,13 +1,18 @@
 package com.devlee.mymoviediary.viewmodels
 
-import androidx.lifecycle.*
+import androidx.databinding.ObservableBoolean
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.devlee.mymoviediary.R
+import com.devlee.mymoviediary.data.database.entity.CategoryEntity
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.presentation.adapter.category.CategoryViewType
-import com.devlee.mymoviediary.presentation.adapter.category.MainCategoryAdapter
+import com.devlee.mymoviediary.utils.Resource
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MyDiaryViewModel(
@@ -15,36 +20,46 @@ class MyDiaryViewModel(
 ) : ViewModel() {
 
     var categories = repository.getCategoryAll()
-    var handlerCategoryList: MutableLiveData<ArrayList<Category>> = MutableLiveData(arrayListOf())
+    var handlerCategoryList: MutableLiveData<Resource<ArrayList<Category>>> = MutableLiveData()
 
-    val categoryAdapter = MainCategoryAdapter()
+    val editMode = ObservableBoolean(false)
 
-    fun readCategory() {
-        viewModelScope.launch(Dispatchers.IO) {
-            categories.collect { categoryEntities ->
-                setCategory(categoryEntities.map { it.category })
-            }
+    fun readCategory() = viewModelScope.launch(Dispatchers.IO) {
+        categories.collect { categoryEntitis ->
+            handlerCategoryList.postValue(Resource.Loading())
+            setCategory(categoryEntitis.map { it.category })
         }
     }
 
     fun setCategory(category: List<Category>) {
         viewModelScope.launch(Dispatchers.IO) {
-            val allCategoryList = arrayListOf<Category>()
-            // 기본 카테고리
-            val defaultCategory = listOf(
-                Category(title = "전체보기", type = CategoryViewType.DEFAULT.type, drawableRes = R.drawable.category_all_icon),
-                Category(title = "즐겨찾기", type = CategoryViewType.DEFAULT.type, drawableRes = R.drawable.star_icon)
-            )
-            // 카테고리 추가
-            val addCategory = listOf(
-                Category(title = "카테고리 추가", type = CategoryViewType.ADD.type, drawableRes = R.drawable.category_add_icon)
-            )
+            delay(1000)
+            try {
+                val allCategoryList = arrayListOf<Category>()
+                // 기본 카테고리
+                val defaultCategory = listOf(
+                    Category("전체보기", CategoryViewType.DEFAULT.type, null, R.drawable.category_all_icon),
+                    Category("즐겨찾기", CategoryViewType.DEFAULT.type, null, R.drawable.star_icon)
+                )
+                // 카테고리 추가
+                val addCategory = listOf(
+                    Category("카테고리 추가", CategoryViewType.ADD.type, null, R.drawable.category_add_icon)
+                )
 
-            allCategoryList.addAll(defaultCategory)
-            allCategoryList.addAll(category)
-            allCategoryList.addAll(addCategory)
+                allCategoryList.addAll(defaultCategory)
+                allCategoryList.addAll(category)
+                allCategoryList.addAll(addCategory)
 
-            handlerCategoryList.postValue(allCategoryList)
+                handlerCategoryList.postValue(Resource.Success(allCategoryList))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                handlerCategoryList.postValue(Resource.Error(e.message ?: "Category Error!!!"))
+            }
         }
     }
+
+    fun insertCategory(categoryEntity: CategoryEntity) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.insertCategory(categoryEntity)
+        }
 }

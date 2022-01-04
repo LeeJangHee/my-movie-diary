@@ -1,4 +1,4 @@
-package com.devlee.mymoviediary.utils
+package com.devlee.mymoviediary.utils.recyclerview
 
 import android.graphics.Canvas
 import android.graphics.Paint

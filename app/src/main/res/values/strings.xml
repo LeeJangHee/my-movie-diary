@@ -8,5 +8,6 @@
 
     <!--  툴바 이름  -->
     <string name="category">카테고리</string>
+    <string name="category_edit_hint_text">카테고리 이름 입력</string>
 
 </resources>

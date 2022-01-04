@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.devlee.mymoviediary.presentation.layout.RoundDialog
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:cornerRadius="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" >
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/customDialogTitle"
+                style="@style/AppTheme.DefaultTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24dp"
+                android:layout_marginStart="@dimen/dp_16"
+                android:layout_marginVertical="@dimen/dp_16"
+                app:layout_constraintBottom_toTopOf="@+id/customDialogView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="Title" />
+
+            <FrameLayout
+                android:id="@+id/customDialogView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/customDialogButtonLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/customDialogTitle" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/customDialogButtonLayout"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/customDialogView">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/customDialogNegative"
+                    style="@style/AppTheme.DefaultTextStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/color_ff3939"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/customDialogPositive"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="취소" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/customDialogPositive"
+                    style="@style/AppTheme.DefaultTextStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/customDialogNegative"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="확인" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.devlee.mymoviediary.presentation.layout.RoundDialog>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
