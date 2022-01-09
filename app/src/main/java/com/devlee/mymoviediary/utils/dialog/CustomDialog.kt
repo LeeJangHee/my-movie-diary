@@ -30,8 +30,7 @@ class CustomDialog {
 
         /** Title */
         fun setTitle(@StringRes titleId: Int): Builder {
-            title = context.getString(titleId)
-            return this
+            return setTitle(context.getString(titleId))
         }
 
         fun setTitle(title: String?): Builder {
@@ -57,8 +56,8 @@ class CustomDialog {
         }
 
         /** Positive Button */
-        fun setPositiveButton(@StringRes textId: Int, listener: (() -> Unit)? = null) {
-            setPositiveButton(context.getString(textId), listener)
+        fun setPositiveButton(@StringRes textId: Int, listener: (() -> Unit)? = null): Builder {
+            return setPositiveButton(context.getString(textId), listener)
         }
 
         fun setPositiveButton(textStr: String?, listener: (() -> Unit)? = null): Builder {
@@ -68,8 +67,8 @@ class CustomDialog {
         }
 
         /** Negative Button */
-        fun setNegativeButton(@StringRes textId: Int, listener: (() -> Unit)? = null) {
-            setNegativeButton(context.getString(textId), listener)
+        fun setNegativeButton(@StringRes textId: Int, listener: (() -> Unit)? = null): Builder {
+            return setNegativeButton(context.getString(textId), listener)
         }
 
         fun setNegativeButton(textStr: String?, listener: (() -> Unit)? = null): Builder {

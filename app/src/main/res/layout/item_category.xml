@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <import type="android.view.View" />
-
         <import type="com.devlee.mymoviediary.presentation.adapter.category.CategoryViewType" />
 
         <variable
@@ -22,8 +20,19 @@
         android:id="@+id/categoryItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@{!editMode ? @color/white : @color/color_f0f0f0}"
         android:minHeight="56dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/categoryHeaderColor"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            categoryColor="@{categoryModel.color}"
+            android:layout_marginStart="@dimen/dp_17"
+            android:layout_marginBottom="@dimen/dp_19"
+            app:shapeAppearanceOverlay="@style/circleImage"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/categoryImage"
@@ -31,9 +40,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginBottom="@dimen/dp_18"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/categoryTitle"
@@ -55,7 +64,7 @@
             android:orientation="vertical"
             app:layout_constraintGuide_begin="46dp" />
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="@dimen/dp_16"
@@ -71,19 +80,28 @@
                 style="@style/CategoryTitleStyle"
                 android:layout_width="36dp"
                 android:layout_height="24dp"
-                android:layout_marginEnd="4dp"
                 android:layout_marginBottom="15dp"
                 android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/categoryArrowImage"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="parent"
                 tools:text="10" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/categoryArrowImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="17dp"
-                android:src="@drawable/right_arrow_icon" />
+                android:layout_marginStart="4dp"
+                android:src="@drawable/right_arrow_icon"
+                app:layout_constraintBottom_toBottomOf="@+id/categoryCountText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/categoryCountText"
+                app:layout_constraintTop_toTopOf="@+id/categoryCountText" />
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/categoryGuidelineEdit"
@@ -98,7 +116,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
-            android:visibility="@{editMode ? View.VISIBLE : View.GONE}"
+            categoryEdit="@{editMode}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/categoryEditLinear"
             app:layout_constraintStart_toEndOf="@+id/categoryGuidelineEdit"
@@ -118,18 +136,26 @@
             tools:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/categoryEditOk"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_weight="1"
-                android:text="ok" />
-
-            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/categoryEditCancel"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
+                style="@style/AppTheme.DefaultTextStyle"
+                android:textSize="14dp"
+                android:textColor="@color/black"
+                android:gravity="center"
                 android:layout_weight="1"
-                android:text="no" />
+                android:text="@string/no_kr" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/categoryEditOk"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                style="@style/AppTheme.DefaultTextStyle"
+                android:textSize="14dp"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:text="@string/ok_kr" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

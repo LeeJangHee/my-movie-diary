@@ -19,6 +19,8 @@
             android:layout_height="7dp"
             android:layout_marginEnd="5dp"
             android:src="@mipmap/ic_launcher"
+            android:background="@android:color/transparent"
+            app:shapeAppearanceOverlay="@style/circleImage"
             app:layout_constraintBottom_toBottomOf="@+id/dayText"
             app:layout_constraintEnd_toStartOf="@+id/dayText"
             app:layout_constraintHorizontal_bias="0.5"

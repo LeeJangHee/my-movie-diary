@@ -12,10 +12,10 @@
         android:layout_height="wrap_content">
 
         <com.devlee.mymoviediary.presentation.layout.RoundDialog
-            android:layout_width="match_parent"
+            android:layout_width="328dp"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            app:cornerRadius="18dp"
+            app:cornerRadius="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -23,11 +23,9 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/customDialogTitle"
-                style="@style/AppTheme.DefaultTextStyle"
+                style="@style/DialogTitleStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24dp"
-                android:layout_marginStart="@dimen/dp_16"
                 android:layout_marginVertical="@dimen/dp_16"
                 app:layout_constraintBottom_toTopOf="@+id/customDialogView"
                 app:layout_constraintStart_toStartOf="parent"
@@ -56,11 +54,7 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/customDialogNegative"
-                    style="@style/AppTheme.DefaultTextStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/color_ff3939"
-                    android:gravity="center"
+                    style="@style/DialogButtonTextStyle"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/customDialogPositive"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -71,10 +65,9 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/customDialogPositive"
-                    style="@style/AppTheme.DefaultTextStyle"
+                    style="@style/DialogButtonTextStyle"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:background="@android:color/holo_green_light"
                     android:gravity="center"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

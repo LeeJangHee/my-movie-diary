@@ -5,14 +5,17 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.database.entity.CategoryEntity
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.databinding.ItemCategoryBinding
+import com.devlee.mymoviediary.databinding.LayoutColorFirstPickerBinding
+import com.devlee.mymoviediary.databinding.LayoutColorPickerBinding
 import com.devlee.mymoviediary.utils.MyDiaryDiffUtil
 import com.devlee.mymoviediary.utils.dialog.CustomDialog
-import com.devlee.mymoviediary.utils.hideKeyboardIME
+import com.devlee.mymoviediary.utils.getColorRes
 import com.devlee.mymoviediary.viewmodels.MyDiaryViewModel
 import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerView
@@ -57,35 +60,58 @@ class MainCategoryAdapter(
         var title: String = ""
 
         init {
+            // 추가 버튼 클릭
             addBinding.categoryItem.setOnClickListener {
-                categoryViewModel.editMode.set(true)
-                addBinding.editMode = categoryViewModel.editMode.get()
+                setEditMode(true)
             }
 
+            // 색상 선택
             addBinding.categoryEditColorPicker.setOnClickListener {
-                val colorPickerView = LayoutInflater.from(it.context).inflate(R.layout.layout_color_picker, null, false)
-                val colorView: ColorPickerView = colorPickerView.findViewById(R.id.colorPickerView)
-                var hexColor: String? = null
-                var colorEnvelope: ColorEnvelope? = null
-                colorView.setColorListener(ColorEnvelopeListener { envelope, fromUser ->
-                    Log.e(TAG, "#${envelope?.hexCode}")
-                    hexColor = "#${envelope?.hexCode}"
-                    colorEnvelope = envelope
-                })
+                fun allColorPickDialog() {
+                    val colorPickerView = LayoutInflater.from(it.context).inflate(R.layout.layout_color_picker, null, false)
+                    val colorView: ColorPickerView = colorPickerView.findViewById(R.id.colorPickerView)
+                    var colorEnvelope: ColorEnvelope? = null
+                    colorView.attachBrightnessSlider(colorPickerView.findViewById(R.id.colorPickerBrightnessView))
+                    colorView.setColorListener(ColorEnvelopeListener { envelope, fromUser ->
+                        Log.e(TAG, "#${envelope?.hexCode}")
+                        colorEnvelope = envelope
+                    })
 
-                CustomDialog.Builder(addBinding.root.context)
-                    .setTitle("ColorPicker")
-                    .setCustomView(colorPickerView)
-                    .setPositiveButton("확인") {
-                        Log.e(TAG, "setPositiveButton ${colorEnvelope?.color}")
-                        categoryColor = colorEnvelope?.color
-                    }
-                    .setNegativeButton("취소") {
+                    CustomDialog.Builder(it.context)
+                        .setTitle(R.string.dialog_title_color_pick)
+                        .setCustomView(colorPickerView)
+                        .setPositiveButton(R.string.ok_kr) {
+                            Log.e(TAG, "setPositiveButton ${colorEnvelope?.color}")
+                            categoryColor = colorEnvelope?.color
+                            // 칼라 선택 후 백그라운드 색상을 바꿔 준다.
+                            categoryColor?.let { colorInt ->
+                                addBinding.categoryEditColorPicker.setBackgroundColor(colorInt)
+                            }
+                        }
+                        .setNegativeButton(R.string.no_kr) {
 
-                    }
-                    .show()
+                        }
+                        .show()
+                }
+
+                fun firstColorPickDialog() {
+                    val firstColorPickBinding = LayoutColorFirstPickerBinding.inflate(LayoutInflater.from(it.context))
+                    firstColorPickBinding.adapter = FirstColorPickAdapter()
+
+                    CustomDialog.Builder(it.context)
+                        .setTitle(R.string.dialog_title_color_pick)
+                        .setCustomView(firstColorPickBinding.root)
+                        .setPositiveButton(R.string.ok_kr) {
+                            allColorPickDialog()
+                        }
+                        .setNegativeButton(R.string.no_kr)
+                        .show()
+                }
+
+                firstColorPickDialog()
             }
 
+            // 에딧 리스너
             addBinding.categoryEdit.addTextChangedListener {
                 if (it.isNullOrEmpty()) {
                     addBinding.categoryEditOk.isEnabled = false
@@ -95,6 +121,7 @@ class MainCategoryAdapter(
                 }
             }
 
+            // 확인
             addBinding.categoryEditOk.setOnClickListener {
                 if (categoryColor == null) return@setOnClickListener
                 val categoryData = Category(
@@ -104,10 +131,20 @@ class MainCategoryAdapter(
                     drawableRes = null
                 )
                 categoryViewModel.insertCategory(CategoryEntity(0, categoryData))
-                categoryViewModel.editMode.set(false)
+                setEditMode(false)
                 addBinding.categoryEdit.text?.clear()
-                it.hideKeyboardIME()
             }
+
+            // 취소
+            addBinding.categoryEditCancel.setOnClickListener {
+                addBinding.categoryEditColorPicker.setBackgroundColor(getColorRes(it.context, R.color.color_c3c3c3))
+                setEditMode(false)
+            }
+        }
+
+        private fun setEditMode(set: Boolean) {
+            categoryViewModel.editMode.set(set)
+            addBinding.editMode = categoryViewModel.editMode.get()
         }
 
         fun addBinding(category: Category) {

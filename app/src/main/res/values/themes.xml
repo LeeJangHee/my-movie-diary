@@ -19,6 +19,10 @@
     <style name="AppTheme.NoTitle" parent="AppTheme">
     </style>
 
+    <style name="circleImage">
+        <item name="cornerSize">50%</item>
+    </style>
+
     <style name="AppTheme.Cursor" parent="AppTheme">
         <item name="colorAccent">@color/color_999999</item>
     </style>
@@ -65,5 +69,20 @@
         <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
         <item name="android:hint">@string/category_edit_hint_text</item>
         <item name="android:textSize">16dp</item>
+    </style>
+
+    <!--  Dialog  -->
+    <style name="DialogTitleStyle" parent="AppTheme.DefaultTextStyle">
+        <item name="android:textSize">17dp</item>
+        <item name="android:layout_marginStart">18dp</item>
+        <item name="android:layout_marginTop">18dp</item>
+        <item name="android:layout_marginBottom">7dp</item>
+    </style>
+
+    <style name="DialogButtonTextStyle" parent="AppTheme.DefaultTextStyle">
+        <item name="android:textSize">14dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
     </style>
 </resources>

@@ -10,4 +10,25 @@
     <string name="category">카테고리</string>
     <string name="category_edit_hint_text">카테고리 이름 입력</string>
 
+    <string name="ok_kr">확인</string>
+    <string name="no_kr">취소</string>
+    <string name="dialog_title_color_pick">컬러 선택</string>
+
+    <string-array name="first_pick">
+        <item>@color/all_pick_0</item>
+        <item>@color/all_pick_1</item>
+        <item>@color/all_pick_2</item>
+        <item>@color/all_pick_3</item>
+        <item>@color/all_pick_4</item>
+        <item>@color/all_pick_5</item>
+        <item>@color/all_pick_6</item>
+        <item>@color/all_pick_7</item>
+        <item>@color/all_pick_8</item>
+        <item>@color/all_pick_9</item>
+        <item>@color/all_pick_10</item>
+        <item>@color/all_pick_11</item>
+        <item>@color/all_pick_12</item>
+        <item>@color/all_pick_13</item>
+        <item>@color/all_pick_14</item>
+    </string-array>
 </resources>
