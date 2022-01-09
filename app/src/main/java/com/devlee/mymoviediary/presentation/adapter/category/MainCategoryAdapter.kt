@@ -5,15 +5,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.database.entity.CategoryEntity
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.databinding.ItemCategoryBinding
 import com.devlee.mymoviediary.databinding.LayoutColorFirstPickerBinding
-import com.devlee.mymoviediary.databinding.LayoutColorPickerBinding
 import com.devlee.mymoviediary.utils.MyDiaryDiffUtil
+import com.devlee.mymoviediary.utils.categoryFirstItemClick
 import com.devlee.mymoviediary.utils.dialog.CustomDialog
 import com.devlee.mymoviediary.utils.getColorRes
 import com.devlee.mymoviediary.viewmodels.MyDiaryViewModel
@@ -73,7 +72,7 @@ class MainCategoryAdapter(
                     var colorEnvelope: ColorEnvelope? = null
                     colorView.attachBrightnessSlider(colorPickerView.findViewById(R.id.colorPickerBrightnessView))
                     colorView.setColorListener(ColorEnvelopeListener { envelope, fromUser ->
-                        Log.e(TAG, "#${envelope?.hexCode}")
+                        Log.d(TAG, "#${envelope?.hexCode}")
                         colorEnvelope = envelope
                     })
 
@@ -81,16 +80,10 @@ class MainCategoryAdapter(
                         .setTitle(R.string.dialog_title_color_pick)
                         .setCustomView(colorPickerView)
                         .setPositiveButton(R.string.ok_kr) {
-                            Log.e(TAG, "setPositiveButton ${colorEnvelope?.color}")
-                            categoryColor = colorEnvelope?.color
-                            // 칼라 선택 후 백그라운드 색상을 바꿔 준다.
-                            categoryColor?.let { colorInt ->
-                                addBinding.categoryEditColorPicker.setBackgroundColor(colorInt)
-                            }
+                            Log.d(TAG, "setPositiveButton ${colorEnvelope?.color}")
+                            setColorPick(colorEnvelope?.color)
                         }
-                        .setNegativeButton(R.string.no_kr) {
-
-                        }
+                        .setNegativeButton(R.string.no_kr)
                         .show()
                 }
 
@@ -98,7 +91,7 @@ class MainCategoryAdapter(
                     val firstColorPickBinding = LayoutColorFirstPickerBinding.inflate(LayoutInflater.from(it.context))
                     firstColorPickBinding.adapter = FirstColorPickAdapter()
 
-                    CustomDialog.Builder(it.context)
+                    val customDialog = CustomDialog.Builder(it.context)
                         .setTitle(R.string.dialog_title_color_pick)
                         .setCustomView(firstColorPickBinding.root)
                         .setPositiveButton(R.string.ok_kr) {
@@ -106,6 +99,11 @@ class MainCategoryAdapter(
                         }
                         .setNegativeButton(R.string.no_kr)
                         .show()
+
+                    categoryFirstItemClick = { color ->
+                        setColorPick(color)
+                        customDialog.dismiss()
+                    }
                 }
 
                 firstColorPickDialog()
@@ -123,7 +121,9 @@ class MainCategoryAdapter(
 
             // 확인
             addBinding.categoryEditOk.setOnClickListener {
-                if (categoryColor == null) return@setOnClickListener
+                if (categoryColor == null) {
+                    categoryColor = getColorRes(addBinding.root.context, R.color.color_c3c3c3)
+                }
                 val categoryData = Category(
                     title = title,
                     type = CategoryViewType.CATEGORY.type,
@@ -139,6 +139,13 @@ class MainCategoryAdapter(
             addBinding.categoryEditCancel.setOnClickListener {
                 addBinding.categoryEditColorPicker.setBackgroundColor(getColorRes(it.context, R.color.color_c3c3c3))
                 setEditMode(false)
+            }
+        }
+
+        private fun setColorPick(color: Int?) {
+            categoryColor = color
+            categoryColor?.let {
+                addBinding.categoryEditColorPicker.setBackgroundColor(it)
             }
         }
 

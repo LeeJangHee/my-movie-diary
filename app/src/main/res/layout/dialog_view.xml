@@ -26,7 +26,7 @@
                 style="@style/DialogTitleStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_16"
                 app:layout_constraintBottom_toTopOf="@+id/customDialogView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -45,7 +45,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/customDialogButtonLayout"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="@dimen/dp_56"
                 android:layout_marginTop="@dimen/dp_16"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

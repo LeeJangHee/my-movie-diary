@@ -16,6 +16,10 @@ class CustomDialog {
     private var binding: DialogViewBinding? = null
     private var dialog: AlertDialog? = null
 
+    fun dismiss() {
+        dialog?.dismiss()
+    }
+
     class Builder(val context: Context) {
         private var title: String? = null
         private var customView: View? = null

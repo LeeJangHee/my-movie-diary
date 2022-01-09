@@ -1,25 +1,36 @@
 package com.devlee.mymoviediary.presentation.adapter.category
 
+import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.devlee.mymoviediary.databinding.ItemColorFirstBinding
 import com.devlee.mymoviediary.utils.MyDiaryDiffUtil
+import com.devlee.mymoviediary.utils.categoryFirstItemClick
 
-class FirstColorPickAdapter: RecyclerView.Adapter<FirstColorPickAdapter.ViewHolder>() {
+class FirstColorPickAdapter : RecyclerView.Adapter<FirstColorPickAdapter.ViewHolder>() {
 
-    var colorList = arrayListOf<String>()
+    private val TAG = "FirstColorPickAdapter"
 
-    inner class ViewHolder(val binding: ItemColorFirstBinding): RecyclerView.ViewHolder(binding.root) {
+    var colorList = arrayListOf<Int>()
+
+    inner class ViewHolder(val binding: ItemColorFirstBinding) : RecyclerView.ViewHolder(binding.root) {
 
         init {
-
+            binding.colorFirstItem.setOnClickListener {
+                val backgroundColor = binding.colorFirstItem.background
+                if (backgroundColor is ColorDrawable) {
+                    Log.d(TAG, "color = ${backgroundColor.color}")
+                    categoryFirstItemClick?.invoke(backgroundColor.color)
+                }
+            }
         }
 
-        fun bind(color: String) {
+        fun bind(color: Int) {
             binding.apply {
-                colorFirstItem.setBackgroundColor(color.toInt())
+                colorFirstItem.setBackgroundColor(color)
                 executePendingBindings()
             }
         }
@@ -37,7 +48,7 @@ class FirstColorPickAdapter: RecyclerView.Adapter<FirstColorPickAdapter.ViewHold
 
     override fun getItemCount(): Int = colorList.size
 
-    fun setColorIdList(list: ArrayList<String>) {
+    fun setColorIdList(list: ArrayList<Int>) {
         val colorFirstDiffUtil = MyDiaryDiffUtil(colorList, list)
         val diffUtilResult = DiffUtil.calculateDiff(colorFirstDiffUtil)
         colorList = list
