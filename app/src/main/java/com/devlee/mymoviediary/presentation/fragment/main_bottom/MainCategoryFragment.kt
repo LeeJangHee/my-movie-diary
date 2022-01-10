@@ -2,6 +2,7 @@ package com.devlee.mymoviediary.presentation.fragment.main_bottom
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import androidx.fragment.app.viewModels
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.database.MyDiaryDatabase
@@ -11,9 +12,12 @@ import com.devlee.mymoviediary.presentation.adapter.category.MainCategoryAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
 import com.devlee.mymoviediary.utils.Resource
+import com.devlee.mymoviediary.utils.categoryErrorView
+import com.devlee.mymoviediary.utils.getColorRes
 import com.devlee.mymoviediary.utils.loadingLiveData
 import com.devlee.mymoviediary.viewmodels.MyDiaryViewModel
 import com.devlee.mymoviediary.viewmodels.ViewModelProviderFactory
+import com.google.android.material.snackbar.Snackbar
 
 class MainCategoryFragment : BaseFragment<FragmentMainCategoryBinding>() {
     private val TAG = "MainCategoryFragment"
@@ -24,7 +28,8 @@ class MainCategoryFragment : BaseFragment<FragmentMainCategoryBinding>() {
         ViewModelProviderFactory(repository)
     }
 
-    private val categoryAdapter by lazy { MainCategoryAdapter(categoryViewModel) }
+    private val categoryAdapter by lazy { MainCategoryAdapter(requireActivity(), categoryViewModel) }
+    private val snackbar: Snackbar by lazy { Snackbar.make(binding.root, "", 700) }
 
     override fun getLayoutId(): Int = R.layout.fragment_main_category
 
@@ -48,6 +53,17 @@ class MainCategoryFragment : BaseFragment<FragmentMainCategoryBinding>() {
         initList()
         binding.categoryRecyclerView.apply {
             adapter = categoryAdapter
+        }
+
+        categoryErrorView = {
+            val errorView = LayoutInflater.from(it.context).inflate(R.layout.layout_category_error_view, null)
+            val snackbarLayout = snackbar.view as Snackbar.SnackbarLayout
+            snackbarLayout.apply {
+                setBackgroundColor(getColorRes(it.context, android.R.color.transparent))
+                addView(errorView, 0)
+            }
+            snackbar.anchorView = it
+            snackbar.show()
         }
     }
 

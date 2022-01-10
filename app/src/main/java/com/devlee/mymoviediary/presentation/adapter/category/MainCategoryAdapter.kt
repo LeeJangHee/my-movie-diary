@@ -1,9 +1,11 @@
 package com.devlee.mymoviediary.presentation.adapter.category
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.devlee.mymoviediary.R
@@ -12,6 +14,7 @@ import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.databinding.ItemCategoryBinding
 import com.devlee.mymoviediary.databinding.LayoutColorFirstPickerBinding
 import com.devlee.mymoviediary.utils.MyDiaryDiffUtil
+import com.devlee.mymoviediary.utils.categoryErrorView
 import com.devlee.mymoviediary.utils.categoryFirstItemClick
 import com.devlee.mymoviediary.utils.dialog.CustomDialog
 import com.devlee.mymoviediary.utils.getColorRes
@@ -21,10 +24,12 @@ import com.skydoves.colorpickerview.ColorPickerView
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 
 class MainCategoryAdapter(
+    val requireActivity: FragmentActivity,
     val categoryViewModel: MyDiaryViewModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val TAG = "MainCategoryAdapter"
+    private val MAX_CATEGORY_NAME_BYTE = 20
 
     private var categoryList = listOf<Category>()
 
@@ -53,6 +58,7 @@ class MainCategoryAdapter(
     }
 
     // 카테고리 추가
+    @SuppressLint("ShowToast")
     inner class AddHolder(private val addBinding: ItemCategoryBinding) : RecyclerView.ViewHolder(addBinding.root) {
         val viewType = CategoryViewType.ADD.type
         var categoryColor: Int? = null
@@ -121,6 +127,13 @@ class MainCategoryAdapter(
 
             // 확인
             addBinding.categoryEditOk.setOnClickListener {
+
+                val categoryNameBytes = title.toByteArray(charset("euc-kr"))
+                // 최대, 최소 길이
+                if (categoryNameBytes.size < 1 || categoryNameBytes.size > MAX_CATEGORY_NAME_BYTE) {
+                    categoryErrorView?.invoke(addBinding.root)
+                    return@setOnClickListener
+                }
                 if (categoryColor == null) {
                     categoryColor = getColorRes(addBinding.root.context, R.color.color_c3c3c3)
                 }
@@ -131,15 +144,19 @@ class MainCategoryAdapter(
                     drawableRes = null
                 )
                 categoryViewModel.insertCategory(CategoryEntity(0, categoryData))
-                setEditMode(false)
-                addBinding.categoryEdit.text?.clear()
+                reset()
             }
 
             // 취소
             addBinding.categoryEditCancel.setOnClickListener {
-                addBinding.categoryEditColorPicker.setBackgroundColor(getColorRes(it.context, R.color.color_c3c3c3))
-                setEditMode(false)
+                reset()
             }
+        }
+
+        private fun reset() {
+            setEditMode(false)
+            addBinding.categoryEdit.text?.clear()
+            setColorPick(getColorRes(requireActivity, R.color.color_c3c3c3))
         }
 
         private fun setColorPick(color: Int?) {

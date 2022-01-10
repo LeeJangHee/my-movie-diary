@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="android.view.View" />
+
         <import type="com.devlee.mymoviediary.presentation.adapter.category.CategoryViewType" />
 
         <variable
@@ -25,14 +27,14 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/categoryHeaderColor"
+            categoryColor="@{categoryModel.color}"
             android:layout_width="15dp"
             android:layout_height="15dp"
-            categoryColor="@{categoryModel.color}"
             android:layout_marginStart="@dimen/dp_17"
             android:layout_marginBottom="@dimen/dp_19"
-            app:shapeAppearanceOverlay="@style/circleImage"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:shapeAppearanceOverlay="@style/circleImage" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/categoryImage"
@@ -113,10 +115,11 @@
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/categoryEdit"
             style="@style/CategoryEditStyle"
+            categoryEdit="@{editMode}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
-            categoryEdit="@{editMode}"
+            android:maxLength="20"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/categoryEditLinear"
             app:layout_constraintStart_toEndOf="@+id/categoryGuidelineEdit"
@@ -137,39 +140,52 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/categoryEditCancel"
+                style="@style/AppTheme.DefaultTextStyle"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                style="@style/AppTheme.DefaultTextStyle"
-                android:textSize="14dp"
-                android:textColor="@color/black"
-                android:gravity="center"
                 android:layout_weight="1"
-                android:text="@string/no_kr" />
+                android:gravity="center"
+                android:text="@string/no_kr"
+                android:textColor="@color/black"
+                android:textSize="14dp" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/categoryEditOk"
+                style="@style/AppTheme.DefaultTextStyle"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                style="@style/AppTheme.DefaultTextStyle"
-                android:textSize="14dp"
-                android:textColor="@color/black"
-                android:gravity="center"
                 android:layout_weight="1"
-                android:text="@string/ok_kr" />
+                android:gravity="center"
+                android:text="@string/ok_kr"
+                android:textColor="@color/black"
+                android:textSize="14dp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <View
-            android:id="@+id/categoryEditColorPicker"
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/color_c3c3c3"
             android:visibility="@{editMode ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/categoryGuidelineEdit"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="gone" />
+            tools:visibility="gone">
+
+            <View
+                android:id="@+id/categoryEditColorPicker"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_c3c3c3" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/category_check_icon" />
+
+        </FrameLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

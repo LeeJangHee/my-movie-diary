@@ -31,4 +31,6 @@
         <item>@color/all_pick_13</item>
         <item>@color/all_pick_14</item>
     </string-array>
+
+    <string name="category_name_size_error_message">한글 10자 영문 20자 초과하여 작성하실 수 없습니다. (띄어쓰기 포함)</string>
 </resources>
