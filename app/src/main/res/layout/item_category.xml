@@ -18,174 +18,202 @@
             type="Boolean" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/categoryItem"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@{!editMode ? @color/white : @color/color_f0f0f0}"
-        android:minHeight="56dp">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/categoryHeaderColor"
-            categoryColor="@{categoryModel.color}"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginStart="@dimen/dp_17"
-            android:layout_marginBottom="@dimen/dp_19"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:shapeAppearanceOverlay="@style/circleImage" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/categoryImage"
-            categoryImages="@{categoryModel}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_16"
-            android:layout_marginBottom="@dimen/dp_18"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/categoryTitle"
-            style="@style/CategoryTitleStyle"
-            categoryTextStyle="@{categoryModel}"
-            android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:text="@{categoryModel.title}"
-            android:visibility="@{editMode ? View.GONE : View.VISIBLE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/categoryGuidelineTitle"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="한글 카테고리" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/categoryGuidelineTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="46dp" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginEnd="@dimen/dp_16"
-            android:gravity="bottom"
-            android:orientation="horizontal"
-            android:visibility="@{categoryModel.type == CategoryViewType.CATEGORY.type ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/categoryCountText"
-                style="@style/CategoryTitleStyle"
-                android:layout_width="36dp"
-                android:layout_height="24dp"
-                android:layout_marginBottom="15dp"
-                android:gravity="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/categoryArrowImage"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:text="10" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/categoryArrowImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:src="@drawable/right_arrow_icon"
-                app:layout_constraintBottom_toBottomOf="@+id/categoryCountText"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/categoryCountText"
-                app:layout_constraintTop_toTopOf="@+id/categoryCountText" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/categoryGuidelineEdit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="33dp" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/categoryEdit"
-            style="@style/CategoryEditStyle"
-            categoryEdit="@{editMode}"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="10dp"
-            android:maxLength="20"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/categoryEditLinear"
-            app:layout_constraintStart_toEndOf="@+id/categoryGuidelineEdit"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="gone" />
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/categoryEditLinear"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:orientation="horizontal"
-            android:visibility="@{editMode ? View.VISIBLE : View.GONE}"
-            android:weightSum="2"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="gone">
+            android:id="@+id/categorySwipeView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:gravity="end"
+            android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/categoryEditCancel"
-                style="@style/AppTheme.DefaultTextStyle"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/no_kr"
-                android:textColor="@color/black"
-                android:textSize="14dp" />
+                style="@style/CategorySwipeMenuTextStyle"
+                android:id="@+id/categoryMenuChange"
+                android:background="@color/color_f0f0f0"
+                android:text="@string/category_swipe_menu_edit" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/categoryEditOk"
-                style="@style/AppTheme.DefaultTextStyle"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/ok_kr"
-                android:textColor="@color/black"
-                android:textSize="14dp" />
+                style="@style/CategorySwipeMenuTextStyle"
+                android:id="@+id/categoryMenuDe"
+                android:background="@color/color_ff3939"
+                android:textColor="@color/white"
+                android:text="@string/category_swipe_menu_del" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="@{editMode ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/categoryGuidelineEdit"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="gone">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/categoryItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@{!editMode ? @color/white : @color/color_f0f0f0}"
+            android:minHeight="56dp">
 
-            <View
-                android:id="@+id/categoryEditColorPicker"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/color_c3c3c3" />
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/categoryHeaderColor"
+                categoryColor="@{categoryModel.color}"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginStart="@dimen/dp_17"
+                android:layout_marginBottom="@dimen/dp_19"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:shapeAppearanceOverlay="@style/circleImage" />
 
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/categoryImage"
+                categoryImages="@{categoryModel}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/category_check_icon" />
+                android:layout_marginStart="@dimen/dp_16"
+                android:layout_marginBottom="@dimen/dp_18"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-        </FrameLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/categoryTitle"
+                style="@style/CategoryTitleStyle"
+                categoryTextStyle="@{categoryModel}"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:text="@{categoryModel.title}"
+                android:visibility="@{editMode ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/categoryGuidelineTitle"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="한글 카테고리" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/categoryGuidelineTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="46dp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:gravity="bottom"
+                android:orientation="horizontal"
+                android:visibility="@{categoryModel.type == CategoryViewType.CATEGORY.type ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/categoryCountText"
+                    style="@style/CategoryTitleStyle"
+                    android:layout_width="36dp"
+                    android:layout_height="24dp"
+                    android:layout_marginBottom="15dp"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/categoryArrowImage"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:text="10" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/categoryArrowImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:src="@drawable/right_arrow_icon"
+                    app:layout_constraintBottom_toBottomOf="@+id/categoryCountText"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/categoryCountText"
+                    app:layout_constraintTop_toTopOf="@+id/categoryCountText" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/categoryGuidelineEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="33dp" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/categoryEdit"
+                style="@style/CategoryEditStyle"
+                categoryEdit="@{editMode}"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                android:maxLength="20"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/categoryEditLinear"
+                app:layout_constraintStart_toEndOf="@+id/categoryGuidelineEdit"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="gone" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/categoryEditLinear"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:visibility="@{editMode ? View.VISIBLE : View.GONE}"
+                android:weightSum="2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="gone">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/categoryEditCancel"
+                    style="@style/AppTheme.DefaultTextStyle"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/no_kr"
+                    android:textColor="@color/black"
+                    android:textSize="14dp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/categoryEditOk"
+                    style="@style/AppTheme.DefaultTextStyle"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/ok_kr"
+                    android:textColor="@color/black"
+                    android:textSize="14dp" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="@{editMode ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/categoryGuidelineEdit"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="gone">
+
+                <View
+                    android:id="@+id/categoryEditColorPicker"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/color_c3c3c3" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/category_check_icon" />
+
+            </FrameLayout>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
 </layout>

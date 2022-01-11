@@ -219,6 +219,8 @@ class MainCategoryAdapter(
         diffUtilResult.dispatchUpdatesTo(this)
     }
 
+    fun getCategoryList() = categoryList
+
 }
 
 enum class CategoryViewType(val type: Int) {

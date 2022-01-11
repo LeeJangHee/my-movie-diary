@@ -1,9 +1,12 @@
 package com.devlee.mymoviediary.presentation.fragment.main_bottom
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.database.MyDiaryDatabase
 import com.devlee.mymoviediary.data.repository.MyDiaryRepository
@@ -15,6 +18,7 @@ import com.devlee.mymoviediary.utils.Resource
 import com.devlee.mymoviediary.utils.categoryErrorView
 import com.devlee.mymoviediary.utils.getColorRes
 import com.devlee.mymoviediary.utils.loadingLiveData
+import com.devlee.mymoviediary.utils.recyclerview.CategoryTouchCallback
 import com.devlee.mymoviediary.viewmodels.MyDiaryViewModel
 import com.devlee.mymoviediary.viewmodels.ViewModelProviderFactory
 import com.google.android.material.snackbar.Snackbar
@@ -51,9 +55,7 @@ class MainCategoryFragment : BaseFragment<FragmentMainCategoryBinding>() {
 
         setAppbar()
         initList()
-        binding.categoryRecyclerView.apply {
-            adapter = categoryAdapter
-        }
+        setRecyclerView()
 
         categoryErrorView = {
             val errorView = LayoutInflater.from(it.context).inflate(R.layout.layout_category_error_view, null)
@@ -92,6 +94,23 @@ class MainCategoryFragment : BaseFragment<FragmentMainCategoryBinding>() {
         }
         setMenuToolbar(type = AppToolbarLayout.LEFT, resId = R.drawable.search_icon) {
 
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setRecyclerView() {
+        val categoryTouchCallback = CategoryTouchCallback().apply {
+            val swipeMenuWidth = resources.getDimension(R.dimen.dp_56) * 2
+            setClamp(swipeMenuWidth)
+        }
+        ItemTouchHelper(categoryTouchCallback).attachToRecyclerView(binding.categoryRecyclerView)
+        binding.categoryRecyclerView.apply {
+            adapter = categoryAdapter
+
+            setOnTouchListener { _, _ ->
+                categoryTouchCallback.removePreviousClamp(this)
+                false
+            }
         }
     }
 }
