@@ -62,4 +62,14 @@ class MyDiaryViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertCategory(categoryEntity)
         }
+
+    fun deleteCategory(category: Category) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteCategory(category)
+        }
+
+    fun updateCategory(category: Category, preCategory: Category) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateCategory(category, preCategory)
+        }
 }

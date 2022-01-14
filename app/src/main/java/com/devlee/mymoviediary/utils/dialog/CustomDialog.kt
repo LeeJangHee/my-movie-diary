@@ -5,10 +5,13 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.DialogViewBinding
+import com.devlee.mymoviediary.utils.getColorRes
 import com.devlee.mymoviediary.utils.show
 
 class CustomDialog {
@@ -28,6 +31,8 @@ class CustomDialog {
         private var negativeText: String? = null
         private var positiveButtonListener: (() -> Unit)? = null
         private var negativeButtonListener: (() -> Unit)? = null
+        private var positiveTextColor: Int? = null
+        private var negativeTextColor: Int? = null
         private var dismissListener: (() -> Unit)? = null
         private var cancelable: Boolean = true
 
@@ -50,8 +55,7 @@ class CustomDialog {
 
         /** Message */
         fun setMessage(@StringRes messageId: Int): Builder {
-            message = context.getString(messageId)
-            return this
+            return setMessage(context.getString(messageId))
         }
 
         fun setMessage(message: String?): Builder {
@@ -60,23 +64,25 @@ class CustomDialog {
         }
 
         /** Positive Button */
-        fun setPositiveButton(@StringRes textId: Int, listener: (() -> Unit)? = null): Builder {
-            return setPositiveButton(context.getString(textId), listener)
+        fun setPositiveButton(@StringRes textId: Int, @ColorRes colorRes: Int = R.color.color_1c1c1c, listener: (() -> Unit)? = null): Builder {
+            return setPositiveButton(context.getString(textId), colorRes, listener)
         }
 
-        fun setPositiveButton(textStr: String?, listener: (() -> Unit)? = null): Builder {
+        fun setPositiveButton(textStr: String?, color: Int = R.color.color_1c1c1c, listener: (() -> Unit)? = null): Builder {
             positiveText = textStr
+            positiveTextColor = getColorRes(context, color)
             positiveButtonListener = listener
             return this
         }
 
         /** Negative Button */
-        fun setNegativeButton(@StringRes textId: Int, listener: (() -> Unit)? = null): Builder {
-            return setNegativeButton(context.getString(textId), listener)
+        fun setNegativeButton(@StringRes textId: Int, @ColorRes colorRes: Int = R.color.color_1c1c1c, listener: (() -> Unit)? = null): Builder {
+            return setNegativeButton(context.getString(textId), colorRes, listener)
         }
 
-        fun setNegativeButton(textStr: String?, listener: (() -> Unit)? = null): Builder {
+        fun setNegativeButton(textStr: String?, color: Int = R.color.color_1c1c1c, listener: (() -> Unit)? = null): Builder {
             negativeText = textStr
+            negativeTextColor = getColorRes(context, color)
             negativeButtonListener = listener
             return this
         }
@@ -122,6 +128,14 @@ class CustomDialog {
                     }
                 }
 
+
+                message?.let {
+                    this.customDialogMessage.apply {
+                        text = it
+                        this.show()
+                    }
+                }
+
                 customView?.let {
                     this.customDialogView.apply {
                         removeAllViews()
@@ -133,6 +147,7 @@ class CustomDialog {
                 positiveText?.let {
                     this.customDialogPositive.also { positiveTextView ->
                         positiveTextView.text = it
+                        positiveTextView.setTextColor(positiveTextColor ?: getColorRes(context, R.color.color_1c1c1c))
                         positiveTextView.setOnClickListener {
                             positiveButtonListener?.invoke()
                             customPopupHelper.dialog?.dismiss()
@@ -144,6 +159,7 @@ class CustomDialog {
                 negativeText?.let {
                     this.customDialogNegative.also { negativeTextView ->
                         negativeTextView.text = it
+                        negativeTextView.setTextColor(negativeTextColor ?: getColorRes(context, R.color.color_1c1c1c))
                         negativeTextView.setOnClickListener {
                             negativeButtonListener?.invoke()
                             customPopupHelper.dialog?.dismiss()

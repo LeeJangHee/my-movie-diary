@@ -117,6 +117,16 @@ class CategoryTouchCallback : ItemTouchHelper.Callback() {
             previousPosition = null
         }
     }
+
+    fun removePreviousClamp(viewHolder: RecyclerView.ViewHolder) {
+        if (currentPosition == previousPosition) return
+
+        previousPosition?.let {
+            getView(viewHolder)?.animate()?.translationX(0f)
+            setTag(viewHolder, false)
+            previousPosition = null
+        }
+    }
 }
 
 // https://velog.io/@trycatch98/Android-RecyclerView-Swipe-Menu

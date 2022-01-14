@@ -1,10 +1,8 @@
 package com.devlee.mymoviediary.data.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.devlee.mymoviediary.data.database.entity.CategoryEntity
+import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.utils.Resource
 import kotlinx.coroutines.flow.Flow
 
@@ -21,9 +19,11 @@ interface MyDiaryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCategory(categoryEntity: CategoryEntity)
-//
-//    @Delete
-//    suspend fun deleteCategory(categoryEntity: CategoryEntity)
 
+    @Query("DELETE FROM category_table WHERE category = :category")
+    suspend fun deleteCategory(category: Category)
+
+    @Query("UPDATE category_table SET category = :category WHERE category = :preCategory")
+    suspend fun updateCategory(category: Category, preCategory: Category)
 
 }

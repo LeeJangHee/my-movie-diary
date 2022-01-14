@@ -134,18 +134,22 @@ fun RecyclerView.setFirstColorAdapter(adapter: FirstColorPickAdapter) {
         this.adapter = adapter.apply {
             // 아이템 set
             setColorIdList(colorList)
+            layoutManager = GridLayoutManager(context, 5)
 
             // 아이템 아래 간격
             addItemDecoration(object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                     super.getItemOffsets(outRect, view, parent, state)
+
                     val bottom = 26f.convertDpToPx()
+                    val horizontal = context.resources.getDimension(R.dimen.dp_17).toInt()
+                    outRect.left = horizontal
+                    outRect.right = horizontal
                     if (parent.getChildAdapterPosition(view) < 10) {
                         outRect.bottom = bottom
                     }
                 }
             })
         }
-        layoutManager = GridLayoutManager(context, 5)
     }
 }

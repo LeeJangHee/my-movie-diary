@@ -104,6 +104,7 @@ class MainCategoryFragment : BaseFragment<FragmentMainCategoryBinding>() {
             setClamp(swipeMenuWidth)
         }
         ItemTouchHelper(categoryTouchCallback).attachToRecyclerView(binding.categoryRecyclerView)
+        categoryAdapter.setItemTouchCallback(categoryTouchCallback)
         binding.categoryRecyclerView.apply {
             adapter = categoryAdapter
 

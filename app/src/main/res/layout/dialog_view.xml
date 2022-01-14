@@ -9,25 +9,27 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        tools:background="@color/black">
 
         <com.devlee.mymoviediary.presentation.layout.RoundDialog
             android:layout_width="328dp"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            android:paddingHorizontal="@dimen/dp_24"
             app:cornerRadius="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" >
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/customDialogTitle"
                 style="@style/DialogTitleStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_16"
                 app:layout_constraintBottom_toTopOf="@+id/customDialogView"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed"
@@ -35,26 +37,41 @@
 
             <FrameLayout
                 android:id="@+id/customDialogView"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toTopOf="@+id/customDialogButtonLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/customDialogTitle" />
+                app:layout_constraintTop_toBottomOf="@+id/customDialogTitle" >
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/customDialogMessage"
+                    style="@style/DialogMessageTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="11dp"
+                    android:layout_marginBottom="33dp"
+                    android:visibility="gone"
+                    tools:text="@string/category_delete_message"
+                    tools:visibility="visible" />
+
+            </FrameLayout>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/customDialogButtonLayout"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/dp_56"
-                android:layout_marginTop="@dimen/dp_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end|center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginBottom="17dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/customDialogView">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/customDialogNegative"
                     style="@style/DialogButtonTextStyle"
+                    android:layout_marginEnd="33dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/customDialogPositive"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -66,9 +83,6 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/customDialogPositive"
                     style="@style/DialogButtonTextStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -76,7 +90,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="확인" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
         </com.devlee.mymoviediary.presentation.layout.RoundDialog>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,7 +6,9 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="color_1c1c1c">#1c1c1c</color>
-    
+    <color name="color_de000000">#de000000</color>
+    <color name="color_99000000">#99000000</color>
+
     <color name="color_fffefc">#fffefc</color>
     <color name="color_535353">#535353</color>
     <color name="color_c3c3c3">#c3c3c3</color>
@@ -14,6 +16,7 @@
     <color name="color_999999">#999999</color>
     <color name="color_b9b9b9">#b9b9b9</color>
     <color name="color_f0f0f0">#f0f0f0</color>
+    <color name="color_efefef">#efefef</color>
 
     <color name="color_ff3939">#ff3939</color>
 
