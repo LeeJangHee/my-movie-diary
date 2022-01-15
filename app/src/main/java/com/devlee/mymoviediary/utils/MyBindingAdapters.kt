@@ -2,15 +2,19 @@ package com.devlee.mymoviediary.utils
 
 import android.graphics.Color
 import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import coil.load
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.model.Category
@@ -131,22 +135,24 @@ fun RecyclerView.setFirstColorAdapter(adapter: FirstColorPickAdapter) {
         getColorRes(this.context, R.color.all_pick_14)
     )
     this.apply {
+        val spanCount = 5
+        layoutManager = GridLayoutManager(context, spanCount)
+
         this.adapter = adapter.apply {
             // 아이템 set
             setColorIdList(colorList)
-            layoutManager = GridLayoutManager(context, 5)
 
             // 아이템 아래 간격
             addItemDecoration(object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                     super.getItemOffsets(outRect, view, parent, state)
 
-                    val bottom = 26f.convertDpToPx()
+                    val mBottom = 26f.convertDpToPx()
                     val horizontal = context.resources.getDimension(R.dimen.dp_17).toInt()
-                    outRect.left = horizontal
-                    outRect.right = horizontal
+
+
                     if (parent.getChildAdapterPosition(view) < 10) {
-                        outRect.bottom = bottom
+                        outRect.bottom = mBottom
                     }
                 }
             })

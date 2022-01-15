@@ -81,15 +81,14 @@
 
     <!--  Dialog  -->
     <style name="DialogTitleStyle" parent="AppTheme.DefaultTextStyle">
-        <item name="android:textSize">16dp</item>
-        <item name="android:fontFamily">@font/noto_sans_kr_bold</item>
+        <item name="android:textSize">17dp</item>
         <item name="android:textColor">@color/color_de000000</item>
         <item name="android:lineHeight" tools:ignore="NewApi">24dp</item>
         <item name="android:layout_marginTop">@dimen/dp_24</item>
     </style>
 
     <style name="DialogButtonTextStyle" parent="AppTheme.DefaultTextStyle">
-        <item name="android:textSize">17dp</item>
+        <item name="android:textSize">16dp</item>
         <item name="android:lineHeight" tools:ignore="NewApi">24dp</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_width">wrap_content</item>

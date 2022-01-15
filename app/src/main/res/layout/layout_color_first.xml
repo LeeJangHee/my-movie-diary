@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="com.devlee.mymoviediary.viewmodels.MyDiaryViewModel" />
+    </data>
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TableRow>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/colorFirst0"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/all_pick_0"
+                android:onClickListener="@{v -> viewModel.onFirstItemClick(v)}"
+                android:layout_marginEnd="@dimen/dp_18"
+                android:layout_marginVertical="13dp"
+                app:shapeAppearanceOverlay="@style/circleImage" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/colorFirst1"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/all_pick_1"
+                android:onClickListener="@{v -> viewModel.onFirstItemClick(v)}"
+                android:layout_marginHorizontal="@dimen/dp_18"
+                android:layout_marginVertical="13dp"
+                app:shapeAppearanceOverlay="@style/circleImage" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/colorFirst2"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/all_pick_2"
+                android:onClickListener="@{v -> viewModel.onFirstItemClick(v)}"
+                android:layout_marginHorizontal="@dimen/dp_18"
+                android:layout_marginVertical="13dp"
+                app:shapeAppearanceOverlay="@style/circleImage" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/colorFirst3"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/all_pick_3"
+                android:onClickListener="@{v -> viewModel.onFirstItemClick(v)}"
+                android:layout_marginHorizontal="@dimen/dp_18"
+                android:layout_marginVertical="13dp"
+                app:shapeAppearanceOverlay="@style/circleImage" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/colorFirst4"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/all_pick_4"
+                android:onClickListener="@{v -> viewModel.onFirstItemClick(v)}"
+                android:layout_marginHorizontal="@dimen/dp_18"
+                android:layout_marginVertical="13dp"
+                app:shapeAppearanceOverlay="@style/circleImage" />
+        </TableRow>
+
+        <TableRow>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/colorFirst5"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/all_pick_5"
+                android:onClickListener="@{v -> viewModel.onFirstItemClick(v)}"
+                android:layout_marginEnd="@dimen/dp_18"
+                android:layout_marginVertical="13dp"
+                app:shapeAppearanceOverlay="@style/circleImage" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/colorFirst6"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/all_pick_6"
+                android:onClickListener="@{v -> viewModel.onFirstItemClick(v)}"
+                android:layout_marginHorizontal="@dimen/dp_18"
+                android:layout_marginVertical="13dp"
+                app:shapeAppearanceOverlay="@style/circleImage" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/colorFirst7"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/all_pick_7"
+                android:onClickListener="@{v -> viewModel.onFirstItemClick(v)}"
+                android:layout_marginHorizontal="@dimen/dp_18"
+                android:layout_marginVertical="13dp"
+                app:shapeAppearanceOverlay="@style/circleImage" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/colorFirst8"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/all_pick_8"
+                android:onClickListener="@{v -> viewModel.onFirstItemClick(v)}"
+                android:layout_marginHorizontal="@dimen/dp_18"
+                android:layout_marginVertical="13dp"
+                app:shapeAppearanceOverlay="@style/circleImage" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/colorFirst9"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/all_pick_9"
+                android:onClickListener="@{v -> viewModel.onFirstItemClick(v)}"
+                android:layout_marginHorizontal="@dimen/dp_18"
+                android:layout_marginVertical="13dp"
+                app:shapeAppearanceOverlay="@style/circleImage" />
+        </TableRow>
+
+        <TableRow>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/colorFirst10"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/all_pick_10"
+                android:onClickListener="@{v -> viewModel.onFirstItemClick(v)}"
+                android:layout_marginEnd="@dimen/dp_18"
+                android:layout_marginVertical="13dp"
+                app:shapeAppearanceOverlay="@style/circleImage" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/colorFirst11"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/all_pick_11"
+                android:onClickListener="@{v -> viewModel.onFirstItemClick(v)}"
+                android:layout_marginHorizontal="@dimen/dp_18"
+                android:layout_marginVertical="13dp"
+                app:shapeAppearanceOverlay="@style/circleImage" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/colorFirst12"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/all_pick_12"
+                android:onClickListener="@{v -> viewModel.onFirstItemClick(v)}"
+                android:layout_marginHorizontal="@dimen/dp_18"
+                android:layout_marginVertical="13dp"
+                app:shapeAppearanceOverlay="@style/circleImage" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/colorFirst13"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/all_pick_13"
+                android:onClickListener="@{v -> viewModel.onFirstItemClick(v)}"
+                android:layout_marginHorizontal="@dimen/dp_18"
+                android:layout_marginVertical="13dp"
+                app:shapeAppearanceOverlay="@style/circleImage" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/colorFirst14"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/all_pick_14"
+                android:onClickListener="@{v -> viewModel.onFirstItemClick(v)}"
+                android:layout_marginHorizontal="@dimen/dp_18"
+                android:layout_marginVertical="13dp"
+                app:shapeAppearanceOverlay="@style/circleImage" />
+        </TableRow>
+
+    </TableLayout>
+
+</layout>

@@ -1,5 +1,8 @@
 package com.devlee.mymoviediary.viewmodels
 
+import android.graphics.drawable.ColorDrawable
+import android.util.Log
+import android.view.View
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +13,7 @@ import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.presentation.adapter.category.CategoryViewType
 import com.devlee.mymoviediary.utils.Resource
+import com.devlee.mymoviediary.utils.categoryFirstItemClick
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -72,4 +76,12 @@ class MyDiaryViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateCategory(category, preCategory)
         }
+
+    fun onFirstItemClick(view: View) {
+        val backgroundColor = view.background
+        if (backgroundColor is ColorDrawable) {
+            Log.d("firstItemClick", "color = ${backgroundColor.color}")
+            categoryFirstItemClick?.invoke(backgroundColor.color)
+        }
+    }
 }

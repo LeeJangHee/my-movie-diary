@@ -14,6 +14,7 @@ import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.database.entity.CategoryEntity
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.databinding.ItemCategoryBinding
+import com.devlee.mymoviediary.databinding.LayoutColorFirstBinding
 import com.devlee.mymoviediary.databinding.LayoutColorFirstPickerBinding
 import com.devlee.mymoviediary.utils.MyDiaryDiffUtil
 import com.devlee.mymoviediary.utils.categoryErrorView
@@ -265,8 +266,8 @@ class MainCategoryAdapter(
         }
 
         fun firstColorPickDialog() {
-            val firstColorPickBinding = LayoutColorFirstPickerBinding.inflate(LayoutInflater.from(binding.root.context))
-            firstColorPickBinding.adapter = FirstColorPickAdapter()
+            val firstColorPickBinding = LayoutColorFirstBinding.inflate(LayoutInflater.from(binding.root.context))
+//            firstColorPickBinding.adapter = FirstColorPickAdapter()
 
             val customDialog = CustomDialog.Builder(binding.root.context)
                 .setTitle(R.string.dialog_title_color_pick)
