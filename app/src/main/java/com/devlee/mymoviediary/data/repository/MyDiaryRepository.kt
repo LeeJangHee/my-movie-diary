@@ -8,7 +8,7 @@ class MyDiaryRepository(
     private val db: MyDiaryDatabase
 ) {
     /** MyDiary Database */
-//    fun getMyDiaryAll() = db.dao().getMyDiaryAll()
+    fun getMyDiaryAll() = db.dao().getMyDiaryAll()
 
     /** Category Database */
     fun getCategoryAll() = db.dao().getCategoryAll()

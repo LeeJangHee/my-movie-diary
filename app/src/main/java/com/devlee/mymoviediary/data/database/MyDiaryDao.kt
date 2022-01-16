@@ -2,6 +2,7 @@ package com.devlee.mymoviediary.data.database
 
 import androidx.room.*
 import com.devlee.mymoviediary.data.database.entity.CategoryEntity
+import com.devlee.mymoviediary.data.database.entity.MyDiaryEntity
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.utils.Resource
 import kotlinx.coroutines.flow.Flow
@@ -10,8 +11,8 @@ import kotlinx.coroutines.flow.Flow
 interface MyDiaryDao {
 
     /** MyDairy */
-//    @Query("SELECT * FROM mydiary_table")
-//    fun getMyDiaryAll(): Flow<List<MyDiaryEntity>>
+    @Query("SELECT * FROM mydiary_table")
+    fun getMyDiaryAll(): Flow<List<MyDiaryEntity>>
 
     /** Category */
     @Query("SELECT * FROM category_table")

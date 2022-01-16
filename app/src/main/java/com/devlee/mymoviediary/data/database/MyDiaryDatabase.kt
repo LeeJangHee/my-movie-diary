@@ -3,10 +3,12 @@ package com.devlee.mymoviediary.data.database
 import android.content.Context
 import androidx.room.*
 import com.devlee.mymoviediary.data.database.entity.CategoryEntity
+import com.devlee.mymoviediary.data.database.entity.MyDiaryEntity
 import com.devlee.mymoviediary.utils.Constants.MYDIARY_DB_NAME
 
 @Database(
     entities = [
+        MyDiaryEntity::class,
         CategoryEntity::class
     ],
     version = 1

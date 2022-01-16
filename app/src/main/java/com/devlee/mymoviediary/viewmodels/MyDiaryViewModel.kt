@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.database.entity.CategoryEntity
 import com.devlee.mymoviediary.data.model.Category
+import com.devlee.mymoviediary.data.model.MyDiary
 import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.presentation.adapter.category.CategoryViewType
 import com.devlee.mymoviediary.utils.Resource
@@ -21,22 +22,48 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MyDiaryViewModel(
-    val repository: MyDiaryRepository
+    private val repository: MyDiaryRepository
 ) : ViewModel() {
 
+    /** category item */
     var categories = repository.getCategoryAll()
     var handlerCategoryList: MutableLiveData<Resource<ArrayList<Category>>> = MutableLiveData()
 
+    /** category Edit mode */
     val editMode = ObservableBoolean(false)
 
-    fun readCategory() = viewModelScope.launch(Dispatchers.IO) {
-        categories.collect { categoryEntitis ->
-            handlerCategoryList.postValue(Resource.Loading())
-            setCategory(categoryEntitis.map { it.category })
+
+    /** home item */
+    var myDiaries = repository.getMyDiaryAll()
+    var handlerMyDiaryList: MutableLiveData<Resource<ArrayList<MyDiary>>> = MutableLiveData()
+
+
+    fun readMyDiary() = viewModelScope.launch(Dispatchers.IO) {
+        myDiaries.collect { myDiaryEntities ->
+            handlerMyDiaryList.postValue(Resource.Loading())
+            setMyDiary(myDiaryEntities.map { it.myDiary })
         }
     }
 
-    fun setCategory(category: List<Category>) {
+    fun readCategory() = viewModelScope.launch(Dispatchers.IO) {
+        categories.collect { categoryEntities ->
+            handlerCategoryList.postValue(Resource.Loading())
+            setCategory(categoryEntities.map { it.category })
+        }
+    }
+
+    private fun setMyDiary(myDiary: List<MyDiary>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            delay(1000)
+            try {
+                handlerMyDiaryList.postValue(Resource.Success(myDiary as ArrayList))
+            } catch (e: Exception) {
+                handlerMyDiaryList.postValue(Resource.Error(e.message ?: "home data Error!!!"))
+            }
+        }
+    }
+
+    private fun setCategory(category: List<Category>) {
         viewModelScope.launch(Dispatchers.IO) {
             delay(1000)
             try {

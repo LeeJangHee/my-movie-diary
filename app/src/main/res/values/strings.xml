@@ -9,6 +9,7 @@
     <!--  툴바 이름  -->
     <string name="category">카테고리</string>
     <string name="category_edit_hint_text">카테고리 이름 입력</string>
+    <string name="home_create_toolbar_title">새 게시물</string>
 
     <string name="ok_kr">확인</string>
     <string name="no_kr">취소</string>
@@ -31,6 +32,12 @@
         <item>@color/all_pick_13</item>
         <item>@color/all_pick_14</item>
     </string-array>
+
+
+    <!--  카테고리 아이템 이름  -->
+    <string name="category_item_all">전체보기</string>
+    <string name="category_item_favorite">즐겨찾기</string>
+
 
     <string name="category_name_size_error_message">한글 10자 영문 20자 초과하여 작성하실 수 없습니다. (띄어쓰기 포함)</string>
     <string name="category_swipe_menu_edit">편집</string>

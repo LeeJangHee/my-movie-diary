@@ -1,19 +1,33 @@
 package com.devlee.mymoviediary.presentation.fragment.main_bottom
 
+import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.database.MyDiaryDatabase
 import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.databinding.FragmentMainHomeBinding
+import com.devlee.mymoviediary.presentation.activity.main.MainActivity
 import com.devlee.mymoviediary.presentation.adapter.home.MainHomeAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
+import com.devlee.mymoviediary.utils.Resource
+import com.devlee.mymoviediary.utils.gone
+import com.devlee.mymoviediary.utils.isBottomNav
+import com.devlee.mymoviediary.utils.loadingLiveData
 import com.devlee.mymoviediary.viewmodels.MyDiaryViewModel
 import com.devlee.mymoviediary.viewmodels.ViewModelProviderFactory
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
+
+    companion object {
+        private const val TAG = "MainHomeFragment"
+    }
 
     val homeViewModel: MyDiaryViewModel by viewModels {
         val repository = MyDiaryRepository(MyDiaryDatabase.getInstance(requireActivity()))
@@ -35,12 +49,28 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
         // 추가 버튼
         binding.addDiaryButton.setOnClickListener {
             findNavController().navigate(R.id.action_mainHomeFragment_to_createMyDiaryFragment)
+            lifecycleScope.launch {
+                delay(300)
+                (requireActivity() as MainActivity).isBottomNav(false)
+            }
         }
     }
 
     private fun setRecyclerView() {
-        val newList = listOf(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-        diaryAdapter.setData(newList)
+        homeViewModel.readMyDiary()
+        homeViewModel.handlerMyDiaryList.observe(viewLifecycleOwner) { res ->
+            when (res) {
+                is Resource.Loading -> loadingLiveData.postValue(true)
+                is Resource.Success -> {
+                    loadingLiveData.postValue(false)
+                    diaryAdapter.setData(res.data!!)
+                }
+                is Resource.Error -> {
+                    loadingLiveData.postValue(false)
+                    Log.d(TAG, "${res.message}")
+                }
+            }
+        }
         binding.mainHomeRecyclerView.apply {
             adapter = diaryAdapter
         }

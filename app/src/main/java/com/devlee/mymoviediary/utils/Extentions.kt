@@ -8,6 +8,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
+import com.devlee.mymoviediary.R
+import com.devlee.mymoviediary.presentation.activity.main.MainActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 /** View visibility */
 fun View.show(isShow: Boolean? = null) {
@@ -43,4 +46,13 @@ fun View.showKeyboardIME(editText: EditText) {
 fun View.hideKeyboardIME() {
     val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
     imm?.hideSoftInputFromWindow(windowToken, 0)
+}
+
+fun MainActivity.isBottomNav(set: Boolean) {
+    val bottomNavView = this.findViewById<BottomNavigationView>(R.id.mainBottomNav)
+    if (set) {
+        bottomNavView.show()
+    } else {
+        bottomNavView.gone()
+    }
 }

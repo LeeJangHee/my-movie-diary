@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_nav"
+    app:startDestination="@id/mainHomeFragment">
+
+    <fragment
+        android:id="@+id/mainHomeFragment"
+        android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.MainHomeFragment"
+        android:label="MainHomeFragment"
+        tools:layout="@layout/fragment_main_home">
+        <action
+            android:id="@+id/action_mainHomeFragment_to_createMyDiaryFragment"
+            app:destination="@id/createMyDiaryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createMyDiaryFragment"
+        android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.create.CreateMyDiaryFragment"
+        android:label="CreateMyDiaryFragment"
+        tools:layout="@layout/fragment_create_my_diary"/>
+</navigation>

@@ -1,6 +1,7 @@
 package com.devlee.mymoviediary.presentation.layout
 
 import android.content.Context
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +12,10 @@ import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import coil.load
+import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.LayoutAppbarBinding
 import com.devlee.mymoviediary.databinding.LayoutAppbarTitleBinding
+import com.devlee.mymoviediary.utils.convertDpToPx
 import com.devlee.mymoviediary.utils.dp
 import com.devlee.mymoviediary.utils.gone
 
@@ -81,6 +84,8 @@ class AppToolbarLayout(
             strId != null -> {
                 view = TextView(context).apply {
                     setText(strId)
+                    setTextColor(context.getColor(R.color.color_1c1c1c))
+                    textSize = 15f
                     setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
                     setOnClickListener(onClickListener)
                 }

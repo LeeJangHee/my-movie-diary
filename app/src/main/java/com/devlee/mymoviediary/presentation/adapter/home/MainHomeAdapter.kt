@@ -4,12 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.devlee.mymoviediary.data.model.MyDiary
 import com.devlee.mymoviediary.databinding.ItemMainBinding
 import com.devlee.mymoviediary.utils.MyDiaryDiffUtil
 
 class MainHomeAdapter : RecyclerView.Adapter<MainHomeAdapter.MyViewHolder>() {
 
-    private var myDiaryList = emptyList<Int>()
+    private var myDiaryList = emptyList<MyDiary>()
 
     inner class MyViewHolder(private val binding: ItemMainBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind() {
@@ -32,7 +33,7 @@ class MainHomeAdapter : RecyclerView.Adapter<MainHomeAdapter.MyViewHolder>() {
 
     override fun getItemCount(): Int = myDiaryList.size
 
-    fun setData(newDiaryList: List<Int>) {
+    fun setData(newDiaryList: List<MyDiary>) {
         val mainDiffUtil = MyDiaryDiffUtil(myDiaryList, newDiaryList)
         val diffUtilResult = DiffUtil.calculateDiff(mainDiffUtil)
         myDiaryList = newDiaryList
