@@ -14,13 +14,9 @@ import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.database.entity.CategoryEntity
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.databinding.ItemCategoryBinding
-import com.devlee.mymoviediary.databinding.LayoutColorFirstBinding
 import com.devlee.mymoviediary.databinding.LayoutColorFirstPickerBinding
-import com.devlee.mymoviediary.utils.MyDiaryDiffUtil
-import com.devlee.mymoviediary.utils.categoryErrorView
-import com.devlee.mymoviediary.utils.categoryFirstItemClick
+import com.devlee.mymoviediary.utils.*
 import com.devlee.mymoviediary.utils.dialog.CustomDialog
-import com.devlee.mymoviediary.utils.getColorRes
 import com.devlee.mymoviediary.utils.recyclerview.CategoryTouchCallback
 import com.devlee.mymoviediary.viewmodels.MyDiaryViewModel
 import com.skydoves.colorpickerview.ColorEnvelope
@@ -266,9 +262,9 @@ class MainCategoryAdapter(
         }
 
         fun firstColorPickDialog() {
-            val firstColorPickBinding = LayoutColorFirstBinding.inflate(LayoutInflater.from(binding.root.context))
-//            firstColorPickBinding.adapter = FirstColorPickAdapter()
-
+            val firstColorPickBinding = LayoutColorFirstPickerBinding.inflate(LayoutInflater.from(binding.root.context))
+            firstColorPickBinding.viewModel = categoryViewModel
+            Log.d(TAG, "tablelayout width ${firstColorPickBinding.root.width}")
             val customDialog = CustomDialog.Builder(binding.root.context)
                 .setTitle(R.string.dialog_title_color_pick)
                 .setCustomView(firstColorPickBinding.root)
@@ -278,8 +274,14 @@ class MainCategoryAdapter(
                 .setNegativeButton(R.string.no_kr)
                 .show()
 
+            // 선택 아이탬 클릭
             categoryFirstItemClick = { color ->
                 setColorPick(binding, color)
+                customDialog.dismiss()
+            }
+
+            categoryUserPickItemClick = {
+                allColorPickDialog()
                 customDialog.dismiss()
             }
         }

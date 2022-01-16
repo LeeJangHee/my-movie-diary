@@ -14,6 +14,7 @@ import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.presentation.adapter.category.CategoryViewType
 import com.devlee.mymoviediary.utils.Resource
 import com.devlee.mymoviediary.utils.categoryFirstItemClick
+import com.devlee.mymoviediary.utils.categoryUserPickItemClick
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -83,5 +84,9 @@ class MyDiaryViewModel(
             Log.d("firstItemClick", "color = ${backgroundColor.color}")
             categoryFirstItemClick?.invoke(backgroundColor.color)
         }
+    }
+
+    fun onUserPickItemClick() {
+        categoryUserPickItemClick?.invoke()
     }
 }

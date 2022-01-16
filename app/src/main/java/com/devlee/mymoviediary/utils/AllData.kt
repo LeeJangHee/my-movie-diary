@@ -9,5 +9,6 @@ val loadingLiveData = MutableLiveData(false)
 
 /** 처음 색 선택 클릭 리스너 */
 var categoryFirstItemClick: ((Int?) -> Unit)? = null
+var categoryUserPickItemClick: (() -> Unit)? = null
 
 var categoryErrorView: ((View) -> Unit)? = null
