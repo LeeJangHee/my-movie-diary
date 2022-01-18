@@ -4,14 +4,22 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import android.widget.ProgressBar
+import coil.load
+import com.devlee.mymoviediary.R
 
 class ProgressDialog(context: Context) : Dialog(context) {
 
+    private val anim = AnimationUtils.loadAnimation(context, R.anim.loading_anim)
+    private val imageView = ImageView(context).apply {
+        load(R.drawable.loading_icon)
+    }
+
     init {
         setCancelable(false)
-        val progress = ProgressBar(context)
-        addContentView(progress, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+        addContentView(imageView, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
     }
 
     fun showProgress() {
@@ -24,6 +32,7 @@ class ProgressDialog(context: Context) : Dialog(context) {
         }
         try {
             if (!isShowing) {
+                imageView.startAnimation(anim)
                 show()
             }
         } catch (e: Exception) {
@@ -35,6 +44,7 @@ class ProgressDialog(context: Context) : Dialog(context) {
         try {
             if (isShowing) {
                 dismiss()
+                imageView.clearAnimation()
             }
         } catch (e: Exception) {
             e.printStackTrace()

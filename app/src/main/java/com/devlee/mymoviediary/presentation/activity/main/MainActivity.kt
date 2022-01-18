@@ -35,6 +35,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         hideBottomNavTooltip()
 
+        // 키보드가 올라올 경우 bottom nav layout 숨김
         binding.root.viewTreeObserver.addOnGlobalLayoutListener {
             fun checkIMEShow(): Boolean {
                 val rootViewHeight = binding.root.rootView.height
@@ -52,6 +53,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
     }
 
+    /** bottom nav layout longclick -> 이름 보이지 않기 */
     private fun hideBottomNavTooltip() {
         binding.mainBottomNav.menu.forEach {
             val view = this.findViewById<View>(it.itemId)
