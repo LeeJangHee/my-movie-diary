@@ -131,4 +131,8 @@ dependencies {
     // Color Picker
     implementation "com.github.skydoves:colorpickerview:2.2.4"
 
+    // TedPermission
+    def tedpermission_version = "3.3.0"
+    implementation "io.github.ParkSangGwon:tedpermission-normal:$tedpermission_version"      // Normal
+    implementation "io.github.ParkSangGwon:tedpermission-coroutine:$tedpermission_version"   // Coroutine
 }

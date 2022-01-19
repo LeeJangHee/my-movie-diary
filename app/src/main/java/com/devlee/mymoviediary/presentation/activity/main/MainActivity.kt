@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.ActivityMainBinding
 import com.devlee.mymoviediary.presentation.activity.BaseActivity
+import com.devlee.mymoviediary.utils.isMainBottomNavLayout
 import com.devlee.mymoviediary.utils.show
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -44,6 +45,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             }
 
             checkIMEShow().also {
+                if (isMainBottomNavLayout.value == false) return@addOnGlobalLayoutListener
                 if (imeShown != it) {
                     imeShown = it
 

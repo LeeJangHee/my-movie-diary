@@ -10,4 +10,7 @@
     <dimen name="dp_24">24dp</dimen>
 
     <dimen name="toolbar_text_size">15dp</dimen>
+
+    <dimen name="create_item_width">110dp</dimen>
+    <dimen name="create_item_height">110dp</dimen>
 </resources>

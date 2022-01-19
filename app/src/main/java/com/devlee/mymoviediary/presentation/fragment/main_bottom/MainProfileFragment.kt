@@ -11,6 +11,5 @@ class MainProfileFragment : BaseFragment<FragmentMainProfileBinding>() {
 
     override fun setView() {
         setTitleToolbar(title = "Profile")
-        setMenuToolbar(type = AppToolbarLayout.RIGHT, strId = R.string.test)
     }
 }

@@ -104,4 +104,28 @@
         <item name="android:lineHeight" tools:ignore="NewApi">20dp</item>
         <item name="android:textColor">@color/color_99000000</item>
     </style>
+
+    <!--  Create Content  -->
+    <style name="CreateCategoryDefaultStyle" parent="AppTheme.DefaultTextStyle">
+        <item name="android:textColor">@color/color_999999</item>
+        <item name="android:textSize">@dimen/dp_16</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+    </style>
+
+    <style name="CreateContentEditStyle" parent="AppTheme.DefaultEditStyle">
+        <item name="android:singleLine">false</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+        <item name="android:hint">@string/create_content_hint</item>
+        <item name="android:textColorHint">@color/color_c3c3c3</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="CreateCategorySelectedStyle" parent="CategoryTitleStyle">
+
+    </style>
+
+    <style name="CreateItemTextStyle" parent="AppTheme.DefaultTextStyle">
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+        <item name="android:textSize">10dp</item>
+    </style>
 </resources>

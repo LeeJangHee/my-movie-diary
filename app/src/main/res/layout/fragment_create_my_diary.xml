@@ -1,20 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
 
+        <variable
+            name="category"
+            type="com.devlee.mymoviediary.data.model.Category" />
+        <variable
+            name="viewModel"
+            type="com.devlee.mymoviediary.viewmodels.ContentCreateViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".CreateMyDiaryFragment">
+        android:layout_height="match_parent">
 
-        <TextView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment" />
+            tools:context=".CreateMyDiaryFragment">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!--    날짜 선택 뷰    -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/createDateLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/createRecyclerView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="spread">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/AppTheme.DefaultTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2022. 01. 12"
+                    android:textSize="16dp" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/create_date_icon" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!--    동영상 or 오디오 아이템 선택 뷰    -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/createRecyclerView"
+                android:layout_width="0dp"
+                android:layout_height="110dp"
+                android:layout_marginStart="@dimen/dp_16"
+                android:layout_marginTop="28dp"
+                android:orientation="horizontal"
+                android:adapter="@{viewModel.contentCreateAdapter}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toTopOf="@+id/createCategoryLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/createDateLayout" />
+
+            <!--    카테고리 선택 뷰    -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/createCategoryLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/dp_16"
+                app:layout_constraintBottom_toTopOf="@+id/createDivideView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/createRecyclerView">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/createCategoryDefaultView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="@{category == null ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="visible">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginTop="26dp"
+                        android:layout_marginBottom="27dp"
+                        android:src="@drawable/create_catagory_add_icon" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/CreateCategoryDefaultStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="7dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="24dp"
+                        android:text="@string/create_category_choice" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/createCategorySelectedView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="@{category != null ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="gone">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/categoryHeaderColor"
+                        categoryColor="@{category.color}"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginTop="26dp"
+                        android:layout_marginBottom="27dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:shapeAppearanceOverlay="@style/circleImage" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/CreateCategorySelectedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="9dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="24dp"
+                        android:text="@{category.title}" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/createDivideView"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="@dimen/dp_16"
+                android:background="@drawable/divide_line_bg"
+                app:layout_constraintBottom_toTopOf="@+id/createContentEditView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/createCategoryLayout" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/createContentEditView"
+                style="@style/CreateContentEditStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top|start"
+                android:padding="@dimen/dp_16"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/createDivideView" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 </layout>

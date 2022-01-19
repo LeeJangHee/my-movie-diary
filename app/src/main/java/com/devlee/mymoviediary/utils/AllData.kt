@@ -12,3 +12,5 @@ var categoryFirstItemClick: ((Int?) -> Unit)? = null
 var categoryUserPickItemClick: (() -> Unit)? = null
 
 var categoryErrorView: ((View) -> Unit)? = null
+
+var isMainBottomNavLayout = MutableLiveData(true)

@@ -3,13 +3,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <!--    -->
-    <string name="test">게시</string>
-
     <!--  툴바 이름  -->
     <string name="category">카테고리</string>
     <string name="category_edit_hint_text">카테고리 이름 입력</string>
     <string name="home_create_toolbar_title">새 게시물</string>
+    <string name="next_kr">다음</string>
 
     <string name="ok_kr">확인</string>
     <string name="no_kr">취소</string>
@@ -44,4 +42,13 @@
     <string name="category_swipe_menu_del">삭제</string>
     <string name="category_delete_title">카테고리 삭제</string>
     <string name="category_delete_message">카테고리를 삭제하시겠습니까?\n삭제를 하면 설정되어있던 카테고리가 모두 삭제되고 카테고리 목록에서도 삭제됩니다.</string>
+
+    <!--  컨텐츠 생성  -->
+    <string name="create_category_choice">카테고리 선택</string>
+    <string name="create_content_hint">오늘 하루를 정리해 보세요</string>
+
+
+    <!--  권한 설정  -->
+    <string name="permission_dialog_title">필수 권한</string>
+    <string name="permission_dialog_content_choice_message">영상 또는 음성 파일을 추가하시려면 권한을 설정해 주세요.</string>
 </resources>

@@ -1,7 +1,6 @@
 package com.devlee.mymoviediary.utils
 
 import android.graphics.Color
-import android.graphics.Rect
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
@@ -9,7 +8,6 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.devlee.mymoviediary.R

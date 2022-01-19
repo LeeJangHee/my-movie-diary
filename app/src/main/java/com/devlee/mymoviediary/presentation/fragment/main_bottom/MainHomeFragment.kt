@@ -13,13 +13,9 @@ import com.devlee.mymoviediary.presentation.activity.main.MainActivity
 import com.devlee.mymoviediary.presentation.adapter.home.MainHomeAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
-import com.devlee.mymoviediary.utils.Resource
-import com.devlee.mymoviediary.utils.gone
-import com.devlee.mymoviediary.utils.isBottomNav
-import com.devlee.mymoviediary.utils.loadingLiveData
+import com.devlee.mymoviediary.utils.*
 import com.devlee.mymoviediary.viewmodels.MyDiaryViewModel
 import com.devlee.mymoviediary.viewmodels.ViewModelProviderFactory
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -41,6 +37,7 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
     override fun setView() {
         setAppbar()
         setRecyclerView()
+        isMainBottomNavLayout.postValue(true)
 
         binding.apply {
             lifecycleOwner = viewLifecycleOwner

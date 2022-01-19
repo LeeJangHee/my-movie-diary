@@ -14,6 +14,9 @@ interface MyDiaryDao {
     @Query("SELECT * FROM mydiary_table")
     fun getMyDiaryAll(): Flow<List<MyDiaryEntity>>
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMyDiary(myDiaryEntity: MyDiaryEntity)
+
     /** Category */
     @Query("SELECT * FROM category_table")
     fun getCategoryAll(): Flow<List<CategoryEntity>>
