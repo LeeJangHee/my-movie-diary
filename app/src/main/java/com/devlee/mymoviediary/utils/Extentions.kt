@@ -49,10 +49,9 @@ fun View.hideKeyboardIME() {
 }
 
 fun MainActivity.isBottomNav(set: Boolean) {
-    val bottomNavView = this.findViewById<BottomNavigationView>(R.id.mainBottomNav)
     if (set) {
-        bottomNavView.show()
+        this.showBottomNav()
     } else {
-        bottomNavView.gone()
+        this.hideBottomNav()
     }
 }

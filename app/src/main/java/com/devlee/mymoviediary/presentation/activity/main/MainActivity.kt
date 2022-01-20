@@ -27,7 +27,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         val navFragment = supportFragmentManager.findFragmentById(R.id.mainNavContainerView) as NavHostFragment
         navController = navFragment.navController
-        binding.mainBottomNav.setupWithNavController(navController)
+        bottomNavLayout?.setupWithNavController(navController)
 
         appBarConfiguration = AppBarConfiguration(
             setOf(R.id.mainHomeFragment, R.id.mainCalenderFragment, R.id.mainCategoryFragment, R.id.mainProfileFragment)
@@ -49,7 +49,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 if (imeShown != it) {
                     imeShown = it
 
-                    binding.mainBottomNav.show(!imeShown)
+                    bottomNavLayout?.show(!imeShown)
                 }
             }
         }
@@ -57,7 +57,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     /** bottom nav layout longclick -> 이름 보이지 않기 */
     private fun hideBottomNavTooltip() {
-        binding.mainBottomNav.menu.forEach {
+        bottomNavLayout?.menu?.forEach {
             val view = this.findViewById<View>(it.itemId)
             view.setOnLongClickListener { true }
         }
@@ -68,6 +68,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     override fun getLayout(): Int = R.layout.activity_main
+    override fun showBottomNav() {
+        super.showBottomNav()
+    }
 
     override fun setToolbar() {
 

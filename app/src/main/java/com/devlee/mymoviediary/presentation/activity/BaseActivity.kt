@@ -12,9 +12,13 @@ import androidx.viewbinding.ViewBinding
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.ActivityDefaultBinding
 import com.devlee.mymoviediary.databinding.LayoutAppbarBinding
+import com.devlee.mymoviediary.databinding.LayoutBottomNavBaseBinding
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
 import com.devlee.mymoviediary.presentation.layout.ProgressDialog
+import com.devlee.mymoviediary.utils.gone
+import com.devlee.mymoviediary.utils.show
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 abstract class BaseActivity<V : ViewBinding> : AppCompatActivity(), BaseFragment.ToolbarControl, BaseFragment.ProgressControl {
     protected lateinit var binding: V
@@ -23,6 +27,10 @@ abstract class BaseActivity<V : ViewBinding> : AppCompatActivity(), BaseFragment
     // ActionBar
     private var appbarLayoutBinding: LayoutAppbarBinding? = null
     protected var appToolbarLayout: AppToolbarLayout? = null
+
+    // Bottom Nav
+    private var bottomNavLayoutBinding: LayoutBottomNavBaseBinding? = null
+    protected var bottomNavLayout: BottomNavigationView? = null
 
     private val progressDialog: ProgressDialog by lazy { ProgressDialog(this) }
 
@@ -35,12 +43,17 @@ abstract class BaseActivity<V : ViewBinding> : AppCompatActivity(), BaseFragment
             binding = DataBindingUtil.inflate(layoutInflater, getLayout(), defaultBinding.layoutContent.layoutBase, false)
             defaultBinding.layoutContent.layoutBase.addView(binding.root)
             appbarLayoutBinding = defaultBinding.layoutAppbar
+            bottomNavLayoutBinding = defaultBinding.layoutBottomNav
         }
 
         appbarLayoutBinding?.let { appbarBinding ->
             appToolbarLayout = AppToolbarLayout(this, appbarBinding)
 
             setToolbar()
+        }
+
+        bottomNavLayoutBinding?.let { bottomBinding->
+            bottomNavLayout = bottomBinding.baseBottomNav
         }
     }
 
@@ -50,6 +63,16 @@ abstract class BaseActivity<V : ViewBinding> : AppCompatActivity(), BaseFragment
     }
 
     open fun getLayout(): Int = 0
+
+    open fun hideBottomNav() {
+        bottomNavLayoutBinding?.root?.gone()
+    }
+
+    open fun showBottomNav() {
+        bottomNavLayoutBinding?.root?.show()
+    }
+
+    open fun getAppbar()= appToolbarLayout
 
     abstract fun setToolbar()
 
