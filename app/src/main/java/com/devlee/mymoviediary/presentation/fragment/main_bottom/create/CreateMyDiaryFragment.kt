@@ -3,20 +3,26 @@ package com.devlee.mymoviediary.presentation.fragment.main_bottom.create
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.FragmentCreateMyDiaryBinding
+import com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData
 import com.devlee.mymoviediary.presentation.activity.main.MainActivity
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
+import com.devlee.mymoviediary.utils.SharedPreferencesUtil
 import com.devlee.mymoviediary.utils.isBottomNav
 import com.devlee.mymoviediary.utils.isMainBottomNavLayout
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
+import kotlinx.coroutines.launch
 
 class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
+    private val TAG = "CreateMyDiaryFragment"
 
     private val createViewModel: ContentCreateViewModel by viewModels()
 
@@ -37,8 +43,26 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
 
                 // 선택 BottomSheet
                 bottomChoiceViewCallback = { bottomChoiceType ->
-                    val action = CreateMyDiaryFragmentDirections.actionCreateMyDiaryFragmentToBottomChoiceFragment(bottomChoiceType)
-                    findNavController().navigate(action)
+                    Log.d(TAG, "setView: ${bottomChoiceType.name}")
+                    val itemList = mutableListOf<ChoiceBottomSheetData>()
+                    lifecycleScope.launch {
+                        when (bottomChoiceType) {
+                            BottomChoiceType.CONTENT -> {
+                                itemList.add(ChoiceBottomSheetData(text = "영상 파일"))
+                                itemList.add(ChoiceBottomSheetData(text = "음성 파일"))
+                            }
+                            BottomChoiceType.CATEGORY -> {
+                                SharedPreferencesUtil.getCategoryListPref().forEach {
+                                    itemList.add(ChoiceBottomSheetData(category = it))
+                                }
+                            }
+                        }
+                        val action = CreateMyDiaryFragmentDirections.actionCreateMyDiaryFragmentToBottomChoiceFragment(
+                            bottomChoiceType,
+                            itemList.toTypedArray()
+                        )
+                        findNavController().navigate(action)
+                    }
                 }
             }
             lifecycleOwner = viewLifecycleOwner

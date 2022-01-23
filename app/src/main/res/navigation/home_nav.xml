@@ -34,5 +34,8 @@
         <argument
             android:name="bottomChoiceType"
             app:argType="com.devlee.mymoviediary.presentation.fragment.main_bottom.create.BottomChoiceType" />
+        <argument
+            android:name="choiceBottomSheetList"
+            app:argType="com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData[]" />
     </dialog>
 </navigation>

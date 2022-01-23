@@ -13,8 +13,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:hardwareAccelerated="false"
         android:largeHeap="true"
+        android:name=".App"
         android:theme="@style/AppTheme">
         <!-- Activity -->
         <activity

@@ -14,6 +14,7 @@ import com.devlee.mymoviediary.data.model.MyDiary
 import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.presentation.adapter.category.CategoryViewType
 import com.devlee.mymoviediary.utils.Resource
+import com.devlee.mymoviediary.utils.SharedPreferencesUtil
 import com.devlee.mymoviediary.utils.categoryFirstItemClick
 import com.devlee.mymoviediary.utils.categoryUserPickItemClick
 import kotlinx.coroutines.Dispatchers
@@ -37,6 +38,16 @@ class MyDiaryViewModel(
     var myDiaries = repository.getMyDiaryAll()
     var handlerMyDiaryList: MutableLiveData<Resource<ArrayList<MyDiary>>> = MutableLiveData()
 
+    fun getCategoryList(): List<Category> {
+        var list = listOf<Category>()
+        viewModelScope.launch {
+            categories.collect {
+                list = it.map { entity -> entity.category }
+            }
+        }
+        return list
+    }
+
 
     fun readMyDiary() = viewModelScope.launch(Dispatchers.IO) {
         myDiaries.collect { myDiaryEntities ->
@@ -47,8 +58,11 @@ class MyDiaryViewModel(
 
     fun readCategory() = viewModelScope.launch(Dispatchers.IO) {
         categories.collect { categoryEntities ->
+            val categoryList = categoryEntities.map { it.category }
             handlerCategoryList.postValue(Resource.Loading())
-            setCategory(categoryEntities.map { it.category })
+
+            SharedPreferencesUtil.setCategoryListPref(categoryList)
+            setCategory(categoryList)
         }
     }
 

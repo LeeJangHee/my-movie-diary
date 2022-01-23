@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.airbnb.lottie.animation.content.Content
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.databinding.ItemBottomChoiceBinding
 import com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData
@@ -15,29 +14,29 @@ import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
 class CreateBottomSheetAdapter(
     private val type: BottomChoiceType,
     private val bottomViewModel: ContentCreateViewModel
-): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var bottomSheetItemList = listOf<ChoiceBottomSheetData>()
 
     // 동영상 또는 비디오 선택 View
-    inner class BottomSheetContentViewHolder(val binding: ItemBottomChoiceBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class BottomSheetContentViewHolder(val binding: ItemBottomChoiceBinding) : RecyclerView.ViewHolder(binding.root) {
 
 
         fun bind(text: String?) {
             binding.apply {
-
+                textTitle = text
                 executePendingBindings()
             }
         }
     }
 
     // 만들어둔 Category 선택 View
-    inner class BottomSheetCategoryViewHolder(val binding: ItemBottomChoiceBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class BottomSheetCategoryViewHolder(val binding: ItemBottomChoiceBinding) : RecyclerView.ViewHolder(binding.root) {
 
 
         fun bind(category: Category?) {
             binding.apply {
-
+                this.category = category
                 executePendingBindings()
             }
         }

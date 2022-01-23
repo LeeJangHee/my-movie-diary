@@ -4,6 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
+        <variable
+            name="cancelString"
+            type="String" />
+        <variable
+            name="viewModel"
+            type="com.devlee.mymoviediary.viewmodels.ContentCreateViewModel" />
 
     </data>
 
@@ -15,21 +22,24 @@
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/bottomChoiceRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_bottom_choice"/>
 
             <include
-                android:id="@+id/bottomCHoiceCancel"
+                android:id="@+id/bottomChoiceCancel"
                 layout="@layout/item_bottom_choice"
                 android:layout_gravity="bottom"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                app:textTitle="@{cancelString}" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -6,6 +6,7 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devlee.mymoviediary.R
+import com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceData
 import com.devlee.mymoviediary.presentation.adapter.create.CreateAdapter
 import com.devlee.mymoviediary.presentation.adapter.create.CreateViewType
@@ -13,6 +14,7 @@ import com.devlee.mymoviediary.presentation.fragment.main_bottom.create.BottomCh
 import com.devlee.mymoviediary.utils.dialog.CustomDialog
 import com.gun0912.tedpermission.coroutine.TedPermission
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 class ContentCreateViewModel : ViewModel() {
@@ -22,8 +24,10 @@ class ContentCreateViewModel : ViewModel() {
     var contentCreateAdapter = CreateAdapter(this)
     var contentChoiceDataList = arrayListOf<ContentChoiceData>(ContentChoiceData(CreateViewType.ADD.type))
 
-    var deniedPermissionCallback : (() -> Unit)? = null
-    var bottomChoiceViewCallback : ((BottomChoiceType) -> Unit)? = null
+    var choiceBottomSheetList: MutableSharedFlow<List<ChoiceBottomSheetData>> = MutableSharedFlow()
+
+    var deniedPermissionCallback: (() -> Unit)? = null
+    var bottomChoiceViewCallback: ((BottomChoiceType) -> Unit)? = null
 
 
     init {
@@ -58,5 +62,14 @@ class ContentCreateViewModel : ViewModel() {
             }
             Log.d(TAG, "contentAddItemClick: $permissionResult")
         }
+    }
+
+    fun setChoiceBottomSheetData(newData: List<ChoiceBottomSheetData>) =
+        viewModelScope.launch(Dispatchers.IO) {
+            choiceBottomSheetList.emit(newData)
+        }
+
+    fun onClickCategory() {
+        bottomChoiceViewCallback?.invoke(BottomChoiceType.CATEGORY)
     }
 }
