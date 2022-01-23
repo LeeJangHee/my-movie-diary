@@ -50,6 +50,11 @@ android {
     buildFeatures {
         dataBinding true
     }
+
+    dexOptions {
+        jumboMode true
+        javaMaxHeapSize "4g"
+    }
 }
 
 dependencies {

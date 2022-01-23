@@ -18,5 +18,21 @@
         android:id="@+id/createMyDiaryFragment"
         android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.create.CreateMyDiaryFragment"
         android:label="CreateMyDiaryFragment"
-        tools:layout="@layout/fragment_create_my_diary"/>
+        tools:layout="@layout/fragment_create_my_diary">
+        <action
+            android:id="@+id/action_createMyDiaryFragment_to_bottomChoiceFragment"
+            app:destination="@id/bottomChoiceFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/bottomChoiceFragment"
+        android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.create.ChoiceBottomSheet"
+        android:label="ChoiceBottomShe"
+        tools:layout="@layout/bottom_choice_view" >
+        <action
+            android:id="@+id/action_bottomChoiceFragment_to_createMyDiaryFragment"
+            app:destination="@id/createMyDiaryFragment" />
+        <argument
+            android:name="bottomChoiceType"
+            app:argType="com.devlee.mymoviediary.presentation.fragment.main_bottom.create.BottomChoiceType" />
+    </dialog>
 </navigation>

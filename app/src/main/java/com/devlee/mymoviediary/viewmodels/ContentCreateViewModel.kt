@@ -9,6 +9,7 @@ import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceData
 import com.devlee.mymoviediary.presentation.adapter.create.CreateAdapter
 import com.devlee.mymoviediary.presentation.adapter.create.CreateViewType
+import com.devlee.mymoviediary.presentation.fragment.main_bottom.create.BottomChoiceType
 import com.devlee.mymoviediary.utils.dialog.CustomDialog
 import com.gun0912.tedpermission.coroutine.TedPermission
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +23,7 @@ class ContentCreateViewModel : ViewModel() {
     var contentChoiceDataList = arrayListOf<ContentChoiceData>(ContentChoiceData(CreateViewType.ADD.type))
 
     var deniedPermissionCallback : (() -> Unit)? = null
+    var bottomChoiceViewCallback : ((BottomChoiceType) -> Unit)? = null
 
 
     init {
@@ -39,6 +41,7 @@ class ContentCreateViewModel : ViewModel() {
             launch(Dispatchers.Main) {
                 if (permissionResult.isGranted) {
                     Log.d(TAG, "거부된 권한 없음 ${permissionResult.isGranted}")
+                    bottomChoiceViewCallback?.invoke(BottomChoiceType.CONTENT)
                 } else {
                     if (permissionResult.deniedPermissions.contains(Manifest.permission.WRITE_EXTERNAL_STORAGE) ||
                         permissionResult.deniedPermissions.contains(Manifest.permission.READ_EXTERNAL_STORAGE)

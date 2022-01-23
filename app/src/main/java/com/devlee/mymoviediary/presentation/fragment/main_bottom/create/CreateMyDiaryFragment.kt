@@ -27,11 +27,18 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
 
         binding.apply {
             viewModel = createViewModel.apply {
+                // 권한 체크
                 deniedPermissionCallback = {
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                     intent.data = Uri.parse("package:" + requireActivity().packageName)
                     requireActivity().startActivity(intent)
                     requireActivity().finish()
+                }
+
+                // 선택 BottomSheet
+                bottomChoiceViewCallback = { bottomChoiceType ->
+                    val action = CreateMyDiaryFragmentDirections.actionCreateMyDiaryFragmentToBottomChoiceFragment(bottomChoiceType)
+                    findNavController().navigate(action)
                 }
             }
             lifecycleOwner = viewLifecycleOwner
@@ -60,4 +67,8 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
             (requireActivity() as MainActivity).isBottomNav(true)
         }
     }
+}
+
+enum class BottomChoiceType {
+    CONTENT, CATEGORY
 }
