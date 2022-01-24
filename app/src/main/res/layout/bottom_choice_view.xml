@@ -4,44 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="android.view.View" />
+
         <variable
             name="cancelString"
             type="String" />
+
         <variable
             name="viewModel"
             type="com.devlee.mymoviediary.viewmodels.ContentCreateViewModel" />
 
     </data>
 
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bottom_choice_bg"
-        android:id="@+id/bottomRootView">
+        android:fillViewport="false">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/bottomChoiceRecycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginBottom="@dimen/dp_56"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_bottom_choice" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/bottomChoiceRecycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_bottom_choice"/>
-
-            <include
-                android:id="@+id/bottomChoiceCancel"
-                layout="@layout/item_bottom_choice"
-                android:layout_gravity="bottom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:textTitle="@{cancelString}" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        <include
+            android:id="@+id/bottomChoiceCancel"
+            layout="@layout/item_bottom_choice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:layout_anchor="@id/bottomChoiceRecycler"
+            app:layout_anchorGravity="bottom"
+            app:textTitle="@{cancelString}" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

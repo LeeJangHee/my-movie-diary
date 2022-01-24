@@ -2,5 +2,6 @@
 <resources>
     <declare-styleable name="RoundDialog">
         <attr name="cornerRadius" format="reference|dimension" />
+        <attr name="cornerRadiusTop" format="reference|dimension" />
     </declare-styleable>
 </resources>
