@@ -21,7 +21,9 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bottom_choice_bg"
         android:fillViewport="false">
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/bottomChoiceRecycler"
@@ -31,15 +33,21 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_bottom_choice" />
 
-        <include
-            android:id="@+id/bottomChoiceCancel"
-            layout="@layout/item_bottom_choice"
+        <FrameLayout
+            android:id="@+id/bottomChoiceCancelView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            app:layout_anchor="@id/bottomChoiceRecycler"
-            app:layout_anchorGravity="bottom"
-            app:textTitle="@{cancelString}" />
+            android:background="@color/white"
+            android:elevation="12dp"
+            android:outlineProvider="none">
+            <include
+                android:id="@+id/bottomChoiceCancel"
+                layout="@layout/item_bottom_choice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:textTitle="@{cancelString}" />
+        </FrameLayout>
+
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
