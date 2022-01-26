@@ -2,6 +2,7 @@ package com.devlee.mymoviediary.presentation.fragment.main_bottom.create
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,16 +11,19 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.BottomChoiceViewBinding
 import com.devlee.mymoviediary.presentation.adapter.create.CreateBottomSheetAdapter
+import com.devlee.mymoviediary.utils.getColorRes
+import com.devlee.mymoviediary.utils.toDp
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.coroutines.delay
+import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.shape.ShapeAppearanceModel
 
 class ChoiceBottomSheetFragment : BottomSheetDialogFragment() {
 
@@ -42,6 +46,7 @@ class ChoiceBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, R.style.BottomSheet_Base_Light)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -119,6 +124,21 @@ class ChoiceBottomSheetFragment : BottomSheetDialogFragment() {
 
         choiceBottomSheetAdapter.setBottomSheetItem(args.choiceBottomSheetList.toList())
         setRecyclerView()
+        setCornerRadius(view)
+    }
+
+    private fun setCornerRadius(view: View) {
+        val model = ShapeAppearanceModel().toBuilder().apply {
+            setTopRightCorner(CornerFamily.ROUNDED, 4.toDp())
+            setTopLeftCorner(CornerFamily.ROUNDED, 4.toDp())
+        }.build()
+
+        val shape = MaterialShapeDrawable(model).apply {
+            val backgroundColor = getColorRes(requireContext(), R.color.white)
+            fillColor = ColorStateList.valueOf(backgroundColor)
+        }
+
+        view.background = shape
     }
 
     @SuppressLint("RestrictedApi")

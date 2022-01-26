@@ -7,10 +7,10 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Category(
-    val title: String,
-    val type: Int,
+    val title: String,          // 제목
+    val type: Int,              // CategoryAdapter ViewType
     @ColorInt
-    val color: Int?,
+    val color: Int?,            // 색상
     @DrawableRes
-    val drawableRes: Int?
+    val drawableRes: Int?       // 이미지
 ) : Parcelable

@@ -7,10 +7,9 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.annotation.ColorRes
+import androidx.annotation.RestrictTo
 import androidx.core.content.ContextCompat
-import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.presentation.activity.main.MainActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
 
 /** View visibility */
 fun View.show(isShow: Boolean? = null) {
@@ -27,10 +26,18 @@ fun Float.convertPxToDp() = (this / Resources.getSystem().displayMetrics.density
 fun Context.convertDpToDimen(dimenRes: Int) = (this.resources.getDimension(dimenRes) / this.resources.displayMetrics.density).toInt()
 fun Float.getDimension(): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, Resources.getSystem().displayMetrics).toInt()
 
-val Float.dp: Int
-    get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
-val Int.dp: Int
-    get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
+/** Convert px to dp */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun Float.dp(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun Int.dp(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun Float.toDp(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun Int.toDp(): Float = (this * Resources.getSystem().displayMetrics.density)
 
 fun getColorRes(context: Context, @ColorRes color: Int): Int {
     return ContextCompat.getColor(context, color)

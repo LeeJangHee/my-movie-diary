@@ -68,8 +68,8 @@ class AppToolbarLayout(
 
     /** image menu */
     fun setImageOrTextMenu(type: Int, @DrawableRes resId: Int? = null, @StringRes strId: Int? = null, onClickListener: View.OnClickListener? = null) {
-        val paddingHorizontal: Int = 16.dp
-        val paddingVertical: Int = 16.dp
+        val paddingHorizontal: Int = 16.dp()
+        val paddingVertical: Int = 16.dp()
         var view = View(context)
         when {
             resId != null -> {
