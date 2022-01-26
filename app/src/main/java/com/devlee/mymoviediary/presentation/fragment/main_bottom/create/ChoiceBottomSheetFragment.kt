@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.BottomChoiceViewBinding
@@ -20,7 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.delay
 
-class ChoiceBottomSheet : BottomSheetDialogFragment() {
+class ChoiceBottomSheetFragment : BottomSheetDialogFragment() {
 
     companion object {
         private const val TAG = "ChoiceBottomSheet"
@@ -33,7 +34,7 @@ class ChoiceBottomSheet : BottomSheetDialogFragment() {
 
     private val choiceBottomSheetAdapter by lazy { CreateBottomSheetAdapter(args.bottomChoiceType, bottomSheetViewModel) }
 
-    private val args: ChoiceBottomSheetArgs by navArgs()
+    private val args: ChoiceBottomSheetFragmentArgs by navArgs()
 
     /** Animation */
     private val fadeIn by lazy { AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in) }
@@ -45,7 +46,16 @@ class ChoiceBottomSheet : BottomSheetDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = BottomChoiceViewBinding.inflate(inflater, container, false).apply {
-            viewModel = bottomSheetViewModel
+            viewModel = bottomSheetViewModel.apply {
+                // 선택 categoryItem
+                selectedCategoryItem = { category ->
+                    Log.d(TAG, "selectedCategory: ${category.title}")
+                    val action = ChoiceBottomSheetFragmentDirections.actionBottomChoiceFragmentToCreateMyDiaryFragment(
+                        category = category
+                    )
+                    findNavController().navigate(action)
+                }
+            }
             lifecycleOwner = viewLifecycleOwner
             cancelString = requireContext().getString(R.string.no_kr)
         }

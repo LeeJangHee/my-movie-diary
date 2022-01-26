@@ -11,11 +11,15 @@
         <variable
             name="category"
             type="com.devlee.mymoviediary.data.model.Category" />
+        <variable
+            name="bottomSheetItemClickListener"
+            type="android.view.View.OnClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="@{bottomSheetItemClickListener}"
         android:minHeight="@dimen/dp_56">
 
         <androidx.appcompat.widget.LinearLayoutCompat

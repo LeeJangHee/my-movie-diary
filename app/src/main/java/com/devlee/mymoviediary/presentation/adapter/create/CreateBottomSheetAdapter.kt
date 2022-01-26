@@ -1,6 +1,8 @@
 package com.devlee.mymoviediary.presentation.adapter.create
 
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +18,7 @@ class CreateBottomSheetAdapter(
     private val bottomViewModel: ContentCreateViewModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private val TAG = "CreateBottomSheetAdapter"
     private var bottomSheetItemList = listOf<ChoiceBottomSheetData>()
 
     // 동영상 또는 비디오 선택 View
@@ -37,6 +40,10 @@ class CreateBottomSheetAdapter(
         fun bind(category: Category?) {
             binding.apply {
                 this.category = category
+                bottomSheetItemClickListener = View.OnClickListener {
+                    Log.d(TAG, "Category bind: ${category?.title}")
+                    bottomViewModel.selectedCategoryItem(category)
+                }
                 executePendingBindings()
             }
         }

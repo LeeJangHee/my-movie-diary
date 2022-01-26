@@ -6,6 +6,7 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devlee.mymoviediary.R
+import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceData
 import com.devlee.mymoviediary.presentation.adapter.create.CreateAdapter
@@ -28,6 +29,8 @@ class ContentCreateViewModel : ViewModel() {
 
     var deniedPermissionCallback: (() -> Unit)? = null
     var bottomChoiceViewCallback: ((BottomChoiceType) -> Unit)? = null
+
+    var selectedCategoryItem: ((Category) -> Unit)? = null
 
 
     init {
@@ -72,4 +75,15 @@ class ContentCreateViewModel : ViewModel() {
     fun onClickCategory() {
         bottomChoiceViewCallback?.invoke(BottomChoiceType.CATEGORY)
     }
+
+    fun selectedCategoryItem(category: Category?) {
+        Log.w(TAG, "selectedCategoryItem: ${category?.title}/${category?.color}")
+        if (category != null) {
+            selectedCategoryItem?.invoke(category)
+        } else {
+            Log.d(TAG, "Category is Null")
+        }
+
+    }
+
 }

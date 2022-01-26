@@ -9,6 +9,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.FragmentCreateMyDiaryBinding
 import com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData
@@ -25,6 +26,7 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
     private val TAG = "CreateMyDiaryFragment"
 
     private val createViewModel: ContentCreateViewModel by viewModels()
+    private val args: CreateMyDiaryFragmentArgs by navArgs()
 
     override fun setView() {
         setAppbar()
@@ -66,6 +68,8 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
                 }
             }
             lifecycleOwner = viewLifecycleOwner
+
+            category = args.category
         }
     }
 

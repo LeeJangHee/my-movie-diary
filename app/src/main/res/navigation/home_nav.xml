@@ -22,10 +22,14 @@
         <action
             android:id="@+id/action_createMyDiaryFragment_to_bottomChoiceFragment"
             app:destination="@id/bottomChoiceFragment" />
+        <argument
+            android:name="category"
+            app:argType="com.devlee.mymoviediary.data.model.Category"
+            app:nullable="true" />
     </fragment>
     <dialog
         android:id="@+id/bottomChoiceFragment"
-        android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.create.ChoiceBottomSheet"
+        android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.create.ChoiceBottomSheetFragment"
         android:label="ChoiceBottomShe"
         tools:layout="@layout/bottom_choice_view" >
         <action

@@ -45,7 +45,10 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
 
         // 추가 버튼
         binding.addDiaryButton.setOnClickListener {
-            findNavController().navigate(R.id.action_mainHomeFragment_to_createMyDiaryFragment)
+            val action = MainHomeFragmentDirections.actionMainHomeFragmentToCreateMyDiaryFragment(
+                category = null
+            )
+            findNavController().navigate(action)
             lifecycleScope.launch {
                 delay(300)
                 (requireActivity() as MainActivity).isBottomNav(false)
