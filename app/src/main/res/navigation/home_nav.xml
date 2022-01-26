@@ -34,7 +34,9 @@
         tools:layout="@layout/bottom_choice_view" >
         <action
             android:id="@+id/action_bottomChoiceFragment_to_createMyDiaryFragment"
-            app:destination="@id/createMyDiaryFragment" />
+            app:destination="@id/createMyDiaryFragment"
+            app:popUpTo="@id/createMyDiaryFragment"
+            app:popUpToInclusive="true"/>
         <argument
             android:name="bottomChoiceType"
             app:argType="com.devlee.mymoviediary.presentation.fragment.main_bottom.create.BottomChoiceType" />
