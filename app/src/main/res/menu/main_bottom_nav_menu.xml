@@ -9,7 +9,7 @@
     <item
         android:id="@+id/calendar_nav"
         android:icon="@drawable/bottom_menu_calender_icon"
-        android:title="Calender" />
+        android:title="Calendar" />
 
     <item
         android:id="@+id/mainCategoryFragment"

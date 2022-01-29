@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/mainCalenderFragment"
-        android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.MainCalenderFragment"
+        android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.MainCalendarFragment"
         android:label="MainCalenderFragment"
-        tools:layout="@layout/fragment_main_calender">
+        tools:layout="@layout/fragment_main_calendar">
         <action
             android:id="@+id/action_mainCalenderFragment_to_calenderDayFragment"
             app:destination="@id/calenderDayFragment" />
@@ -21,7 +21,7 @@
         android:id="@+id/calenderMonthFragment"
         android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.calender.CalenderMonthFragment"
         android:label="fragment_calender_month"
-        tools:layout="@layout/fragment_calender_month" >
+        tools:layout="@layout/fragment_calendar_month" >
         <action
             android:id="@+id/action_calenderMonthFragment_to_calenderDayFragment"
             app:destination="@id/calenderDayFragment" />
@@ -30,5 +30,5 @@
         android:id="@+id/calenderDayFragment"
         android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.calender.CalenderDayFragment"
         android:label="fragment_calender_day"
-        tools:layout="@layout/fragment_calender_day" />
+        tools:layout="@layout/fragment_calendar_day" />
 </navigation>

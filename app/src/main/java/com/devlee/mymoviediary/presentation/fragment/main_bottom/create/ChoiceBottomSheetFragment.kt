@@ -73,7 +73,13 @@ class ChoiceBottomSheetFragment : BottomSheetDialogFragment() {
 
         if (args.bottomChoiceType == BottomChoiceType.CATEGORY) {
             // Category 추가할 때, 취소버튼 y좌표
-            binding.bottomChoiceCancelView.y = (requireContext().resources.getDimension(R.dimen.dp_56) * 5) - requireContext().resources.getDimension(R.dimen.dp_56)
+
+            val dy = if (args.choiceBottomSheetList.size < 4) {
+                requireContext().resources.getDimension(R.dimen.dp_56) * args.choiceBottomSheetList.size
+            } else {
+                requireContext().resources.getDimension(R.dimen.dp_56) * 4
+            }
+            binding.bottomChoiceCancelView.y = dy
             val layoutParams = (binding.root.parent as View).layoutParams as CoordinatorLayout.LayoutParams
             val behavior = layoutParams.behavior
             if (behavior is BottomSheetBehavior) {
@@ -119,7 +125,7 @@ class ChoiceBottomSheetFragment : BottomSheetDialogFragment() {
             }
         } else {
             // Content 추가할 때, 취소버튼 y좌표
-            binding.bottomChoiceCancelView.y = (requireContext().resources.getDimension(R.dimen.dp_56) * 3) - requireContext().resources.getDimension(R.dimen.dp_56)
+            binding.bottomChoiceCancelView.y = requireContext().resources.getDimension(R.dimen.dp_56) * 2
         }
 
         choiceBottomSheetAdapter.setBottomSheetItem(args.choiceBottomSheetList.toList())

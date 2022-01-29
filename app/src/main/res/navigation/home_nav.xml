@@ -26,11 +26,14 @@
             android:name="category"
             app:argType="com.devlee.mymoviediary.data.model.Category"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_createMyDiaryFragment_to_calendarSelectedFragment"
+            app:destination="@id/calendarSelectedFragment" />
     </fragment>
     <dialog
         android:id="@+id/bottomChoiceFragment"
         android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.create.ChoiceBottomSheetFragment"
-        android:label="ChoiceBottomShe"
+        android:label="ChoiceBottomSheet"
         tools:layout="@layout/bottom_choice_view" >
         <action
             android:id="@+id/action_bottomChoiceFragment_to_createMyDiaryFragment"
@@ -44,4 +47,9 @@
             android:name="choiceBottomSheetList"
             app:argType="com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData[]" />
     </dialog>
+    <dialog
+        android:id="@+id/calendarSelectedFragment"
+        android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.create.CalendarDialogFragment"
+        android:label="CalendarSelectedFragment"
+        tools:layout="@layout/dialog_calendar" />
 </navigation>

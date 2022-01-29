@@ -2,11 +2,11 @@ package com.devlee.mymoviediary.presentation.fragment.main_bottom
 
 import androidx.navigation.fragment.findNavController
 import com.devlee.mymoviediary.R
-import com.devlee.mymoviediary.databinding.FragmentMainCalenderBinding
+import com.devlee.mymoviediary.databinding.FragmentMainCalendarBinding
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 
 
-class MainCalenderFragment : BaseFragment<FragmentMainCalenderBinding>() {
+class MainCalendarFragment : BaseFragment<FragmentMainCalendarBinding>() {
 
     override fun setView() {
         setAppbar()
@@ -19,7 +19,7 @@ class MainCalenderFragment : BaseFragment<FragmentMainCalenderBinding>() {
         }
     }
 
-    override fun getLayoutId(): Int = R.layout.fragment_main_calender
+    override fun getLayoutId(): Int = R.layout.fragment_main_calendar
 
     private fun setAppbar() {
         setTitleToolbar("달력")

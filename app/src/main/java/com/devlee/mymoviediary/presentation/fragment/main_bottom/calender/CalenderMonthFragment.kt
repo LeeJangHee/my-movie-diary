@@ -1,19 +1,14 @@
 package com.devlee.mymoviediary.presentation.fragment.main_bottom.calender
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.devlee.mymoviediary.R
-import com.devlee.mymoviediary.databinding.FragmentCalenderMonthBinding
+import com.devlee.mymoviediary.databinding.FragmentCalendarMonthBinding
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
 
 
-class CalenderMonthFragment : BaseFragment<FragmentCalenderMonthBinding>() {
+class CalenderMonthFragment : BaseFragment<FragmentCalendarMonthBinding>() {
     override fun setView() {
         setAppbar()
 
@@ -32,6 +27,6 @@ class CalenderMonthFragment : BaseFragment<FragmentCalenderMonthBinding>() {
         }
     }
 
-    override fun getLayoutId(): Int = R.layout.fragment_calender_month
+    override fun getLayoutId(): Int = R.layout.fragment_calendar_month
 
 }

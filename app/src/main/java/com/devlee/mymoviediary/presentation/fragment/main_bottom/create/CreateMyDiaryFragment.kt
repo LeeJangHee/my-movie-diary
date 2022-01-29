@@ -4,10 +4,12 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.devlee.mymoviediary.R
@@ -70,7 +72,12 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
             lifecycleOwner = viewLifecycleOwner
 
             category = args.category
+            createDateLayout.setOnClickListener(::setUpSelectedDate)
         }
+    }
+
+    private fun setUpSelectedDate(view: View) {
+        findNavController().navigate(R.id.action_createMyDiaryFragment_to_calendarSelectedFragment)
     }
 
     private fun setOnBackPressed() {
