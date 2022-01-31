@@ -10,6 +10,9 @@
         <variable
             name="dateTitle"
             type="String" />
+        <variable
+            name="viewModel"
+            type="com.devlee.mymoviediary.viewmodels.ContentCreateViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -100,7 +103,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="26dp"
             android:layout_marginBottom="20dp"
-            android:onClick="@{v -> buttonClickListener.onPositiveClickListener()}"
+            android:onClick="@{v -> buttonClickListener.onPositiveClickListener(viewModel.day)}"
             android:text="확인"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

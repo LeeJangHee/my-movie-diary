@@ -14,6 +14,7 @@ import com.devlee.mymoviediary.presentation.adapter.create.CreateViewType
 import com.devlee.mymoviediary.presentation.fragment.main_bottom.create.BottomChoiceType
 import com.devlee.mymoviediary.utils.dialog.CustomDialog
 import com.gun0912.tedpermission.coroutine.TedPermission
+import com.kizitonwose.calendarview.model.CalendarDay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
@@ -31,6 +32,8 @@ class ContentCreateViewModel : ViewModel() {
     var bottomChoiceViewCallback: ((BottomChoiceType) -> Unit)? = null
 
     var selectedCategoryItem: ((Category) -> Unit)? = null
+
+    var day: CalendarDay? = null
 
 
     init {
