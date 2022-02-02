@@ -2,7 +2,6 @@ package com.devlee.mymoviediary.presentation.fragment.main_bottom.create
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
@@ -10,19 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.LinearLayout
-import androidx.annotation.RestrictTo
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.BottomChoiceViewBinding
 import com.devlee.mymoviediary.presentation.adapter.create.CreateBottomSheetAdapter
 import com.devlee.mymoviediary.utils.getColorRes
 import com.devlee.mymoviediary.utils.recyclerview.CustomLinearLayoutManager
+import com.devlee.mymoviediary.utils.selectedCategoryCallback
 import com.devlee.mymoviediary.utils.toDp
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -63,10 +58,8 @@ class ChoiceBottomSheetFragment : BottomSheetDialogFragment() {
                 // 선택 categoryItem
                 selectedCategoryItem = { category ->
                     Log.d(TAG, "selectedCategory: ${category.title}")
-                    val action = ChoiceBottomSheetFragmentDirections.actionBottomChoiceFragmentToCreateMyDiaryFragment(
-                        category = category
-                    )
-                    findNavController().navigate(action)
+                    selectedCategoryCallback?.invoke(category)
+                    dismiss()
                 }
             }
             lifecycleOwner = viewLifecycleOwner

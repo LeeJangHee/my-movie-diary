@@ -15,6 +15,9 @@ class DayViewContainer(view: View, listener: (CalendarDay) -> Unit) : ViewContai
 }
 
 interface CalendarChoiceInterface {
-    fun onPositiveClickListener(day: CalendarDay?)
+    fun onPositiveClickListener()
     fun onNegativeClickListener()
 }
+
+
+var calendarDialogCallback: ((String) -> Unit)? = null

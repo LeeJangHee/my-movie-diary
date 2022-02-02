@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 @SuppressLint("SimpleDateFormat", "NewApi")
 object DateFormatUtil {
@@ -14,12 +13,15 @@ object DateFormatUtil {
     private val yearFormatter = DateTimeFormatter.ofPattern("yyyy")
     private val yearMonthFormatter = DateTimeFormatter.ofPattern("yyyy. MM")
 
-    fun getTodayFormat(currentTime: Long): String {
-        val resultDate = Date(currentTime)
-        return DEFAULT_DATE_FORMAT.format(resultDate)
+    fun getTodayDate(): String {
+        return getAllDate(LocalDate.now())
     }
 
     fun getYearAndMonth(date: LocalDate): String {
         return yearMonthFormatter.format(date)
+    }
+
+    fun getAllDate(date: LocalDate): String {
+        return fullDate.format(date)
     }
 }

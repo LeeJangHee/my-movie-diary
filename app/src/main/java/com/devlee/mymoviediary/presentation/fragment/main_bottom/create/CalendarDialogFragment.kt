@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.databinding.ObservableField
 import androidx.fragment.app.viewModels
 import com.devlee.mymoviediary.R
@@ -14,6 +14,7 @@ import com.devlee.mymoviediary.presentation.fragment.BaseDialogFragment
 import com.devlee.mymoviediary.utils.DateFormatUtil
 import com.devlee.mymoviediary.utils.dialog.CalendarChoiceInterface
 import com.devlee.mymoviediary.utils.dialog.DayViewContainer
+import com.devlee.mymoviediary.utils.dialog.calendarDialogCallback
 import com.devlee.mymoviediary.utils.dp
 import com.devlee.mymoviediary.utils.getColorRes
 import com.devlee.mymoviediary.utils.toDp
@@ -32,12 +33,18 @@ import java.util.*
 @SuppressLint("NewApi")
 class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layout.dialog_calendar) {
 
+    companion object {
+        private const val DEFAULT_PAST = 100L
+        private const val TAG = "CalendarDialogFragment"
+    }
+
     private val calendarDialogViewModel: ContentCreateViewModel by viewModels()
 
     private var selectedDate = LocalDate.now()
 
     private var date = ObservableField<String>()
     private val today = LocalDate.now()
+    private var scrollDate = LocalDate.now()
 
     private lateinit var selectionShape: InsetDrawable
 
@@ -53,8 +60,10 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
             lifecycleOwner = viewLifecycleOwner
             dateTitle = date.get()
             buttonClickListener = object : CalendarChoiceInterface {
-                override fun onPositiveClickListener(day: CalendarDay?) {
-                    Toast.makeText(requireContext(), "확인", Toast.LENGTH_SHORT).show()
+                override fun onPositiveClickListener() {
+                    Log.v(TAG, "Date String : ${DateFormatUtil.getAllDate(selectedDate)}")
+                    calendarDialogCallback?.invoke(DateFormatUtil.getAllDate(selectedDate))
+                    dismiss()
                 }
 
                 override fun onNegativeClickListener() {
@@ -64,6 +73,12 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
             }
             setupCalendarView()
             setPositiveButton()
+            calendarDialogNextBtn.setOnClickListener {
+                setupMonthClickListener(scrollDate.plusMonths(1))
+            }
+            calendarDialogPreviousBtn.setOnClickListener {
+                setupMonthClickListener(scrollDate.minusMonths(1))
+            }
         }
     }
 
@@ -79,10 +94,14 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
 
     }
 
+    private fun DialogCalendarBinding.setPositiveButton() {
+        calendarOk.setTextColor(getColorRes(requireContext(), R.color.color_4a8fff))
+    }
+
     private fun DialogCalendarBinding.setupCalendarView() {
 
         val now: YearMonth = YearMonth.now()
-        val start = now.minusYears(10)
+        val start = now.minusYears(DEFAULT_PAST)
 
         val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
 
@@ -93,16 +112,19 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
         setupMonthScrollListener()
     }
 
-    private fun DialogCalendarBinding.setPositiveButton() {
-        calendarOk.setTextColor(getColorRes(requireContext(), R.color.color_4a8fff))
-    }
-
     private fun setupMonthScrollListener() {
         binding.calendarMain.monthScrollListener = { month ->
             val day: CalendarDay = month.weekDays.first().first { it.owner == DayOwner.THIS_MONTH }
             date.set(DateFormatUtil.getYearAndMonth(day.date))
             binding.dateTitle = date.get()
+            scrollDate = day.date
         }
+    }
+
+    private fun setupMonthClickListener(date: LocalDate) {
+        if (date > today) return
+        binding.calendarMain.scrollToDate(date)
+        scrollDate = date
     }
 
     private fun setupDay() {
@@ -112,7 +134,6 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
             override fun bind(container: DayViewContainer, day: CalendarDay) {
                 container.binding.calendarDay.text = day.day.toString()
                 container.day = day
-                calendarDialogViewModel.day = day
 
                 container.binding.shape.background = null
                 container.binding.calendarDay.setTextColor(getColorRes(requireContext(), R.color.color_1c1c1c))
@@ -144,7 +165,6 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
             // We don't want to
             return
         }
-        calendarDialogViewModel.day = day
         selectedDate = day.date
 
         binding.calendarMain.notifyCalendarChanged()

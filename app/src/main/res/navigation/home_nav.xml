@@ -22,24 +22,18 @@
         <action
             android:id="@+id/action_createMyDiaryFragment_to_bottomChoiceFragment"
             app:destination="@id/bottomChoiceFragment" />
-        <argument
-            android:name="category"
-            app:argType="com.devlee.mymoviediary.data.model.Category"
-            app:nullable="true" />
         <action
             android:id="@+id/action_createMyDiaryFragment_to_calendarSelectedFragment"
             app:destination="@id/calendarSelectedFragment" />
+        <action
+            android:id="@+id/action_createMyDiaryFragment_to_moodFragment"
+            app:destination="@id/moodFragment" />
     </fragment>
     <dialog
         android:id="@+id/bottomChoiceFragment"
         android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.create.ChoiceBottomSheetFragment"
         android:label="ChoiceBottomSheet"
         tools:layout="@layout/bottom_choice_view" >
-        <action
-            android:id="@+id/action_bottomChoiceFragment_to_createMyDiaryFragment"
-            app:destination="@id/createMyDiaryFragment"
-            app:popUpTo="@id/createMyDiaryFragment"
-            app:popUpToInclusive="true"/>
         <argument
             android:name="bottomChoiceType"
             app:argType="com.devlee.mymoviediary.presentation.fragment.main_bottom.create.BottomChoiceType" />
@@ -52,4 +46,15 @@
         android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.create.CalendarDialogFragment"
         android:label="CalendarSelectedFragment"
         tools:layout="@layout/dialog_calendar" />
+    <fragment
+        android:id="@+id/moodFragment"
+        android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.create.MoodFragment"
+        android:label="fragment_mood"
+        tools:layout="@layout/fragment_mood" >
+        <action
+            android:id="@+id/action_moodFragment_to_mainHomeFragment"
+            app:destination="@id/mainHomeFragment"
+            app:popUpTo="@id/mainHomeFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
 </navigation>

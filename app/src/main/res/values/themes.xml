@@ -154,4 +154,9 @@
         <item name="android:textSize">18dp</item>
     </style>
 
+    <style name="MoodTextStyle" parent="AppTheme.DefaultTextStyle">
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
 </resources>

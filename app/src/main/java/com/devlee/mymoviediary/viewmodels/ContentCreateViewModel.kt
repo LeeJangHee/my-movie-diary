@@ -1,12 +1,17 @@
 package com.devlee.mymoviediary.viewmodels
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.View
+import androidx.databinding.ObservableArrayList
+import androidx.databinding.ObservableBoolean
+import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.model.Category
+import com.devlee.mymoviediary.data.model.Mood
 import com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceData
 import com.devlee.mymoviediary.presentation.adapter.create.CreateAdapter
@@ -14,10 +19,10 @@ import com.devlee.mymoviediary.presentation.adapter.create.CreateViewType
 import com.devlee.mymoviediary.presentation.fragment.main_bottom.create.BottomChoiceType
 import com.devlee.mymoviediary.utils.dialog.CustomDialog
 import com.gun0912.tedpermission.coroutine.TedPermission
-import com.kizitonwose.calendarview.model.CalendarDay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import java.io.File
 
 class ContentCreateViewModel : ViewModel() {
 
@@ -33,8 +38,12 @@ class ContentCreateViewModel : ViewModel() {
 
     var selectedCategoryItem: ((Category) -> Unit)? = null
 
-    var day: CalendarDay? = null
-
+    @SuppressLint("NewApi")
+    var dateStr: ObservableField<String?> = ObservableField()
+    var fileList: ObservableArrayList<File> = ObservableArrayList()
+    var selectedCategory: ObservableField<Category?> = ObservableField()
+    var start: ObservableBoolean = ObservableBoolean(false)
+    var mood: ObservableField<Mood> = ObservableField(Mood.NONE)
 
     init {
         contentCreateAdapter.setDiaryList(contentChoiceDataList)

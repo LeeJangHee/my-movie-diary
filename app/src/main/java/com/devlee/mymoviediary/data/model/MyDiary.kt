@@ -1,5 +1,8 @@
 package com.devlee.mymoviediary.data.model
 
+import androidx.annotation.DrawableRes
+import com.devlee.mymoviediary.R
+
 data class MyDiary(
     val date: String,                   // 날짜
     val contents: String? = null,       // 일기 내용
@@ -7,5 +10,15 @@ data class MyDiary(
     val recording: String? = null,      // 음성 파일
     val category: Category? = null,     // 카테고리
     val star: Boolean = false,          // 즐겨찾기
-    val mood: Int? = null               // 기분 이미지
+    @DrawableRes
+    val mood: Int? = Mood.NONE.resId    // 기분 이미지
 )
+
+enum class Mood(@DrawableRes val resId: Int?) {
+    NONE(null),
+    ANGRY(R.drawable.angry_e_icon),
+    SAD(R.drawable.sad_e_icon),
+    FINE(R.drawable.fine_e_icon),
+    GOOD(R.drawable.good_e_icon),
+    HAPPY(R.drawable.happy_e_icon)
+}

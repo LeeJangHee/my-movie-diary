@@ -1,39 +1,37 @@
 package com.devlee.mymoviediary.presentation.fragment.main_bottom.create
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.FragmentCreateMyDiaryBinding
 import com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData
 import com.devlee.mymoviediary.presentation.activity.main.MainActivity
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
-import com.devlee.mymoviediary.utils.SharedPreferencesUtil
-import com.devlee.mymoviediary.utils.isBottomNav
-import com.devlee.mymoviediary.utils.isMainBottomNavLayout
+import com.devlee.mymoviediary.utils.*
+import com.devlee.mymoviediary.utils.dialog.calendarDialogCallback
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
 import kotlinx.coroutines.launch
 
+@SuppressLint("NewApi")
 class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
     private val TAG = "CreateMyDiaryFragment"
 
     private val createViewModel: ContentCreateViewModel by viewModels()
-    private val args: CreateMyDiaryFragmentArgs by navArgs()
 
     override fun setView() {
         setAppbar()
         setOnBackPressed()
-        isMainBottomNavLayout.postValue(false)
+        isMainBottomNavLayout.value = false
 
         binding.apply {
             viewModel = createViewModel.apply {
@@ -70,14 +68,30 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
                 }
             }
             lifecycleOwner = viewLifecycleOwner
-
-            category = args.category
-            createDateLayout.setOnClickListener(::setUpSelectedDate)
+            createDateLayout.setOnClickListener(::setupSelectedDate)
+        }
+        // 날짜 선택
+        calendarDialogCallback = { dateStr ->
+            Log.d(TAG, "calendarCallback: $dateStr")
+            createViewModel.dateStr.set(dateStr)
+        }
+        // Category 선택
+        selectedCategoryCallback = { category ->
+            Log.d(TAG, "categoryCallback: ${category.title}")
+            createViewModel.selectedCategory.set(category)
         }
     }
 
-    private fun setUpSelectedDate(view: View) {
-        findNavController().navigate(R.id.action_createMyDiaryFragment_to_calendarSelectedFragment)
+    override fun onResume() {
+        super.onResume()
+        if (createViewModel.dateStr.get() == null) {
+            createViewModel.dateStr.set(DateFormatUtil.getTodayDate())
+        }
+        Log.d(TAG, "onResume: dateStr = ${createViewModel.dateStr.get()}")
+    }
+
+    private fun setupSelectedDate(view: View) {
+        view.findNavController().navigate(R.id.action_createMyDiaryFragment_to_calendarSelectedFragment)
     }
 
     private fun setOnBackPressed() {
@@ -98,8 +112,7 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
             (requireActivity() as MainActivity).isBottomNav(true)
         }
         setMenuToolbar(type = AppToolbarLayout.RIGHT, strId = R.string.next_kr) {
-            Toast.makeText(requireContext(), "게시 완료", Toast.LENGTH_SHORT).show()
-            (requireActivity() as MainActivity).isBottomNav(true)
+            findNavController().navigate(R.id.action_createMyDiaryFragment_to_moodFragment)
         }
     }
 }

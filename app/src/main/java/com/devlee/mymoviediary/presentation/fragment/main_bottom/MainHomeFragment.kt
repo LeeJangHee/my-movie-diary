@@ -13,7 +13,10 @@ import com.devlee.mymoviediary.presentation.activity.main.MainActivity
 import com.devlee.mymoviediary.presentation.adapter.home.MainHomeAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
-import com.devlee.mymoviediary.utils.*
+import com.devlee.mymoviediary.utils.Resource
+import com.devlee.mymoviediary.utils.isBottomNav
+import com.devlee.mymoviediary.utils.isMainBottomNavLayout
+import com.devlee.mymoviediary.utils.loadingLiveData
 import com.devlee.mymoviediary.viewmodels.MyDiaryViewModel
 import com.devlee.mymoviediary.viewmodels.ViewModelProviderFactory
 import kotlinx.coroutines.delay
@@ -37,7 +40,7 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
     override fun setView() {
         setAppbar()
         setRecyclerView()
-        isMainBottomNavLayout.postValue(true)
+        isMainBottomNavLayout.value = true
 
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
@@ -45,10 +48,7 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
 
         // 추가 버튼
         binding.addDiaryButton.setOnClickListener {
-            val action = MainHomeFragmentDirections.actionMainHomeFragmentToCreateMyDiaryFragment(
-                category = null
-            )
-            findNavController().navigate(action)
+            findNavController().navigate(R.id.action_mainHomeFragment_to_createMyDiaryFragment)
             lifecycleScope.launch {
                 delay(300)
                 (requireActivity() as MainActivity).isBottomNav(false)
