@@ -1,9 +1,11 @@
 package com.devlee.mymoviediary.presentation.fragment.main_bottom.create
 
+import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.devlee.mymoviediary.R
+import com.devlee.mymoviediary.data.model.Mood
 import com.devlee.mymoviediary.databinding.FragmentMoodBinding
 import com.devlee.mymoviediary.presentation.activity.main.MainActivity
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
@@ -20,7 +22,21 @@ class MoodFragment : BaseFragment<FragmentMoodBinding>() {
         setAppbar()
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
-            viewModel = moodViewModel
+            viewModel = moodViewModel.apply {
+
+            }
+            moodClickListener = View.OnClickListener(::setMoodClickListener)
+        }
+    }
+
+    private fun setMoodClickListener(view: View) {
+        when (view.id) {
+            R.id.moodNone -> moodViewModel.mood.set(Mood.NONE)
+            R.id.moodSad -> moodViewModel.mood.set(Mood.SAD)
+            R.id.moodAngry -> moodViewModel.mood.set(Mood.ANGRY)
+            R.id.moodFine -> moodViewModel.mood.set(Mood.FINE)
+            R.id.moodGood -> moodViewModel.mood.set(Mood.GOOD)
+            R.id.moodHappy -> moodViewModel.mood.set(Mood.HAPPY)
         }
     }
 

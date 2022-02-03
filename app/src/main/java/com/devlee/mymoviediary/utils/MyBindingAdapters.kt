@@ -1,8 +1,10 @@
 package com.devlee.mymoviediary.utils
 
 import android.graphics.Color
+import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.model.Category
+import com.devlee.mymoviediary.data.model.Mood
 import com.devlee.mymoviediary.presentation.adapter.category.CategoryViewType
 import com.devlee.mymoviediary.utils.recyclerview.CategoryDecoration
 import com.devlee.mymoviediary.utils.recyclerview.CustomDecoration
@@ -105,5 +108,42 @@ fun EditText.setAddMode(mode: Boolean) {
             clearFocus()
             hideKeyboardIME()
         }
+    }
+}
+
+@BindingAdapter("moodButton")
+fun ImageButton.setMood(mood: Mood) = run {
+    Log.d("moodRadioButton", "setMood: ${mood.name}")
+
+    when (mood) {
+        Mood.NONE -> {
+            isSelected = id == R.id.moodNone
+        }
+        Mood.SAD -> {
+            isSelected = id == R.id.moodSad
+        }
+        Mood.ANGRY -> {
+            isSelected = id == R.id.moodAngry
+        }
+        Mood.FINE -> {
+            isSelected = id == R.id.moodFine
+        }
+        Mood.GOOD -> {
+            isSelected = id == R.id.moodGood
+        }
+        Mood.HAPPY -> {
+            isSelected = id == R.id.moodHappy
+        }
+    }
+    var w: Int = resources.getDimension(R.dimen.mood_collapse_width).toInt()
+    var h: Int = resources.getDimension(R.dimen.mood_collapse_height).toInt()
+    if (isSelected && id != R.id.moodNone) {
+        w = resources.getDimension(R.dimen.mood_expend_width).toInt()
+        h = resources.getDimension(R.dimen.mood_expend_height).toInt()
+    }
+    layoutParams.apply {
+        width = w
+        height = h
+        requestLayout()
     }
 }

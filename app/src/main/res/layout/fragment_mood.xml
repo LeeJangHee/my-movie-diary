@@ -4,9 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.devlee.mymoviediary.viewmodels.ContentCreateViewModel" />
+
+        <variable
+            name="moodClickListener"
+            type="android.view.View.OnClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,7 +35,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/moodIconView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/mood_expend_height"
             android:layout_marginHorizontal="40dp"
             app:layout_constraintBottom_toTopOf="@+id/moodNone"
             app:layout_constraintEnd_toEndOf="parent"
@@ -38,12 +43,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/moodText">
 
-            <androidx.appcompat.widget.AppCompatCheckBox
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/moodSad"
+                moodButton="@{viewModel.mood}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/sad_icon"
-                android:button="@null"
+                android:background="@android:color/transparent"
+                android:src="@drawable/sad_icon"
+                android:adjustViewBounds="true"
+                android:onClick="@{moodClickListener}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/moodAngry"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -51,63 +59,148 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatCheckBox
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/moodAngry"
+                moodButton="@{viewModel.mood}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/angry_icon"
-                android:button="@null"
+                android:background="@android:color/transparent"
+                android:src="@drawable/angry_icon"
+                android:adjustViewBounds="true"
+                android:onClick="@{moodClickListener}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/moodFine"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/moodSad"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatCheckBox
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/moodFine"
+                moodButton="@{viewModel.mood}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/fine_icon"
-                android:button="@null"
+                android:background="@android:color/transparent"
+                android:src="@drawable/fine_icon"
+                android:adjustViewBounds="true"
+                android:onClick="@{moodClickListener}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/moodGood"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/moodAngry"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatCheckBox
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/moodGood"
+                moodButton="@{viewModel.mood}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/good_icon"
-                android:button="@null"
+                android:background="@android:color/transparent"
+                android:src="@drawable/good_icon"
+                android:adjustViewBounds="true"
+                android:onClick="@{moodClickListener}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/moodHappy"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/moodFine"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatCheckBox
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/moodHappy"
+                moodButton="@{viewModel.mood}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/happy_icon"
-                android:button="@null"
+                android:background="@android:color/transparent"
+                android:src="@drawable/happy_icon"
+                android:adjustViewBounds="true"
+                android:onClick="@{moodClickListener}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/moodGood"
                 app:layout_constraintTop_toTopOf="parent" />
 
+<!--            <androidx.appcompat.widget.AppCompatRadioButton-->
+<!--                android:id="@+id/moodSad"-->
+<!--                moodRadioButton="@{viewModel.mood}"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@drawable/sad_icon"-->
+<!--                android:button="@null"-->
+<!--                android:onClick="@{moodClickListener}"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toStartOf="@+id/moodAngry"-->
+<!--                app:layout_constraintHorizontal_bias="0.5"-->
+<!--                app:layout_constraintHorizontal_chainStyle="spread_inside"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--            <androidx.appcompat.widget.AppCompatRadioButton-->
+<!--                android:id="@+id/moodAngry"-->
+<!--                moodRadioButton="@{viewModel.mood}"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@drawable/angry_icon"-->
+<!--                android:button="@null"-->
+<!--                android:onClick="@{moodClickListener}"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toStartOf="@+id/moodFine"-->
+<!--                app:layout_constraintHorizontal_bias="0.5"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/moodSad"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--            <androidx.appcompat.widget.AppCompatRadioButton-->
+<!--                android:id="@+id/moodFine"-->
+<!--                moodRadioButton="@{viewModel.mood}"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@drawable/fine_icon"-->
+<!--                android:button="@null"-->
+<!--                android:onClick="@{moodClickListener}"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toStartOf="@+id/moodGood"-->
+<!--                app:layout_constraintHorizontal_bias="0.5"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/moodAngry"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--            <androidx.appcompat.widget.AppCompatRadioButton-->
+<!--                android:id="@+id/moodGood"-->
+<!--                moodRadioButton="@{viewModel.mood}"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@drawable/good_icon"-->
+<!--                android:button="@null"-->
+<!--                android:onClick="@{moodClickListener}"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toStartOf="@+id/moodHappy"-->
+<!--                app:layout_constraintHorizontal_bias="0.5"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/moodFine"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--            <androidx.appcompat.widget.AppCompatRadioButton-->
+<!--                android:id="@+id/moodHappy"-->
+<!--                moodRadioButton="@{viewModel.mood}"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@drawable/happy_icon"-->
+<!--                android:button="@null"-->
+<!--                android:onClick="@{moodClickListener}"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintHorizontal_bias="0.5"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/moodGood"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.appcompat.widget.AppCompatCheckBox
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/moodNone"
+            moodButton="@{viewModel.mood}"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="50dp"
-            android:background="@drawable/none_icon"
-            android:button="@null"
+            android:src="@drawable/none_icon"
+            android:background="@android:color/transparent"
+            android:onClick="@{moodClickListener}"
             app:layout_constraintBottom_toTopOf="@+id/appCompatTextView2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -119,9 +212,9 @@
             style="@style/MoodTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
             android:text="@string/create_mood_none_text"
             android:textSize="15dp"
-            android:layout_marginTop="6dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
