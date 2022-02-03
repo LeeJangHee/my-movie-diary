@@ -1,6 +1,7 @@
 package com.devlee.mymoviediary.presentation.fragment.main_bottom
 
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -28,7 +29,7 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
         private const val TAG = "MainHomeFragment"
     }
 
-    val homeViewModel: MyDiaryViewModel by viewModels {
+    private val homeViewModel: MyDiaryViewModel by viewModels {
         val repository = MyDiaryRepository(MyDiaryDatabase.getInstance(requireActivity()))
         ViewModelProviderFactory(repository)
     }
@@ -44,6 +45,7 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
 
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
+            viewModel = homeViewModel
         }
 
         // 추가 버튼
@@ -63,7 +65,12 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
                 is Resource.Loading -> loadingLiveData.postValue(true)
                 is Resource.Success -> {
                     loadingLiveData.postValue(false)
-                    diaryAdapter.setData(res.data!!)
+                    if (res.data!!.isNullOrEmpty()) {
+                        binding.homeNoDataText.visibility = View.VISIBLE
+                    } else {
+                        binding.homeNoDataText.visibility = View.GONE
+                        diaryAdapter.setData(res.data!!)
+                    }
                 }
                 is Resource.Error -> {
                     loadingLiveData.postValue(false)

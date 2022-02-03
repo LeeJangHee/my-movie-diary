@@ -13,6 +13,9 @@
     <string name="no_kr">취소</string>
     <string name="dialog_title_color_pick">컬러 선택</string>
 
+    <!--  홈 화면  -->
+    <string name="home_no_data_message">나의 하루를 기록해보세요!</string>
+
 
     <!--  카테고리 아이템 이름  -->
     <string name="category_item_all">전체보기</string>

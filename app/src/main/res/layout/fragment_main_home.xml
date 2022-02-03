@@ -4,12 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="com.devlee.mymoviediary.viewmodels.MyDiaryViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/homeNoDataText"
+            style="@style/CreateCategoryDefaultStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/home_no_data_message"
+            android:textSize="20dp"
+            android:textColor="@color/color_c3c3c3"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/addDiaryButton"
@@ -24,10 +43,10 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mainHomeRecyclerView"
+            divColor="@{@color/color_c3c3c3}"
+            divHeight="@{@dimen/dp_1}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            divHeight="@{@dimen/dp_1}"
-            divColor="@{@color/color_c3c3c3}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
