@@ -62,3 +62,17 @@ fun MainActivity.isBottomNav(set: Boolean) {
         this.hideBottomNav()
     }
 }
+
+/** Animation */
+fun View.startDownToUpAnimation() {
+    startAnimation(AnimationUtils.downToUp(this.context))
+}
+fun View.startUpToDownAnimation() {
+    startAnimation(AnimationUtils.upToDown(this.context))
+}
+fun View.startFadeInAnimation() {
+    startAnimation(AnimationUtils.fadeIn(this.context))
+}
+fun View.startFadeOutAnimation() {
+    startAnimation(AnimationUtils.fadeOut(this.context))
+}

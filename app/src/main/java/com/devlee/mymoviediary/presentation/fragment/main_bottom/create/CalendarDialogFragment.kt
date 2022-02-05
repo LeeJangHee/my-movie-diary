@@ -8,16 +8,15 @@ import android.util.Log
 import android.view.View
 import androidx.databinding.ObservableField
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.DialogCalendarBinding
+import com.devlee.mymoviediary.presentation.adapter.create.DialogYearAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseDialogFragment
-import com.devlee.mymoviediary.utils.DateFormatUtil
+import com.devlee.mymoviediary.utils.*
 import com.devlee.mymoviediary.utils.dialog.CalendarChoiceInterface
 import com.devlee.mymoviediary.utils.dialog.DayViewContainer
 import com.devlee.mymoviediary.utils.dialog.calendarDialogCallback
-import com.devlee.mymoviediary.utils.dp
-import com.devlee.mymoviediary.utils.getColorRes
-import com.devlee.mymoviediary.utils.toDp
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
@@ -26,6 +25,7 @@ import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
 import java.time.LocalDate
+import java.time.Year
 import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.util.*
@@ -46,6 +46,7 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
     private val today = LocalDate.now()
     private var scrollDate = LocalDate.now()
 
+    private lateinit var yearAdapter: DialogYearAdapter
     private lateinit var selectionShape: InsetDrawable
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,12 +74,14 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
             }
             setupCalendarView()
             setPositiveButton()
+            setupYearAdapter()
             calendarDialogNextBtn.setOnClickListener {
                 setupMonthClickListener(scrollDate.plusMonths(1))
             }
             calendarDialogPreviousBtn.setOnClickListener {
                 setupMonthClickListener(scrollDate.minusMonths(1))
             }
+            calendarDialogTitleView.setOnClickListener(::onTitleViewClick)
         }
     }
 
@@ -92,6 +95,26 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
             fillColor = ColorStateList.valueOf(backgroundColor)
         }, 3.dp())
 
+    }
+
+    private fun DialogCalendarBinding.setupYearAdapter() {
+        val yearList: MutableList<Year> = mutableListOf()
+
+        val rangePast = -DEFAULT_PAST..-1L
+        val now = Year.now()
+
+        rangePast.forEach { yearList.add(now.plusYears(it)) }
+        yearList.add(now)
+
+        yearAdapter = DialogYearAdapter().apply {
+            setYearList(yearList)
+        }
+
+        yearRecyclerView.apply {
+            adapter = yearAdapter
+            layoutManager = GridLayoutManager(context, 3)
+            scrollToPosition(yearList.size - 1)
+        }
     }
 
     private fun DialogCalendarBinding.setPositiveButton() {
@@ -168,5 +191,26 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
         selectedDate = day.date
 
         binding.calendarMain.notifyCalendarChanged()
+    }
+
+    private fun onTitleViewClick(v: View) {
+        binding.calendarDialogTitleButton.apply {
+            isSelected = !isSelected
+            switchYearView(isSelected)
+            if (isSelected) {
+                startDownToUpAnimation()
+            } else {
+                startUpToDownAnimation()
+            }
+        }
+    }
+
+    private fun switchYearView(set: Boolean) {
+        binding.yearRecyclerView.show(set)
+        if (set) {
+            binding.calendarMain.hide()
+        } else {
+            binding.calendarMain.show()
+        }
     }
 }

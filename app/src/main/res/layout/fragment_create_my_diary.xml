@@ -41,11 +41,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{viewModel.dateStr}"
-                    android:textSize="16dp" />
+                    android:textSize="16dp"
+                    tools:text="123"/>
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:src="@drawable/create_date_icon" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>

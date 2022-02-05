@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -18,6 +17,7 @@ import com.devlee.mymoviediary.presentation.adapter.create.CreateBottomSheetAdap
 import com.devlee.mymoviediary.utils.getColorRes
 import com.devlee.mymoviediary.utils.recyclerview.CustomLinearLayoutManager
 import com.devlee.mymoviediary.utils.selectedCategoryCallback
+import com.devlee.mymoviediary.utils.startFadeInAnimation
 import com.devlee.mymoviediary.utils.toDp
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -43,9 +43,6 @@ class ChoiceBottomSheetFragment : BottomSheetDialogFragment() {
 
     private val args: ChoiceBottomSheetFragmentArgs by navArgs()
 
-    /** Animation */
-    private val fadeIn by lazy { AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in) }
-    private val fadeOut by lazy { AnimationUtils.loadAnimation(requireContext(), R.anim.fade_out) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,7 +91,7 @@ class ChoiceBottomSheetFragment : BottomSheetDialogFragment() {
                             BottomSheetBehavior.STATE_COLLAPSED -> {
                                 Log.d(TAG, "onStateChanged: STATE_COLLAPSED")
                                 binding.bottomChoiceCancelView.apply {
-                                    startAnimation(fadeIn)
+                                    startFadeInAnimation()
                                     y = behavior.peekHeight - requireContext().resources.getDimension(R.dimen.dp_56)
                                     visibility = View.VISIBLE
                                 }
@@ -102,14 +99,13 @@ class ChoiceBottomSheetFragment : BottomSheetDialogFragment() {
                             BottomSheetBehavior.STATE_DRAGGING -> {
                                 Log.d(TAG, "onStateChanged: STATE_DRAGGING")
                                 binding.bottomChoiceCancelView.apply {
-//                                    startAnimation(fadeOut)
                                     visibility = View.GONE
                                 }
                             }
                             BottomSheetBehavior.STATE_EXPANDED -> {
                                 Log.d(TAG, "onStateChanged: STATE_EXPANDED")
                                 binding.bottomChoiceCancelView.apply {
-                                    startAnimation(fadeIn)
+                                    startFadeInAnimation()
                                     y = binding.root.height - requireContext().resources.getDimension(R.dimen.dp_56)
                                     visibility = View.VISIBLE
                                 }

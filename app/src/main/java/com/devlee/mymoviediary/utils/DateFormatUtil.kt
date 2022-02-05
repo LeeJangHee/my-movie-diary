@@ -24,4 +24,8 @@ object DateFormatUtil {
     fun getAllDate(date: LocalDate): String {
         return fullDate.format(date)
     }
+
+    fun getYear(date: LocalDate): String {
+        return yearFormatter.format(date)
+    }
 }
