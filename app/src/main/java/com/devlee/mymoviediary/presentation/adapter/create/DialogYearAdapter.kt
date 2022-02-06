@@ -1,25 +1,63 @@
 package com.devlee.mymoviediary.presentation.adapter.create
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.ItemDialogCalendarYearBinding
 import com.devlee.mymoviediary.utils.DateFormatUtil
 import com.devlee.mymoviediary.utils.MyDiaryDiffUtil
+import com.devlee.mymoviediary.utils.getColorRes
+import com.devlee.mymoviediary.utils.toDp
+import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.shape.ShapeAppearanceModel
 import java.time.Year
 
 @SuppressLint("NewApi")
-class DialogYearAdapter : RecyclerView.Adapter<DialogYearAdapter.ViewHolder>() {
+class DialogYearAdapter(
+    val requireActivity: FragmentActivity,
+    val yearList: MutableList<Year>,
+    val listener: (Year) -> Unit
+) : RecyclerView.Adapter<DialogYearAdapter.ViewHolder>() {
 
-    private var yearList: List<Year> = listOf()
+    companion object {
+        private const val TAG = "DialogYearAdapter"
+    }
+
+    private var selectedYear: Year = Year.now()
 
     inner class ViewHolder(val binding: ItemDialogCalendarYearBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        private fun ItemDialogCalendarYearBinding.selectedYearStyle(year: Year) = with(yearItemTextView) {
+            background = null
+            setTextColor(getColorRes(requireActivity, R.color.color_1c1c1c))
+
+            if (selectedYear == year) {
+                val shapeModelRound = ShapeAppearanceModel().toBuilder().apply {
+                    setAllCorners(CornerFamily.ROUNDED, 17.toDp())
+                }.build()
+
+                val shape = MaterialShapeDrawable(shapeModelRound).apply {
+                    val backgroundColor = getColorRes(requireActivity, R.color.color_1c1c1c)
+                    fillColor = ColorStateList.valueOf(backgroundColor)
+                }
+
+                background = shape
+                setTextColor(getColorRes(requireActivity, R.color.white))
+            }
+        }
+
 
         fun bind(item: Year) {
             binding.apply {
                 yearString = DateFormatUtil.getYear(item.atDay(1))
+                selectedYearStyle(item)
                 executePendingBindings()
             }
         }
@@ -32,17 +70,19 @@ class DialogYearAdapter : RecyclerView.Adapter<DialogYearAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(yearList[position])
+        val year = yearList[position]
+        holder.bind(year)
+        holder.binding.root.setOnClickListener {
+            listener.invoke(year)
+            selectedItem(year)
+        }
     }
 
     override fun getItemCount(): Int = yearList.size
 
-
-    fun setYearList(newItem: List<Year>) {
-        val yearDiffUtil = MyDiaryDiffUtil(yearList, newItem)
-        val diffUtilResult = DiffUtil.calculateDiff(yearDiffUtil)
-        yearList = newItem
-        diffUtilResult.dispatchUpdatesTo(this)
+    fun selectedItem(newYear: Year) {
+        selectedYear = newYear
+        notifyDataSetChanged()
     }
 
 

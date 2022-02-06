@@ -24,6 +24,7 @@ import com.google.android.material.shape.ShapeAppearanceModel
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
+import com.kizitonwose.calendarview.utils.yearMonth
 import java.time.LocalDate
 import java.time.Year
 import java.time.YearMonth
@@ -91,13 +92,20 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
         }.build()
 
         selectionShape = InsetDrawable(MaterialShapeDrawable(shapeModelRound).apply {
-            val backgroundColor = getColorRes(requireContext(), R.color.black)
+            val backgroundColor = getColorRes(requireContext(), R.color.color_1c1c1c)
             fillColor = ColorStateList.valueOf(backgroundColor)
         }, 3.dp())
 
     }
 
     private fun DialogCalendarBinding.setupYearAdapter() {
+
+        fun selectYear(year: Year) {
+            selectedDate = LocalDate.of(year.value, selectedDate.month.value, 1)
+            calendarMain.scrollToDate(selectedDate)
+            onTitleViewClick()
+        }
+
         val yearList: MutableList<Year> = mutableListOf()
 
         val rangePast = -DEFAULT_PAST..-1L
@@ -106,9 +114,7 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
         rangePast.forEach { yearList.add(now.plusYears(it)) }
         yearList.add(now)
 
-        yearAdapter = DialogYearAdapter().apply {
-            setYearList(yearList)
-        }
+        yearAdapter = DialogYearAdapter(requireActivity(), yearList, ::selectYear)
 
         yearRecyclerView.apply {
             adapter = yearAdapter
@@ -141,6 +147,8 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
             date.set(DateFormatUtil.getYearAndMonth(day.date))
             binding.dateTitle = date.get()
             scrollDate = day.date
+
+            yearAdapter.selectedItem(Year.of(day.date.yearMonth.year))
         }
     }
 
@@ -193,7 +201,7 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
         binding.calendarMain.notifyCalendarChanged()
     }
 
-    private fun onTitleViewClick(v: View) {
+    private fun onTitleViewClick(v: View = binding.root) {
         binding.calendarDialogTitleButton.apply {
             isSelected = !isSelected
             switchYearView(isSelected)
