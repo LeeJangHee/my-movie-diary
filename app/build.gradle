@@ -156,4 +156,11 @@ dependencies {
     // CalendarView
     def calendar_version = "1.0.4"
     implementation "com.github.kizitonwose:CalendarView:$calendar_version"
+
+    // Exoplayer
+    def exoplayer_version = "2.16.1"
+    implementation "com.google.android.exoplayer:exoplayer:$exoplayer_version"
+    implementation "com.google.android.exoplayer:exoplayer-core:$exoplayer_version"
+    implementation "com.google.android.exoplayer:exoplayer-dash:$exoplayer_version"
+    implementation "com.google.android.exoplayer:exoplayer-ui:$exoplayer_version"
 }

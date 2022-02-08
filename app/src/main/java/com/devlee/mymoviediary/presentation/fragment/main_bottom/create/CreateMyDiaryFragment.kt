@@ -14,17 +14,22 @@ import androidx.navigation.fragment.findNavController
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.FragmentCreateMyDiaryBinding
 import com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData
+import com.devlee.mymoviediary.domain.use_case.ContentType
 import com.devlee.mymoviediary.presentation.activity.main.MainActivity
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
 import com.devlee.mymoviediary.utils.*
 import com.devlee.mymoviediary.utils.dialog.calendarDialogCallback
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("NewApi")
 class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
-    private val TAG = "CreateMyDiaryFragment"
+
+    companion object {
+        private const val TAG = "CreateMyDiaryFragment"
+    }
 
     private val createViewModel: ContentCreateViewModel by viewModels()
 
@@ -50,8 +55,8 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
                     lifecycleScope.launch {
                         when (bottomChoiceType) {
                             BottomChoiceType.CONTENT -> {
-                                itemList.add(ChoiceBottomSheetData(text = "영상 파일"))
-                                itemList.add(ChoiceBottomSheetData(text = "음성 파일"))
+                                itemList.add(ChoiceBottomSheetData(contentType = ContentType.VIDEO))
+                                itemList.add(ChoiceBottomSheetData(contentType = ContentType.AUDIO))
                             }
                             BottomChoiceType.CATEGORY -> {
                                 SharedPreferencesUtil.getCategoryListPref().forEach {
@@ -79,6 +84,17 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
         selectedCategoryCallback = { category ->
             Log.d(TAG, "categoryCallback: ${category.title}")
             createViewModel.selectedCategory.set(category)
+        }
+        // 파일 선택
+        selectedContentCallback = { contentType ->
+            lifecycleScope.launch {
+                delay(300)
+                val action = CreateMyDiaryFragmentDirections.actionCreateMyDiaryFragmentToContentChoiceFragment(
+                    contentType = contentType
+                )
+                findNavController().navigate(action)
+            }
+
         }
     }
 

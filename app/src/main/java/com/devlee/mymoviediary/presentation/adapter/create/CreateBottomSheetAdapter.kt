@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.databinding.ItemBottomChoiceBinding
 import com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData
+import com.devlee.mymoviediary.domain.use_case.ContentType
 import com.devlee.mymoviediary.presentation.fragment.main_bottom.create.BottomChoiceType
 import com.devlee.mymoviediary.utils.MyDiaryDiffUtil
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
@@ -25,9 +26,13 @@ class CreateBottomSheetAdapter(
     inner class BottomSheetContentViewHolder(val binding: ItemBottomChoiceBinding) : RecyclerView.ViewHolder(binding.root) {
 
 
-        fun bind(text: String?) {
+        fun bind(contentType: ContentType?) {
             binding.apply {
-                textTitle = text
+                textTitle = "${contentType?.text} 파일"
+                bottomSheetItemClickListener = View.OnClickListener {
+                    Log.d(TAG, "Content bind: ${contentType?.name}")
+                    bottomViewModel.selectedContentItem(contentType)
+                }
                 executePendingBindings()
             }
         }
@@ -61,7 +66,7 @@ class CreateBottomSheetAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is BottomSheetContentViewHolder -> {
-                holder.bind(bottomSheetItemList[position].text)
+                holder.bind(bottomSheetItemList[position].contentType)
             }
             is BottomSheetCategoryViewHolder -> {
                 holder.bind(bottomSheetItemList[position].category)

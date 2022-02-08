@@ -10,15 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.BottomChoiceViewBinding
 import com.devlee.mymoviediary.presentation.adapter.create.CreateBottomSheetAdapter
-import com.devlee.mymoviediary.utils.getColorRes
+import com.devlee.mymoviediary.utils.*
 import com.devlee.mymoviediary.utils.recyclerview.CustomLinearLayoutManager
-import com.devlee.mymoviediary.utils.selectedCategoryCallback
-import com.devlee.mymoviediary.utils.startFadeInAnimation
-import com.devlee.mymoviediary.utils.toDp
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -56,6 +55,11 @@ class ChoiceBottomSheetFragment : BottomSheetDialogFragment() {
                 selectedCategoryItem = { category ->
                     Log.d(TAG, "selectedCategory: ${category.title}")
                     selectedCategoryCallback?.invoke(category)
+                    dismiss()
+                }
+                selectedContentItem = { contentType ->
+                    Log.d(TAG, "selectedContentType: ${contentType.name}")
+                    selectedContentCallback?.invoke(contentType)
                     dismiss()
                 }
             }

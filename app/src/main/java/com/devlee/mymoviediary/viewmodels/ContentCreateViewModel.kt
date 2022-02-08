@@ -14,6 +14,7 @@ import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.data.model.Mood
 import com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceData
+import com.devlee.mymoviediary.domain.use_case.ContentType
 import com.devlee.mymoviediary.presentation.adapter.create.CreateAdapter
 import com.devlee.mymoviediary.presentation.adapter.create.CreateViewType
 import com.devlee.mymoviediary.presentation.fragment.main_bottom.create.BottomChoiceType
@@ -37,6 +38,7 @@ class ContentCreateViewModel : ViewModel() {
     var bottomChoiceViewCallback: ((BottomChoiceType) -> Unit)? = null
 
     var selectedCategoryItem: ((Category) -> Unit)? = null
+    var selectedContentItem: ((ContentType) -> Unit)? = null
 
     @SuppressLint("NewApi")
     var dateStr: ObservableField<String?> = ObservableField()
@@ -96,6 +98,15 @@ class ContentCreateViewModel : ViewModel() {
             Log.d(TAG, "Category is Null")
         }
 
+    }
+
+    fun selectedContentItem(contentType: ContentType?) {
+        Log.w(TAG, "selectedContentItem: ${contentType?.name}")
+        if (contentType != null) {
+            selectedContentItem?.invoke(contentType)
+        } else {
+            Log.d(TAG, "ContentType is Null")
+        }
     }
 
 }

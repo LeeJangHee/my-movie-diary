@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_createMyDiaryFragment_to_moodFragment"
             app:destination="@id/moodFragment" />
+        <action
+            android:id="@+id/action_createMyDiaryFragment_to_contentChoiceFragment"
+            app:destination="@id/contentChoiceFragment" />
     </fragment>
     <dialog
         android:id="@+id/bottomChoiceFragment"
@@ -57,4 +60,13 @@
             app:popUpTo="@id/mainHomeFragment"
             app:popUpToInclusive="true"/>
     </fragment>
+    <dialog
+        android:id="@+id/contentChoiceFragment"
+        android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.create.ContentChoiceFragment"
+        android:label="fragment_content_choice"
+        tools:layout="@layout/bottom_content_choice" >
+        <argument
+            android:name="contentType"
+            app:argType="com.devlee.mymoviediary.domain.use_case.ContentType" />
+    </dialog>
 </navigation>

@@ -6,6 +6,11 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ChoiceBottomSheetData(
-    val text: String? = null,
+    val contentType: ContentType? = null,
     val category: Category? = null
 ) : Parcelable
+
+enum class ContentType(val text: String) {
+    VIDEO("영상"),
+    AUDIO("음성")
+}
