@@ -1,7 +1,7 @@
 package com.devlee.mymoviediary.presentation.fragment.main_bottom.create
 
 import android.content.ContentUris
-import android.graphics.Rect
+import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -14,19 +14,34 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.BottomContentChoiceBinding
+import com.devlee.mymoviediary.domain.use_case.ContentChoiceFileData
 import com.devlee.mymoviediary.domain.use_case.ContentType
 import com.devlee.mymoviediary.presentation.adapter.create.ContentChoiceAdapter
-import com.devlee.mymoviediary.utils.dp
+import com.devlee.mymoviediary.utils.getColorRes
+import com.devlee.mymoviediary.utils.toDp
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
+import com.google.android.exoplayer2.util.Util
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.shape.ShapeAppearanceModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.InputStream
 
 class ContentChoiceFragment : BottomSheetDialogFragment() {
 
@@ -42,6 +57,13 @@ class ContentChoiceFragment : BottomSheetDialogFragment() {
 
     private val contentChoiceAdapter by lazy { ContentChoiceAdapter(args.contentType, contentChoiceViewModel) }
 
+    private val exoPlayer: ExoPlayer by lazy { ExoPlayer.Builder(requireContext()).build() }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, R.style.BottomSheet_Base_Light)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = BottomContentChoiceBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
@@ -50,6 +72,7 @@ class ContentChoiceFragment : BottomSheetDialogFragment() {
             } else {
                 setAudio()
             }
+            title = args.contentType.text
         }
 
         return binding.root
@@ -69,9 +92,46 @@ class ContentChoiceFragment : BottomSheetDialogFragment() {
 
             })
         }
-        binding.apply {
 
+        binding.apply {
+            lifecycleScope.launch {
+                contentChoiceViewModel.selectedVideoList.collect { uriList ->
+
+                    fun PlayerView.currentIsPlaying() = run {
+                        val pvPlayer = exoPlayer
+                        Log.d(TAG, "currentIsPlaying: ${pvPlayer.currentMediaItem}")
+
+                    }
+
+                    uriList.lastOrNull()?.let {
+                        Log.d(TAG, "stateFlow start ${uriList.size}")
+                        val mediaItem = MediaItem.fromUri(it)
+
+                        exoPlayer.apply {
+                            setMediaItem(mediaItem)
+                            prepare()
+                            play()
+                            playWhenReady = true
+                        }
+
+                    } ?: run {
+                        exoPlayer.apply {
+                            clearMediaItems()
+                            stop()
+                            playWhenReady = false
+                        }
+                    }
+                    contentChoicePreviewVideo.apply {
+                        this.player = exoPlayer
+                        currentIsPlaying()
+                        setOnClickListener {
+                            Log.d(TAG, "contentChoicePreviewVideo: ${exoPlayer.isPlaying}")
+                        }
+                    }
+                }
+            }
         }
+        setCornerRadius(view)
     }
 
     /** Video setting */
@@ -84,6 +144,7 @@ class ContentChoiceFragment : BottomSheetDialogFragment() {
             val spanCount = 3
             layoutManager = GridLayoutManager(requireContext(), spanCount)
         }
+
     }
 
 
@@ -92,8 +153,8 @@ class ContentChoiceFragment : BottomSheetDialogFragment() {
 
     }
 
-    private suspend fun loadVideo(): List<File> {
-        return withContext(Dispatchers.IO) {
+    private suspend fun loadVideo(): List<ContentChoiceFileData> {
+        return withContext(Dispatchers.Main) {
             val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
             } else {
@@ -106,14 +167,14 @@ class ContentChoiceFragment : BottomSheetDialogFragment() {
                 MediaStore.Video.Media.MIME_TYPE
             )
 
-            val videoList = mutableListOf<File>()
+            val videoList = mutableListOf<ContentChoiceFileData>()
 
             requireActivity().contentResolver.query(
                 collection,
                 projection,
                 null,
                 null,
-                "${MediaStore.Video.Media.DATE_MODIFIED} DESC"
+                "${MediaStore.Video.Media.DATE_MODIFIED} ASC"
             )?.use { cursor ->
                 val idColumn = cursor.getColumnIndex(MediaStore.Video.Media._ID)
                 val displayNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)
@@ -129,7 +190,7 @@ class ContentChoiceFragment : BottomSheetDialogFragment() {
                     )
                     Log.d(TAG, "loadVideo: $contentUri, $id, $displayName, $mimeType")
                     try {
-                        videoList.add(File(contentUri.toString()))
+                        videoList.add(ContentChoiceFileData(video = contentUri))
                     } catch (e: Exception) {
                         Log.e(TAG, "loadVideo-(): ", e)
                         e.printStackTrace()
@@ -139,5 +200,29 @@ class ContentChoiceFragment : BottomSheetDialogFragment() {
                 videoList
             } ?: listOf()
         }
+    }
+
+    private fun setCornerRadius(view: View) {
+        val model = ShapeAppearanceModel().toBuilder().apply {
+            setTopRightCorner(CornerFamily.ROUNDED, 4.toDp())
+            setTopLeftCorner(CornerFamily.ROUNDED, 4.toDp())
+        }.build()
+
+        val shape = MaterialShapeDrawable(model).apply {
+            val backgroundColor = getColorRes(requireContext(), R.color.white)
+            fillColor = ColorStateList.valueOf(backgroundColor)
+        }
+
+        view.background = shape
+    }
+
+    private fun releaseVideo() {
+        binding.contentChoicePreviewVideo.player?.release()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.w(TAG, "onDestroyView: ")
+        releaseVideo()
     }
 }

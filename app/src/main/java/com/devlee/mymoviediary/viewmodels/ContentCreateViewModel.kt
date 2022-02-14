@@ -2,18 +2,26 @@ package com.devlee.mymoviediary.viewmodels
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Bitmap
+import android.media.MediaMetadataRetriever
+import android.net.Uri
 import android.util.Log
 import android.view.View
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.data.model.Mood
 import com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceData
+import com.devlee.mymoviediary.domain.use_case.ContentChoiceFileData
 import com.devlee.mymoviediary.domain.use_case.ContentType
 import com.devlee.mymoviediary.presentation.adapter.create.CreateAdapter
 import com.devlee.mymoviediary.presentation.adapter.create.CreateViewType
@@ -21,9 +29,10 @@ import com.devlee.mymoviediary.presentation.fragment.main_bottom.create.BottomCh
 import com.devlee.mymoviediary.utils.dialog.CustomDialog
 import com.gun0912.tedpermission.coroutine.TedPermission
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.File
+import java.io.IOException
 
 class ContentCreateViewModel : ViewModel() {
 
@@ -33,6 +42,8 @@ class ContentCreateViewModel : ViewModel() {
     var contentChoiceDataList = arrayListOf<ContentChoiceData>(ContentChoiceData(CreateViewType.ADD.type))
 
     var choiceBottomSheetList: MutableSharedFlow<List<ChoiceBottomSheetData>> = MutableSharedFlow()
+    private var _selectedVideoList: MutableSharedFlow<List<Uri>> = MutableSharedFlow()
+    val selectedVideoList = _selectedVideoList
 
     var deniedPermissionCallback: (() -> Unit)? = null
     var bottomChoiceViewCallback: ((BottomChoiceType) -> Unit)? = null
@@ -42,7 +53,7 @@ class ContentCreateViewModel : ViewModel() {
 
     @SuppressLint("NewApi")
     var dateStr: ObservableField<String?> = ObservableField()
-    var fileList: ObservableArrayList<File> = ObservableArrayList()
+    var fileList: ObservableArrayList<ContentChoiceFileData> = ObservableArrayList()
     var selectedCategory: ObservableField<Category?> = ObservableField()
     var start: ObservableBoolean = ObservableBoolean(false)
     var mood: ObservableField<Mood> = ObservableField(Mood.NONE)
@@ -107,6 +118,25 @@ class ContentCreateViewModel : ViewModel() {
         } else {
             Log.d(TAG, "ContentType is Null")
         }
+    }
+
+    fun uri2Bitmap(context: Context, uri: Uri?): Bitmap? {
+        var bitmap: Bitmap? = null
+        if (uri != null) {
+            try {
+                val mmr = MediaMetadataRetriever().apply {
+                    setDataSource(context, uri)
+                }
+                bitmap = mmr.frameAtTime
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+        return bitmap
+    }
+
+    fun setSelectVideo(videoList: List<Uri>) = viewModelScope.launch {
+        _selectedVideoList.emit(videoList)
     }
 
 }

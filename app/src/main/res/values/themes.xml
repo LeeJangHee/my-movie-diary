@@ -55,6 +55,12 @@
         <item name="android:textColor">@color/color_1c1c1c</item>
     </style>
 
+    <style name="AppbarButtonTextStyle" parent="AppTheme.DefaultTextStyle">
+        <item name="android:textSize">15dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+    </style>
+
     <!--  메인 아이템 날짜 Style  -->
     <style name="MainItemDayTextStyle" parent="AppTheme.DefaultTextStyle">
         <item name="android:fontFamily">@font/noto_sans_kr_light</item>
