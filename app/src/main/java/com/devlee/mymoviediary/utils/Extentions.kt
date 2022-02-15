@@ -2,6 +2,8 @@ package com.devlee.mymoviediary.utils
 
 import android.content.Context
 import android.content.res.Resources
+import android.os.Handler
+import android.os.Looper
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -18,6 +20,9 @@ fun View.show(isShow: Boolean? = null) {
 }
 fun View.gone() = run { visibility = View.GONE }
 fun View.hide() = run { visibility = View.INVISIBLE }
+
+/** Thread */
+fun delay(millis: Long, block: () -> Unit) = Handler(Looper.getMainLooper()).postDelayed(block, millis)
 
 /** xml size convert */
 fun Float.convertDpToPx() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, Resources.getSystem().displayMetrics).toInt()

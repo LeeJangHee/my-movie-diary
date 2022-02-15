@@ -1,5 +1,6 @@
 package com.devlee.mymoviediary.presentation.adapter.create
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,7 +14,6 @@ import com.devlee.mymoviediary.domain.use_case.ContentChoiceFileData
 import com.devlee.mymoviediary.domain.use_case.ContentType
 import com.devlee.mymoviediary.utils.MyDiaryDiffUtil
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
-import java.io.File
 
 class ContentChoiceAdapter(
     private val type: ContentType,
@@ -28,21 +28,27 @@ class ContentChoiceAdapter(
     private var selectedVideoList: MutableList<Uri> = mutableListOf()
     private var selectedAudioList: MutableList<Uri> = mutableListOf()
 
-
     inner class ContentVideoViewHolder(val binding: ItemContentChoiceVideoBinding) : RecyclerView.ViewHolder(binding.root) {
 
+        @SuppressLint("ShowToast")
         fun bind(fileData: ContentChoiceFileData) {
             binding.apply {
-                clickListener = View.OnClickListener {
-                    itemContentVideoCheck.isSelected = !itemContentVideoCheck.isSelected
+                clickListener = View.OnClickListener { v ->
 
-                    fileData.video?.let {
-                        if (itemContentVideoCheck.isSelected) {
-                            selectedVideoList.add(it)
+                    fileData.video?.let { uri ->
+                        if (!itemContentVideoCheck.isSelected) {
+                            // MAX = 4, 추가 선택시 오류문구
+                            if (selectedVideoList.size >= 4) {
+                                contentChoiceViewModel.maxChoiceItemCallback?.invoke()
+                                return@OnClickListener
+                            }
+                            selectedVideoList.add(uri)
                         } else {
-                            selectedVideoList.remove(it)
+                            selectedVideoList.remove(uri)
                         }
                     }
+                    itemContentVideoCheck.isSelected = !itemContentVideoCheck.isSelected
+
                     Log.d(TAG, "selectedVideoList: ${selectedVideoList.size}")
                     contentChoiceViewModel.setSelectVideo(selectedVideoList)
                 }

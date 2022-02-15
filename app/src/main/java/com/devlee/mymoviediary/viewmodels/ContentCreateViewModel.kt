@@ -8,13 +8,10 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.util.Log
 import android.view.View
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.model.Category
@@ -29,9 +26,8 @@ import com.devlee.mymoviediary.presentation.fragment.main_bottom.create.BottomCh
 import com.devlee.mymoviediary.utils.dialog.CustomDialog
 import com.gun0912.tedpermission.coroutine.TedPermission
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
-import java.io.File
 import java.io.IOException
 
 class ContentCreateViewModel : ViewModel() {
@@ -50,6 +46,8 @@ class ContentCreateViewModel : ViewModel() {
 
     var selectedCategoryItem: ((Category) -> Unit)? = null
     var selectedContentItem: ((ContentType) -> Unit)? = null
+
+    var maxChoiceItemCallback: (() -> Unit)? = null
 
     @SuppressLint("NewApi")
     var dateStr: ObservableField<String?> = ObservableField()

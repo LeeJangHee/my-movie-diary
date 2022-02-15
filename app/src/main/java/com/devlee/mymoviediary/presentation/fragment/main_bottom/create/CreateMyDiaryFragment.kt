@@ -21,7 +21,6 @@ import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
 import com.devlee.mymoviediary.utils.*
 import com.devlee.mymoviediary.utils.dialog.calendarDialogCallback
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("NewApi")
@@ -87,14 +86,12 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
         }
         // 파일 선택
         selectedContentCallback = { contentType ->
-            lifecycleScope.launch {
-                delay(300)
+            delay(300) {
                 val action = CreateMyDiaryFragmentDirections.actionCreateMyDiaryFragmentToContentChoiceFragment(
                     contentType = contentType
                 )
                 findNavController().navigate(action)
             }
-
         }
     }
 
