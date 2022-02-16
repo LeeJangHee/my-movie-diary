@@ -1,49 +1,47 @@
 package com.devlee.mymoviediary.presentation.fragment.main_bottom.create
 
 import android.content.ContentUris
-import android.content.res.ColorStateList
 import android.os.Build
-import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.PopupWindow
 import android.widget.SeekBar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.BottomContentChoiceBinding
+import com.devlee.mymoviediary.databinding.ItemSortPopupBinding
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceFileData
 import com.devlee.mymoviediary.domain.use_case.ContentType
 import com.devlee.mymoviediary.presentation.adapter.create.ContentChoiceAdapter
+import com.devlee.mymoviediary.presentation.fragment.BaseBottomSheetFragment
 import com.devlee.mymoviediary.utils.*
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
+import com.devlee.mymoviediary.viewmodels.SortItem
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.shape.CornerFamily
-import com.google.android.material.shape.MaterialShapeDrawable
-import com.google.android.material.shape.ShapeAppearanceModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ContentChoiceFragment : BottomSheetDialogFragment() {
+class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding>(R.layout.bottom_content_choice) {
 
     companion object {
         private const val TAG = "ContentChoiceFragment"
     }
-
-    private var _binding: BottomContentChoiceBinding? = null
-    private val binding get() = _binding!!
 
     private val contentChoiceViewModel: ContentCreateViewModel by viewModels()
     private val args: ContentChoiceFragmentArgs by navArgs()
@@ -53,13 +51,8 @@ class ContentChoiceFragment : BottomSheetDialogFragment() {
     private val exoPlayer: ExoPlayer by lazy { ExoPlayer.Builder(requireContext()).build() }
     private val updateSeekRunnable = Runnable { updateSeekBar() }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.BottomSheet_Base_Light)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = BottomContentChoiceBinding.inflate(inflater, container, false).apply {
+    override fun setView() {
+        binding.apply {
             lifecycleOwner = viewLifecycleOwner
             if (args.contentType == ContentType.VIDEO) {
                 setVideo()
@@ -67,13 +60,114 @@ class ContentChoiceFragment : BottomSheetDialogFragment() {
                 setAudio()
             }
             title = args.contentType.text
+
+            // 정렬 item 클릭
+            sortItemView.setOnClickListener(::setSortItemViewClick)
+
+            // 타임라인 change callback
+            contentChoiceSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(seekbar: SeekBar?, progress: Int, fromUser: Boolean) {
+                }
+
+                override fun onStartTrackingTouch(seekbar: SeekBar) {
+                }
+
+                override fun onStopTrackingTouch(seekbar: SeekBar) {
+                    exoPlayer.seekTo(seekbar.progress * 1000L)
+                }
+
+            })
+            // 취소 클릭
+            contentChoiceCancel.setOnClickListener { dismiss() }
+            // 확인 클릭
+            contentChoiceOk.setOnClickListener {
+                // 확인
+            }
+
+            // 아이템 선택 max 일 경우 경고 문구
+            contentChoiceViewModel.maxChoiceItemCallback = {
+                binding.maxChoiceLayout.show()
+                delayUiThread(700) {
+                    binding.maxChoiceLayout.hide()
+                }
+            }
         }
 
-        return binding.root
+        lifecycleScope.launchWhenResumed {
+            contentChoiceViewModel.selectedSortItem.collect { sortItem ->
+                Log.d(TAG, "selectedSortItem1: $sortItem")
+                binding.selectedSortItem = sortItem
+                loadVideo(sortItem.order) {
+                    launch {
+                        contentChoiceAdapter.setFileList(it)
+                    }
+                }
+            }
+        }
+
+        setBehavior()
+        initExoPlayer()
+        initSortItem()
+        setSelectVideoItem()
+        setTopCornerRadius(4, 4)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun setSortItemViewClick(v: View) {
+        Log.w(TAG, "sortItemView: click", )
+        val itemBinding = ItemSortPopupBinding.inflate(LayoutInflater.from(activity))
+        val popupWindow = PopupWindow(itemBinding.root, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true)
+        popupWindow.showAsDropDown(v)
+
+        with(itemBinding) {
+            Log.w(TAG, "itemBinding: ${itemBinding.root}", )
+            popupItem = contentChoiceViewModel.popupMenuSortItem.get()
+
+            sortPopupMenu.width = v.width
+            root.setOnClickListener {
+                Log.v(TAG, "itemBinding click $popupItem, ${binding.selectedSortItem}")
+                contentChoiceViewModel.popupMenuSortItem.set(binding.selectedSortItem)
+                contentChoiceViewModel.setSortItem(popupItem)
+
+                popupWindow.dismiss()
+            }
+        }
+    }
+
+    private fun setSelectVideoItem() = lifecycleScope.launch {
+        contentChoiceViewModel.selectedVideoList.collect { uriList ->
+
+            fun PlayerView.currentIsPlaying() = run {
+                val pvPlayer = player ?: return@run
+                Log.d(TAG, "currentIsPlaying: ${pvPlayer.currentMediaItem}")
+            }
+
+            uriList.lastOrNull()?.let {
+                Log.d(TAG, "stateFlow start ${uriList.size}")
+                val mediaItem = MediaItem.fromUri(it)
+
+                exoPlayer.apply {
+                    setMediaItem(mediaItem)
+                    prepare()
+                    play()
+                    playWhenReady = true
+                }
+
+            } ?: run {
+                exoPlayer.apply {
+                    clearMediaItems()
+                    stop()
+                    playWhenReady = false
+                }
+            }
+            binding.contentChoicePreviewVideo.apply {
+                this.player = exoPlayer
+                currentIsPlaying()
+            }
+        }
+    }
+
+    private fun setBehavior() {
+        val view = binding.root
         val layoutParams = (binding.root.parent as View).layoutParams as CoordinatorLayout.LayoutParams
         val behavior = layoutParams.behavior
         if (behavior is BottomSheetBehavior) {
@@ -105,66 +199,12 @@ class ContentChoiceFragment : BottomSheetDialogFragment() {
                 binding.maxChoiceLayout.y = behavior.peekHeight - binding.maxChoiceLayout.height.toFloat()
             }
         }
+    }
 
-        initExoPlayer()
-
-        binding.apply {
-            lifecycleScope.launch {
-                contentChoiceViewModel.selectedVideoList.collect { uriList ->
-
-                    fun PlayerView.currentIsPlaying() = run {
-                        val pvPlayer = player ?: return@run
-                        Log.d(TAG, "currentIsPlaying: ${pvPlayer.currentMediaItem}")
-                    }
-
-                    uriList.lastOrNull()?.let {
-                        Log.d(TAG, "stateFlow start ${uriList.size}")
-                        val mediaItem = MediaItem.fromUri(it)
-
-                        exoPlayer.apply {
-                            setMediaItem(mediaItem)
-                            prepare()
-                            play()
-                            playWhenReady = true
-                        }
-
-                    } ?: run {
-                        exoPlayer.apply {
-                            clearMediaItems()
-                            stop()
-                            playWhenReady = false
-                        }
-                    }
-                    contentChoicePreviewVideo.apply {
-                        this.player = exoPlayer
-                        currentIsPlaying()
-                    }
-                }
-            }
-            contentChoiceSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(seekbar: SeekBar?, progress: Int, fromUser: Boolean) {
-                }
-
-                override fun onStartTrackingTouch(seekbar: SeekBar) {
-                }
-
-                override fun onStopTrackingTouch(seekbar: SeekBar) {
-                    exoPlayer.seekTo(seekbar.progress * 1000L)
-                }
-
-            })
-            contentChoiceCancel.setOnClickListener { dismiss() }
-            contentChoiceOk.setOnClickListener {
-                // 확인
-            }
-            contentChoiceViewModel.maxChoiceItemCallback = {
-                binding.maxChoiceLayout.show()
-                delay(700) {
-                    binding.maxChoiceLayout.hide()
-                }
-            }
-        }
-        setCornerRadius(view)
+    private fun initSortItem() {
+        contentChoiceViewModel.popupMenuSortItem.set(SortItem.DESC)
+        contentChoiceViewModel.setSortItem(SortItem.ASC)
+        binding.selectedSortItem = SortItem.ASC
     }
 
     private fun initExoPlayer() {
@@ -195,8 +235,9 @@ class ContentChoiceFragment : BottomSheetDialogFragment() {
 
     }
 
-    private suspend fun loadVideo(): List<ContentChoiceFileData> {
-        return withContext(Dispatchers.Main) {
+    private suspend fun loadVideo(order: String = SortItem.ASC.order, callback: ((List<ContentChoiceFileData>) -> Unit)? = null): List<ContentChoiceFileData> {
+        Log.d(TAG, "loadVideo: $order")
+        return withContext(Dispatchers.IO) {
             val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
             } else {
@@ -216,7 +257,7 @@ class ContentChoiceFragment : BottomSheetDialogFragment() {
                 projection,
                 null,
                 null,
-                "${MediaStore.Video.Media.DATE_MODIFIED} ASC"
+                "${MediaStore.Video.Media.DATE_MODIFIED} $order"
             )?.use { cursor ->
                 val idColumn = cursor.getColumnIndex(MediaStore.Video.Media._ID)
                 val displayNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)
@@ -239,23 +280,13 @@ class ContentChoiceFragment : BottomSheetDialogFragment() {
                     }
                 }
                 Log.d(TAG, "loadVideo: size ${videoList.size}")
+                callback?.invoke(videoList)
                 videoList
-            } ?: listOf()
+            } ?: run {
+                callback?.invoke(listOf())
+                listOf()
+            }
         }
-    }
-
-    private fun setCornerRadius(view: View) {
-        val model = ShapeAppearanceModel().toBuilder().apply {
-            setTopRightCorner(CornerFamily.ROUNDED, 4.toDp())
-            setTopLeftCorner(CornerFamily.ROUNDED, 4.toDp())
-        }.build()
-
-        val shape = MaterialShapeDrawable(model).apply {
-            val backgroundColor = getColorRes(requireContext(), R.color.white)
-            fillColor = ColorStateList.valueOf(backgroundColor)
-        }
-
-        view.background = shape
     }
 
     private fun updateSeekBar() {

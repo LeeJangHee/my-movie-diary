@@ -1,26 +1,23 @@
 package com.devlee.mymoviediary.presentation.fragment
 
 import android.content.res.ColorStateList
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.DialogFragment
 import androidx.viewbinding.ViewBinding
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.presentation.activity.ProgressControl
 import com.devlee.mymoviediary.utils.getColorRes
 import com.devlee.mymoviediary.utils.toDp
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
 
-abstract class BaseDialogFragment<V : ViewBinding>(@LayoutRes private val layoutId: Int) : DialogFragment() {
+abstract class BaseBottomSheetFragment<V : ViewBinding>(@LayoutRes private val layoutId: Int) : BottomSheetDialogFragment() {
 
     companion object {
         private const val CORNER_FAMILY_ROUND = CornerFamily.ROUNDED
@@ -34,15 +31,11 @@ abstract class BaseDialogFragment<V : ViewBinding>(@LayoutRes private val layout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, R.style.BottomSheet_Base_Light)
         progressControl = requireActivity() as ProgressControl
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        dialog?.window?.apply {
-            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//            addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            requestFeature(Window.FEATURE_NO_TITLE)
-        }
         _binding = DataBindingUtil.inflate(inflater, layoutId, container, false)
         return if (_binding != null) {
             binding.root
@@ -52,6 +45,7 @@ abstract class BaseDialogFragment<V : ViewBinding>(@LayoutRes private val layout
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setView()
     }
 
@@ -95,6 +89,7 @@ abstract class BaseDialogFragment<V : ViewBinding>(@LayoutRes private val layout
     open fun dismissProgressDialog() {
         progressControl?.dismissProgress()
     }
+
 
     abstract fun setView()
 }

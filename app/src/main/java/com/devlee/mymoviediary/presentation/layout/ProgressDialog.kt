@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -12,7 +13,7 @@ import com.devlee.mymoviediary.R
 
 class ProgressDialog(context: Context) : Dialog(context) {
 
-    private val anim = AnimationUtils.loadAnimation(context, R.anim.loading_anim)
+    private val anim: Animation by lazy { AnimationUtils.loadAnimation(context, R.anim.loading_anim) }
     private val imageView = ImageView(context).apply {
         load(R.drawable.loading_icon)
     }
@@ -26,7 +27,7 @@ class ProgressDialog(context: Context) : Dialog(context) {
         val context = context
 
         if (context is Activity) {
-            if ((context as Activity).isFinishing) {
+            if ((context).isFinishing) {
                 return
             }
         }

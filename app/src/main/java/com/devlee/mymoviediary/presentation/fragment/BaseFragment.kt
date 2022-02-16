@@ -9,6 +9,7 @@ import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.devlee.mymoviediary.presentation.activity.ProgressControl
 
 abstract class BaseFragment<V : ViewBinding> : Fragment() {
     private var _binding: V? = null
@@ -86,10 +87,4 @@ abstract class BaseFragment<V : ViewBinding> : Fragment() {
             onClickListener: View.OnClickListener? = null
         )
     }
-
-    interface ProgressControl {
-        fun showProgress()
-        fun dismissProgress()
-    }
-
 }

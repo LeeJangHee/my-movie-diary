@@ -1,5 +1,6 @@
 package com.devlee.mymoviediary.utils
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.Log
 import android.view.View
@@ -18,6 +19,10 @@ import com.devlee.mymoviediary.data.model.Mood
 import com.devlee.mymoviediary.presentation.adapter.category.CategoryViewType
 import com.devlee.mymoviediary.utils.recyclerview.CategoryDecoration
 import com.devlee.mymoviediary.utils.recyclerview.CustomDecoration
+import com.devlee.mymoviediary.viewmodels.SortItem
+import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.shape.ShapeAppearanceModel
 
 @BindingAdapter("bindImage")
 fun bindSetImage(view: ImageView, drawable: Int?) {
@@ -145,5 +150,25 @@ fun ImageButton.setMood(mood: Mood) = run {
         width = w
         height = h
         requestLayout()
+    }
+}
+
+@BindingAdapter("sortItemText")
+fun TextView.setSortItem(item: SortItem?) {
+    text = item?.title
+
+    when (id) {
+        R.id.sortPopupMenu -> {
+            val modelPopupMenu = ShapeAppearanceModel().toBuilder().apply {
+                setBottomLeftCorner(CornerFamily.ROUNDED, 4.toDp())
+                setBottomRightCorner(CornerFamily.ROUNDED, 4.toDp())
+            }.build()
+
+            val shapePopupMenu = MaterialShapeDrawable(modelPopupMenu).apply {
+                val backgroundColor = getColorRes(context, R.color.white)
+                fillColor = ColorStateList.valueOf(backgroundColor)
+            }
+            background = shapePopupMenu
+        }
     }
 }

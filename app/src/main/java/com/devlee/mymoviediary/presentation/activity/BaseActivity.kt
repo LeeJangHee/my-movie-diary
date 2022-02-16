@@ -20,7 +20,7 @@ import com.devlee.mymoviediary.utils.gone
 import com.devlee.mymoviediary.utils.show
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-abstract class BaseActivity<V : ViewBinding> : AppCompatActivity(), BaseFragment.ToolbarControl, BaseFragment.ProgressControl {
+abstract class BaseActivity<V : ViewBinding> : AppCompatActivity(), BaseFragment.ToolbarControl, ProgressControl {
     protected lateinit var binding: V
     private lateinit var defaultBinding: ActivityDefaultBinding
 
@@ -52,7 +52,7 @@ abstract class BaseActivity<V : ViewBinding> : AppCompatActivity(), BaseFragment
             setToolbar()
         }
 
-        bottomNavLayoutBinding?.let { bottomBinding->
+        bottomNavLayoutBinding?.let { bottomBinding ->
             bottomNavLayout = bottomBinding.baseBottomNav
         }
     }
@@ -72,7 +72,7 @@ abstract class BaseActivity<V : ViewBinding> : AppCompatActivity(), BaseFragment
         bottomNavLayoutBinding?.root?.show()
     }
 
-    open fun getAppbar()= appToolbarLayout
+    open fun getAppbar() = appToolbarLayout
 
     abstract fun setToolbar()
 
@@ -108,4 +108,9 @@ abstract class BaseActivity<V : ViewBinding> : AppCompatActivity(), BaseFragment
     open fun dismissProgressDialog() {
         progressDialog.dismissProgress()
     }
+}
+
+interface ProgressControl {
+    fun showProgress()
+    fun dismissProgress()
 }

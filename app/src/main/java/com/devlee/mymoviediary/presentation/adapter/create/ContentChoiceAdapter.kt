@@ -33,6 +33,9 @@ class ContentChoiceAdapter(
         @SuppressLint("ShowToast")
         fun bind(fileData: ContentChoiceFileData) {
             binding.apply {
+                // 선택된 비디오 리스트에 있을 경우에 check
+                itemContentVideoCheck.isSelected = selectedVideoList.contains(fileData.video)
+
                 clickListener = View.OnClickListener { v ->
 
                     fileData.video?.let { uri ->
@@ -46,6 +49,8 @@ class ContentChoiceAdapter(
                         } else {
                             selectedVideoList.remove(uri)
                         }
+
+
                     }
                     itemContentVideoCheck.isSelected = !itemContentVideoCheck.isSelected
 
@@ -96,6 +101,8 @@ class ContentChoiceAdapter(
 
 
     fun setFileList(newList: List<ContentChoiceFileData>) {
+        selectedVideoList.clear()
+        selectedAudioList.clear()
         val contentChoiceDiffUtils = MyDiaryDiffUtil(fileList, newList)
         val diffUtilResult = DiffUtil.calculateDiff(contentChoiceDiffUtils)
         fileList = newList

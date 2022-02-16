@@ -4,9 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
+        <import type="com.devlee.mymoviediary.viewmodels.SortItem" />
         <variable
             name="title"
             type="String" />
+        <variable
+            name="viewModel"
+            type="com.devlee.mymoviediary.viewmodels.ContentCreateViewModel" />
+        <variable
+            name="selectedSortItem"
+            type="SortItem" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -102,7 +110,7 @@
                 tools:progress="40"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout"
+                android:id="@+id/sortItemView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="44dp">
@@ -112,6 +120,7 @@
                     style="@style/ContentChoicePopupMenuTextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    sortItemText="@{selectedSortItem}"
                     android:layout_marginStart="16dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

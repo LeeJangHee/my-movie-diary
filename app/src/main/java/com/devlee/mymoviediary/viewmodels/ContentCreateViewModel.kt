@@ -8,11 +8,16 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.util.Log
 import android.view.View
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.data.model.Mood
@@ -26,7 +31,7 @@ import com.devlee.mymoviediary.presentation.fragment.main_bottom.create.BottomCh
 import com.devlee.mymoviediary.utils.dialog.CustomDialog
 import com.gun0912.tedpermission.coroutine.TedPermission
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -39,7 +44,9 @@ class ContentCreateViewModel : ViewModel() {
 
     var choiceBottomSheetList: MutableSharedFlow<List<ChoiceBottomSheetData>> = MutableSharedFlow()
     private var _selectedVideoList: MutableSharedFlow<List<Uri>> = MutableSharedFlow()
-    val selectedVideoList = _selectedVideoList
+    val selectedVideoList = _selectedVideoList.asSharedFlow()
+
+    var test: MutableStateFlow<String> = MutableStateFlow("")
 
     var deniedPermissionCallback: (() -> Unit)? = null
     var bottomChoiceViewCallback: ((BottomChoiceType) -> Unit)? = null
@@ -55,6 +62,10 @@ class ContentCreateViewModel : ViewModel() {
     var selectedCategory: ObservableField<Category?> = ObservableField()
     var start: ObservableBoolean = ObservableBoolean(false)
     var mood: ObservableField<Mood> = ObservableField(Mood.NONE)
+
+    private var _selectedSortItem: MutableSharedFlow<SortItem> = MutableSharedFlow()
+    val selectedSortItem get() = _selectedSortItem.asSharedFlow()
+    var popupMenuSortItem: ObservableField<SortItem> = ObservableField(SortItem.DESC)
 
     init {
         contentCreateAdapter.setDiaryList(contentChoiceDataList)
@@ -137,4 +148,15 @@ class ContentCreateViewModel : ViewModel() {
         _selectedVideoList.emit(videoList)
     }
 
+    fun setSortItem(item: SortItem?) = viewModelScope.launch {
+        item?.let {
+            _selectedSortItem.emit(item)
+        }
+    }
+
+}
+
+enum class SortItem(val title: String, val order: String) {
+    ASC("최신 순", "ASC"),
+    DESC("오래된 순", "DESC")
 }

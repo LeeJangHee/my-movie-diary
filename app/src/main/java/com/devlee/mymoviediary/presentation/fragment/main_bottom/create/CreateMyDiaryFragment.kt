@@ -86,7 +86,7 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
         }
         // 파일 선택
         selectedContentCallback = { contentType ->
-            delay(300) {
+            delayUiThread(300) {
                 val action = CreateMyDiaryFragmentDirections.actionCreateMyDiaryFragmentToContentChoiceFragment(
                     contentType = contentType
                 )

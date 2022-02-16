@@ -1,38 +1,26 @@
 package com.devlee.mymoviediary.presentation.fragment.main_bottom.create
 
-import android.annotation.SuppressLint
-import android.app.Dialog
-import android.content.res.ColorStateList
-import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.BottomChoiceViewBinding
 import com.devlee.mymoviediary.presentation.adapter.create.CreateBottomSheetAdapter
-import com.devlee.mymoviediary.utils.*
+import com.devlee.mymoviediary.presentation.fragment.BaseBottomSheetFragment
 import com.devlee.mymoviediary.utils.recyclerview.CustomLinearLayoutManager
+import com.devlee.mymoviediary.utils.selectedCategoryCallback
+import com.devlee.mymoviediary.utils.selectedContentCallback
+import com.devlee.mymoviediary.utils.startFadeInAnimation
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.shape.CornerFamily
-import com.google.android.material.shape.MaterialShapeDrawable
-import com.google.android.material.shape.ShapeAppearanceModel
 
-class ChoiceBottomSheetFragment : BottomSheetDialogFragment() {
+class ChoiceBottomSheetFragment : BaseBottomSheetFragment<BottomChoiceViewBinding>(R.layout.bottom_choice_view) {
 
     companion object {
         private const val TAG = "ChoiceBottomSheet"
     }
-
-    private var _binding: BottomChoiceViewBinding? = null
-    private val binding get() = _binding!!
 
     private val bottomSheetViewModel: ContentCreateViewModel by viewModels()
 
@@ -42,14 +30,9 @@ class ChoiceBottomSheetFragment : BottomSheetDialogFragment() {
 
     private val args: ChoiceBottomSheetFragmentArgs by navArgs()
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.BottomSheet_Base_Light)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = BottomChoiceViewBinding.inflate(inflater, container, false).apply {
+    override fun setView() {
+        Log.d(TAG, "setView: ")
+        binding.apply {
             viewModel = bottomSheetViewModel.apply {
                 // 선택 categoryItem
                 selectedCategoryItem = { category ->
@@ -65,14 +48,16 @@ class ChoiceBottomSheetFragment : BottomSheetDialogFragment() {
             }
             lifecycleOwner = viewLifecycleOwner
             cancelString = requireContext().getString(R.string.no_kr)
+            bottomChoiceCancel.root.setOnClickListener { dismiss() }
         }
-        return binding.root
+
+        setBottomChoiceType()
+        choiceBottomSheetAdapter.setBottomSheetItem(args.choiceBottomSheetList.toList())
+        setRecyclerView()
+        setTopCornerRadius(4, 4)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "onViewCreated: ")
-
+    private fun setBottomChoiceType() {
         if (args.bottomChoiceType == BottomChoiceType.CATEGORY) {
             // Category 추가할 때, 취소버튼 y좌표
 
@@ -128,35 +113,6 @@ class ChoiceBottomSheetFragment : BottomSheetDialogFragment() {
             // Content 추가할 때, 취소버튼 y좌표
             binding.bottomChoiceCancelView.y = requireContext().resources.getDimension(R.dimen.dp_56) * 2
         }
-
-        choiceBottomSheetAdapter.setBottomSheetItem(args.choiceBottomSheetList.toList())
-        setRecyclerView()
-        setCornerRadius(view)
-    }
-
-    private fun setCornerRadius(view: View) {
-        val model = ShapeAppearanceModel().toBuilder().apply {
-            setTopRightCorner(CornerFamily.ROUNDED, 4.toDp())
-            setTopLeftCorner(CornerFamily.ROUNDED, 4.toDp())
-        }.build()
-
-        val shape = MaterialShapeDrawable(model).apply {
-            val backgroundColor = getColorRes(requireContext(), R.color.white)
-            fillColor = ColorStateList.valueOf(backgroundColor)
-        }
-
-        view.background = shape
-    }
-
-    @SuppressLint("RestrictedApi")
-    override fun setupDialog(dialog: Dialog, style: Int) {
-        super.setupDialog(dialog, style)
-        Log.d(TAG, "setupDialog: ")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        binding.bottomChoiceCancel.root.setOnClickListener { this.dismiss() }
     }
 
     private fun setRecyclerView() {
