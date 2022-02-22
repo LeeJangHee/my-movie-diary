@@ -1,8 +1,5 @@
 package com.devlee.mymoviediary.presentation.fragment.main_bottom.create
 
-import android.content.ContentUris
-import android.os.Build
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,31 +8,32 @@ import android.widget.PopupWindow
 import android.widget.SeekBar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.BottomContentChoiceBinding
 import com.devlee.mymoviediary.databinding.ItemSortPopupBinding
-import com.devlee.mymoviediary.domain.use_case.ContentChoiceFileData
+import com.devlee.mymoviediary.domain.repository.MediaPagingRepository
 import com.devlee.mymoviediary.domain.use_case.ContentType
-import com.devlee.mymoviediary.presentation.adapter.create.ContentChoiceAdapter
+import com.devlee.mymoviediary.presentation.adapter.create.MediaPagingAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseBottomSheetFragment
-import com.devlee.mymoviediary.utils.*
+import com.devlee.mymoviediary.utils.Constants.MEDIA_PAGE_SIZE
+import com.devlee.mymoviediary.utils.delayUiThread
+import com.devlee.mymoviediary.utils.hide
+import com.devlee.mymoviediary.utils.show
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
+import com.devlee.mymoviediary.viewmodels.MediaViewModel
+import com.devlee.mymoviediary.viewmodels.MediaViewModelProviderFactory
 import com.devlee.mymoviediary.viewmodels.SortItem
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding>(R.layout.bottom_content_choice) {
 
@@ -44,9 +42,13 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
     }
 
     private val contentChoiceViewModel: ContentCreateViewModel by viewModels()
+    private val mediaViewModel by viewModels<MediaViewModel> {
+        val repository = MediaPagingRepository(requireContext(), args.contentType)
+        MediaViewModelProviderFactory(repository)
+    }
     private val args: ContentChoiceFragmentArgs by navArgs()
 
-    private val contentChoiceAdapter by lazy { ContentChoiceAdapter(args.contentType, contentChoiceViewModel) }
+    private val mediaPagingAdapter by lazy { MediaPagingAdapter(args.contentType, contentChoiceViewModel) }
 
     private val exoPlayer: ExoPlayer by lazy { ExoPlayer.Builder(requireContext()).build() }
     private val updateSeekRunnable = Runnable { updateSeekBar() }
@@ -95,31 +97,44 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
 
         lifecycleScope.launchWhenResumed {
             contentChoiceViewModel.selectedSortItem.collect { sortItem ->
-                Log.d(TAG, "selectedSortItem1: $sortItem")
+                Log.d(TAG, "selectedSortItem: $sortItem")
                 binding.selectedSortItem = sortItem
-                loadVideo(sortItem.order) {
-                    launch {
-                        contentChoiceAdapter.setFileList(it)
-                    }
-                }
+                val scrollPos = if (sortItem == SortItem.ASC) 1
+                else mediaPagingAdapter.itemCount - 1
+
+                Log.w(TAG, "selectedSortItem: $scrollPos", )
+
+//                binding.contentChoiceRecyclerView.smoothScrollToPosition(scrollPos)
+
+                mediaViewModel.setSortItemFlow(sortItem)
             }
         }
 
         setBehavior()
         initExoPlayer()
         initSortItem()
+        initMediaData()
         setSelectVideoItem()
         setTopCornerRadius(4, 4)
     }
 
+    private fun initMediaData() {
+        mediaViewModel.mediaPagingData.observe(viewLifecycleOwner) {
+            lifecycleScope.launch {
+                Log.w(TAG, "initMediaData: $it")
+                mediaPagingAdapter.submitData(it)
+            }
+        }
+    }
+
     private fun setSortItemViewClick(v: View) {
-        Log.w(TAG, "sortItemView: click", )
+        Log.w(TAG, "sortItemView: click")
         val itemBinding = ItemSortPopupBinding.inflate(LayoutInflater.from(activity))
         val popupWindow = PopupWindow(itemBinding.root, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true)
         popupWindow.showAsDropDown(v)
 
         with(itemBinding) {
-            Log.w(TAG, "itemBinding: ${itemBinding.root}", )
+            Log.w(TAG, "itemBinding: ${itemBinding.root}")
             popupItem = contentChoiceViewModel.popupMenuSortItem.get()
 
             sortPopupMenu.width = v.width
@@ -205,6 +220,7 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
         contentChoiceViewModel.popupMenuSortItem.set(SortItem.DESC)
         contentChoiceViewModel.setSortItem(SortItem.ASC)
         binding.selectedSortItem = SortItem.ASC
+        mediaViewModel.setSortItemFlow(SortItem.ASC)
     }
 
     private fun initExoPlayer() {
@@ -218,11 +234,11 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
 
     /** Video setting */
     private fun BottomContentChoiceBinding.setVideo() = lifecycleScope.launch {
-        val videos = loadVideo()
         contentChoiceRecyclerView.apply {
-            adapter = contentChoiceAdapter.apply {
-                setFileList(videos)
-            }
+//            setHasFixedSize(true)
+//            setItemViewCacheSize(MEDIA_PAGE_SIZE)
+            itemAnimator = null
+            adapter = mediaPagingAdapter
             val spanCount = 3
             layoutManager = GridLayoutManager(requireContext(), spanCount)
         }
@@ -233,60 +249,6 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
     /** Audio setting */
     private fun BottomContentChoiceBinding.setAudio() {
 
-    }
-
-    private suspend fun loadVideo(order: String = SortItem.ASC.order, callback: ((List<ContentChoiceFileData>) -> Unit)? = null): List<ContentChoiceFileData> {
-        Log.d(TAG, "loadVideo: $order")
-        return withContext(Dispatchers.IO) {
-            val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
-            } else {
-                MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-            }
-
-            val projection = arrayOf(
-                MediaStore.Video.Media._ID,
-                MediaStore.Video.Media.DISPLAY_NAME,
-                MediaStore.Video.Media.MIME_TYPE
-            )
-
-            val videoList = mutableListOf<ContentChoiceFileData>()
-
-            requireActivity().contentResolver.query(
-                collection,
-                projection,
-                null,
-                null,
-                "${MediaStore.Video.Media.DATE_MODIFIED} $order"
-            )?.use { cursor ->
-                val idColumn = cursor.getColumnIndex(MediaStore.Video.Media._ID)
-                val displayNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)
-                val mimeTypeColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.MIME_TYPE)
-
-                while (cursor.moveToNext()) {
-                    val id = cursor.getLong(idColumn)
-                    val displayName = cursor.getString(displayNameColumn)
-                    val mimeType = cursor.getString(mimeTypeColumn)
-                    val contentUri = ContentUris.withAppendedId(
-                        MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                        id
-                    )
-                    Log.d(TAG, "loadVideo: $contentUri, $id, $displayName, $mimeType")
-                    try {
-                        videoList.add(ContentChoiceFileData(video = contentUri))
-                    } catch (e: Exception) {
-                        Log.e(TAG, "loadVideo-(): ", e)
-                        e.printStackTrace()
-                    }
-                }
-                Log.d(TAG, "loadVideo: size ${videoList.size}")
-                callback?.invoke(videoList)
-                videoList
-            } ?: run {
-                callback?.invoke(listOf())
-                listOf()
-            }
-        }
     }
 
     private fun updateSeekBar() {

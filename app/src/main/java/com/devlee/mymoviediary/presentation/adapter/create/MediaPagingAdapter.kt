@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.fetch.VideoFrameUriFetcher
@@ -14,19 +15,13 @@ import coil.request.videoFrameMillis
 import com.devlee.mymoviediary.databinding.ItemContentChoiceVideoBinding
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceFileData
 import com.devlee.mymoviediary.domain.use_case.ContentType
-import com.devlee.mymoviediary.utils.MyDiaryDiffUtil
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
 
-class ContentChoiceAdapter(
+class MediaPagingAdapter(
     private val type: ContentType,
-    private val contentChoiceViewModel: ContentCreateViewModel
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val contentCreateViewModel: ContentCreateViewModel
+) : PagingDataAdapter<ContentChoiceFileData, RecyclerView.ViewHolder>(differCallback) {
 
-    companion object {
-        private const val TAG = "ContentChoiceAdapter"
-    }
-
-    private var fileList: List<ContentChoiceFileData> = listOf()
     private var selectedVideoList: MutableList<Uri> = mutableListOf()
     private var selectedAudioList: MutableList<Uri> = mutableListOf()
 
@@ -44,7 +39,7 @@ class ContentChoiceAdapter(
                         if (!itemContentVideoCheck.isSelected) {
                             // MAX = 4, 추가 선택시 오류문구
                             if (selectedVideoList.size >= 4) {
-                                contentChoiceViewModel.maxChoiceItemCallback?.invoke()
+                                contentCreateViewModel.maxChoiceItemCallback?.invoke()
                                 return@OnClickListener
                             }
                             selectedVideoList.add(uri)
@@ -57,7 +52,7 @@ class ContentChoiceAdapter(
                     itemContentVideoCheck.isSelected = !itemContentVideoCheck.isSelected
 
                     Log.d(TAG, "selectedVideoList: ${selectedVideoList.size}")
-                    contentChoiceViewModel.setSelectVideo(selectedVideoList)
+                    contentCreateViewModel.setSelectVideo(selectedVideoList)
                 }
 
                 itemContentVideoThumbnail.load(fileData.video) {
@@ -72,6 +67,7 @@ class ContentChoiceAdapter(
     inner class ContentAudioViewHolder(val binding: ItemContentChoiceVideoBinding) : RecyclerView.ViewHolder(binding.root) {
 
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -94,7 +90,10 @@ class ContentChoiceAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, i: Int) {
         when (holder) {
             is ContentVideoViewHolder -> {
-                holder.bind(fileList[i])
+                getItem(i)?.let {
+                    holder.bind(it)
+                }
+                Log.d(TAG, "onBindViewHolder: ${getItem(i)}")
             }
             is ContentAudioViewHolder -> {
                 Log.d(TAG, "onBindViewHolder: ")
@@ -102,16 +101,18 @@ class ContentChoiceAdapter(
         }
     }
 
-    override fun getItemCount(): Int = fileList.size
 
+    companion object {
+        private const val TAG = "MediaPagingAdapter"
+        private val differCallback = object : DiffUtil.ItemCallback<ContentChoiceFileData>() {
+            override fun areItemsTheSame(oldItem: ContentChoiceFileData, newItem: ContentChoiceFileData): Boolean {
+                return oldItem == newItem
+            }
 
-    fun setFileList(newList: List<ContentChoiceFileData>) {
-        selectedVideoList.clear()
-        selectedAudioList.clear()
-        val contentChoiceDiffUtils = MyDiaryDiffUtil(fileList, newList)
-        val diffUtilResult = DiffUtil.calculateDiff(contentChoiceDiffUtils)
-        fileList = newList
-        diffUtilResult.dispatchUpdatesTo(this)
+            override fun areContentsTheSame(oldItem: ContentChoiceFileData, newItem: ContentChoiceFileData): Boolean {
+                return oldItem == newItem
+            }
+
+        }
     }
-
 }

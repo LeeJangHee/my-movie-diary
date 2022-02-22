@@ -111,18 +111,19 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/sortItemView"
-                android:layout_width="wrap_content"
+                android:layout_width="128dp"
                 android:layout_height="wrap_content"
                 android:minHeight="44dp">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/contentChoicePopupText"
                     style="@style/ContentChoicePopupMenuTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
                     sortItemText="@{selectedSortItem}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/contentChoicePopupImage"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="최근 순" />
@@ -131,12 +132,10 @@
                     android:id="@+id/contentChoicePopupImage"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginStart="39dp"
                     android:layout_marginEnd="8dp"
                     android:src="@drawable/down_arrow_icon"
                     app:layout_constraintBottom_toBottomOf="@+id/contentChoicePopupText"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/contentChoicePopupText"
                     app:layout_constraintTop_toTopOf="@+id/contentChoicePopupText" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

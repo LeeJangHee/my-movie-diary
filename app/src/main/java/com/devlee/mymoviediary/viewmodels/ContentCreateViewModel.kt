@@ -4,20 +4,18 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.util.Log
 import android.view.View
-import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.data.model.Mood
@@ -33,7 +31,6 @@ import com.gun0912.tedpermission.coroutine.TedPermission
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.io.IOException
 
 class ContentCreateViewModel : ViewModel() {
 
@@ -45,8 +42,6 @@ class ContentCreateViewModel : ViewModel() {
     var choiceBottomSheetList: MutableSharedFlow<List<ChoiceBottomSheetData>> = MutableSharedFlow()
     private var _selectedVideoList: MutableSharedFlow<List<Uri>> = MutableSharedFlow()
     val selectedVideoList = _selectedVideoList.asSharedFlow()
-
-    var test: MutableStateFlow<String> = MutableStateFlow("")
 
     var deniedPermissionCallback: (() -> Unit)? = null
     var bottomChoiceViewCallback: ((BottomChoiceType) -> Unit)? = null
@@ -66,6 +61,9 @@ class ContentCreateViewModel : ViewModel() {
     private var _selectedSortItem: MutableSharedFlow<SortItem> = MutableSharedFlow()
     val selectedSortItem get() = _selectedSortItem.asSharedFlow()
     var popupMenuSortItem: ObservableField<SortItem> = ObservableField(SortItem.DESC)
+
+    private var _mediaList: MutableSharedFlow<List<ContentChoiceFileData>> = MutableSharedFlow()
+    val mediaList get() = _mediaList.asLiveData()
 
     init {
         contentCreateAdapter.setDiaryList(contentChoiceDataList)
@@ -129,7 +127,7 @@ class ContentCreateViewModel : ViewModel() {
         }
     }
 
-    fun uri2Bitmap(context: Context, uri: Uri?): Bitmap? {
+    fun uri2Drawable(context: Context, uri: Uri?): Drawable {
         var bitmap: Bitmap? = null
         if (uri != null) {
             try {
@@ -137,11 +135,11 @@ class ContentCreateViewModel : ViewModel() {
                     setDataSource(context, uri)
                 }
                 bitmap = mmr.frameAtTime
-            } catch (e: IOException) {
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
-        return bitmap
+        return BitmapDrawable(context.resources, bitmap)
     }
 
     fun setSelectVideo(videoList: List<Uri>) = viewModelScope.launch {
@@ -152,6 +150,15 @@ class ContentCreateViewModel : ViewModel() {
         item?.let {
             _selectedSortItem.emit(item)
         }
+    }
+
+    fun setMediaList(mediaList: List<ContentChoiceFileData>) = viewModelScope.launch {
+        Log.d(TAG, "setMediaList: $mediaList")
+        _mediaList.emit(mediaList)
+    }
+
+    fun getMediaList(): List<ContentChoiceFileData> {
+        return mediaList.value ?: listOf()
     }
 
 }
