@@ -70,6 +70,7 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
                         findNavController().navigate(action)
                     }
                 }
+                selectedMediaItemCallback = ::updateChoiceMediaData
             }
             lifecycleOwner = viewLifecycleOwner
             createDateLayout.setOnClickListener(::setupSelectedDate)

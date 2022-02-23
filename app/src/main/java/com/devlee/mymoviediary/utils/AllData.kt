@@ -16,5 +16,6 @@ var categoryUserPickItemClick: (() -> Unit)? = null
 var categoryErrorView: ((View) -> Unit)? = null
 var selectedCategoryCallback: ((Category) -> Unit)? = null
 var selectedContentCallback: ((ContentType) -> Unit)? = null
+var selectedMediaItemCallback: (() -> Unit)? = null
 
 var isMainBottomNavLayout = MutableLiveData(true)

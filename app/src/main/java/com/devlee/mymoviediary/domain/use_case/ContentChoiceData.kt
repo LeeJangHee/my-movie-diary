@@ -1,7 +1,7 @@
 package com.devlee.mymoviediary.domain.use_case
 
 import android.net.Uri
-import java.io.File
+import com.devlee.mymoviediary.presentation.adapter.create.CreateViewType
 
 data class ContentChoiceData(           // [새 게시물] - 오디오, 비디오 선택 Item
     val itemType: Int,                  // CreateAdapter ViewType
@@ -12,4 +12,11 @@ data class ContentChoiceData(           // [새 게시물] - 오디오, 비디�
 data class ContentChoiceFileData(
     val video: Uri? = null,
     val audio: Uri? = null,
-)
+) {
+    companion object {
+        fun ContentChoiceFileData.toContentChoiceData(): ContentChoiceData {
+            val type = CreateViewType.DIARY.type
+            return ContentChoiceData(type, video, audio)
+        }
+    }
+}

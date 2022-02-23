@@ -19,8 +19,10 @@ import com.devlee.mymoviediary.domain.use_case.ContentChoiceFileData
 import com.devlee.mymoviediary.domain.use_case.ContentType
 import com.devlee.mymoviediary.presentation.adapter.create.MediaPagingAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseBottomSheetFragment
+import com.devlee.mymoviediary.utils.Constants.MEDIA_PAGE_SIZE
 import com.devlee.mymoviediary.utils.delayUiThread
 import com.devlee.mymoviediary.utils.hide
+import com.devlee.mymoviediary.utils.selectedMediaItemCallback
 import com.devlee.mymoviediary.utils.show
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
 import com.devlee.mymoviediary.viewmodels.MediaViewModel
@@ -93,6 +95,9 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
             // 확인 클릭
             contentChoiceOk.setOnClickListener {
                 // 확인
+                Log.d(TAG, "확인 클릭")
+                selectedMediaItemCallback?.invoke()
+                dismiss()
             }
 
             // 아이템 선택 max 일 경우 경고 문구
@@ -162,6 +167,14 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
             uriList.lastOrNull()?.let {
                 Log.d(TAG, "stateFlow start ${uriList.size}")
                 selectedMediaItem = MediaItem.fromUri(it)
+            } ?: run {
+                selectedMediaItem = null
+                onFirstItemCallback.invoke(mediaPagingAdapter.getItemPosition())
+                return@collect
+            }
+            uriList.forEachIndexed { i, uri ->
+                Log.w(TAG, "uriList.forEachIndexed: $i $uri")
+                contentChoiceViewModel.fileList.add(ContentChoiceFileData(video = uri))
             }
 
             setVideoItem(selectedMediaItem)
@@ -249,8 +262,8 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
     /** Video setting */
     private fun BottomContentChoiceBinding.setVideo() = lifecycleScope.launch {
         contentChoiceRecyclerView.apply {
-//            setHasFixedSize(true)
-//            setItemViewCacheSize(MEDIA_PAGE_SIZE)
+            setHasFixedSize(true)
+            setItemViewCacheSize(MEDIA_PAGE_SIZE)
             itemAnimator = null
             adapter = mediaPagingAdapter
             val spanCount = 3

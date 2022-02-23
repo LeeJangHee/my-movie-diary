@@ -13,8 +13,8 @@ import android.view.View
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.model.Category
@@ -22,6 +22,7 @@ import com.devlee.mymoviediary.data.model.Mood
 import com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceData
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceFileData
+import com.devlee.mymoviediary.domain.use_case.ContentChoiceFileData.Companion.toContentChoiceData
 import com.devlee.mymoviediary.domain.use_case.ContentType
 import com.devlee.mymoviediary.presentation.adapter.create.CreateAdapter
 import com.devlee.mymoviediary.presentation.adapter.create.CreateViewType
@@ -37,7 +38,7 @@ class ContentCreateViewModel : ViewModel() {
     private val TAG = "ContentCreateViewModel"
 
     var contentCreateAdapter = CreateAdapter(this)
-    var contentChoiceDataList = arrayListOf<ContentChoiceData>(ContentChoiceData(CreateViewType.ADD.type))
+    var contentChoiceDataList = MutableLiveData(arrayListOf(ContentChoiceData(CreateViewType.ADD.type)))
 
     var choiceBottomSheetList: MutableSharedFlow<List<ChoiceBottomSheetData>> = MutableSharedFlow()
     private var _selectedVideoList: MutableSharedFlow<List<Uri>> = MutableSharedFlow()
@@ -62,11 +63,9 @@ class ContentCreateViewModel : ViewModel() {
     val selectedSortItem get() = _selectedSortItem.asSharedFlow()
     var popupMenuSortItem: ObservableField<SortItem> = ObservableField(SortItem.DESC)
 
-    private var _mediaList: MutableSharedFlow<List<ContentChoiceFileData>> = MutableSharedFlow()
-    val mediaList get() = _mediaList.asLiveData()
 
     init {
-        contentCreateAdapter.setDiaryList(contentChoiceDataList)
+        contentCreateAdapter.setDiaryList(contentChoiceDataList.value ?: arrayListOf())
     }
 
 
@@ -152,13 +151,13 @@ class ContentCreateViewModel : ViewModel() {
         }
     }
 
-    fun setMediaList(mediaList: List<ContentChoiceFileData>) = viewModelScope.launch {
-        Log.d(TAG, "setMediaList: $mediaList")
-        _mediaList.emit(mediaList)
-    }
-
-    fun getMediaList(): List<ContentChoiceFileData> {
-        return mediaList.value ?: listOf()
+    fun updateChoiceMediaData() {
+        Log.i(TAG, "updateChoiceMediaData-()")
+        // Video or Audio 선택
+        fileList.forEach {
+            contentChoiceDataList.value?.add(it.toContentChoiceData())
+        }
+        contentCreateAdapter.setDiaryList(contentChoiceDataList.value ?: arrayListOf())
     }
 
 }
