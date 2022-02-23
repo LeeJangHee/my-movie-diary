@@ -19,7 +19,8 @@ import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
 
 class MediaPagingAdapter(
     private val type: ContentType,
-    private val contentCreateViewModel: ContentCreateViewModel
+    private val contentCreateViewModel: ContentCreateViewModel,
+    private val resultCallback: (ContentChoiceFileData?) -> Unit
 ) : PagingDataAdapter<ContentChoiceFileData, RecyclerView.ViewHolder>(differCallback) {
 
     private var selectedVideoList: MutableList<Uri> = mutableListOf()
@@ -93,12 +94,19 @@ class MediaPagingAdapter(
                 getItem(i)?.let {
                     holder.bind(it)
                 }
-                Log.d(TAG, "onBindViewHolder: ${getItem(i)}")
+                if (i == 0) {
+                    resultCallback.invoke(getItem(i))
+                }
+                Log.d(TAG, "onBindViewHolder: ${getItem(i)}, $i")
             }
             is ContentAudioViewHolder -> {
                 Log.d(TAG, "onBindViewHolder: ")
             }
         }
+    }
+
+    fun getItemPosition(pos: Int = 0): ContentChoiceFileData? {
+        return if (itemCount > 0) getItem(pos) else null
     }
 
 

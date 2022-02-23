@@ -11,15 +11,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.SimpleItemAnimator
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.BottomContentChoiceBinding
 import com.devlee.mymoviediary.databinding.ItemSortPopupBinding
 import com.devlee.mymoviediary.domain.repository.MediaPagingRepository
+import com.devlee.mymoviediary.domain.use_case.ContentChoiceFileData
 import com.devlee.mymoviediary.domain.use_case.ContentType
 import com.devlee.mymoviediary.presentation.adapter.create.MediaPagingAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseBottomSheetFragment
-import com.devlee.mymoviediary.utils.Constants.MEDIA_PAGE_SIZE
 import com.devlee.mymoviediary.utils.delayUiThread
 import com.devlee.mymoviediary.utils.hide
 import com.devlee.mymoviediary.utils.show
@@ -48,10 +47,20 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
     }
     private val args: ContentChoiceFragmentArgs by navArgs()
 
-    private val mediaPagingAdapter by lazy { MediaPagingAdapter(args.contentType, contentChoiceViewModel) }
+    private val mediaPagingAdapter by lazy { MediaPagingAdapter(args.contentType, contentChoiceViewModel, onFirstItemCallback) }
 
     private val exoPlayer: ExoPlayer by lazy { ExoPlayer.Builder(requireContext()).build() }
     private val updateSeekRunnable = Runnable { updateSeekBar() }
+
+    private var selectedMediaItem: MediaItem? = null
+    private var onFirstItemCallback: (ContentChoiceFileData?) -> Unit = { choiceFileData ->
+        // 인스타 처럼 선택된 아이템이 없으면 처음 아이템으로 비디오 시작
+        choiceFileData?.let {
+            if (it.video != null && selectedMediaItem == null) {
+                setVideoItem(MediaItem.fromUri(it.video))
+            }
+        }
+    }
 
     override fun setView() {
         binding.apply {
@@ -99,12 +108,11 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
             contentChoiceViewModel.selectedSortItem.collect { sortItem ->
                 Log.d(TAG, "selectedSortItem: $sortItem")
                 binding.selectedSortItem = sortItem
-                val scrollPos = if (sortItem == SortItem.ASC) 1
-                else mediaPagingAdapter.itemCount - 1
-
-                Log.w(TAG, "selectedSortItem: $scrollPos", )
-
-//                binding.contentChoiceRecyclerView.smoothScrollToPosition(scrollPos)
+                delayUiThread(50) {
+                    // delay를 적용해야 scroll 이동함.. 왜 그러지?
+                    // 공부가 필요하다..
+                    binding.contentChoiceRecyclerView.smoothScrollToPosition(0)
+                }
 
                 mediaViewModel.setSortItemFlow(sortItem)
             }
@@ -119,10 +127,11 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
     }
 
     private fun initMediaData() {
-        mediaViewModel.mediaPagingData.observe(viewLifecycleOwner) {
+        mediaViewModel.mediaPagingData.observe(viewLifecycleOwner) { pagingData ->
             lifecycleScope.launch {
-                Log.w(TAG, "initMediaData: $it")
-                mediaPagingAdapter.submitData(it)
+                Log.w(TAG, "initMediaData: $pagingData")
+
+                mediaPagingAdapter.submitData(pagingData)
             }
         }
     }
@@ -150,34 +159,39 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
 
     private fun setSelectVideoItem() = lifecycleScope.launch {
         contentChoiceViewModel.selectedVideoList.collect { uriList ->
-
-            fun PlayerView.currentIsPlaying() = run {
-                val pvPlayer = player ?: return@run
-                Log.d(TAG, "currentIsPlaying: ${pvPlayer.currentMediaItem}")
-            }
-
             uriList.lastOrNull()?.let {
                 Log.d(TAG, "stateFlow start ${uriList.size}")
-                val mediaItem = MediaItem.fromUri(it)
-
-                exoPlayer.apply {
-                    setMediaItem(mediaItem)
-                    prepare()
-                    play()
-                    playWhenReady = true
-                }
-
-            } ?: run {
-                exoPlayer.apply {
-                    clearMediaItems()
-                    stop()
-                    playWhenReady = false
-                }
+                selectedMediaItem = MediaItem.fromUri(it)
             }
-            binding.contentChoicePreviewVideo.apply {
-                this.player = exoPlayer
-                currentIsPlaying()
+
+            setVideoItem(selectedMediaItem)
+        }
+    }
+
+    private fun PlayerView.currentIsPlaying() = run {
+        val pvPlayer = player ?: return@run
+        Log.d(TAG, "currentIsPlaying: ${pvPlayer.currentMediaItem}")
+    }
+
+    private fun setVideoItem(mediaItem: MediaItem? = null) {
+        mediaItem?.let {
+            exoPlayer.apply {
+                setMediaItem(mediaItem)
+                prepare()
+                play()
+                playWhenReady = true
             }
+        } ?: run {
+            exoPlayer.apply {
+                clearMediaItems()
+                stop()
+                playWhenReady = false
+            }
+        }
+
+        binding.contentChoicePreviewVideo.apply {
+            this.player = exoPlayer
+            currentIsPlaying()
         }
     }
 
