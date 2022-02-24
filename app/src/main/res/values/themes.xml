@@ -170,4 +170,9 @@
         <item name="android:textSize">14dp</item>
         <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
     </style>
+
+    <style name="ContentChoiceAudioTextStyle" parent="AppTheme.DefaultTextStyle">
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+        <item name="android:textSize">16dp</item>
+    </style>
 </resources>

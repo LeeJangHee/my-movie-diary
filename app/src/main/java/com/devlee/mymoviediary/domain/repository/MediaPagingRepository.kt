@@ -30,7 +30,7 @@ class MediaPagingRepository(
 
     fun getMediaPagingData(sortItem: SortItem): Flow<PagingData<ContentChoiceFileData>> {
         return Pager(PagingConfig(pageSize = MEDIA_PAGE_SIZE, enablePlaceholders = false)) {
-            val items = if (type == ContentType.VIDEO) loadVideo(sortItem) else loadVideo(sortItem)
+            val items = if (type == ContentType.VIDEO) loadVideo(sortItem) else loadAudio(sortItem)
             Log.d(TAG, "getMediaPagingData: ${items.size}")
             MediaPagingSource(items)
         }.flow
@@ -85,6 +85,59 @@ class MediaPagingRepository(
             Log.d(TAG, "loadVideo: size empty")
             listOf()
 
+        }
+    }
+
+    private fun loadAudio(sortItem: SortItem): List<ContentChoiceFileData> {
+        val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+        } else {
+            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        }
+
+        val projection = arrayOf(
+            MediaStore.Audio.Media._ID,
+            MediaStore.Audio.Media.DISPLAY_NAME,
+            MediaStore.Audio.Media.MIME_TYPE,
+            MediaStore.Audio.Media.TITLE
+        )
+
+        val audioList = mutableListOf<ContentChoiceFileData>()
+
+        return context.contentResolver.query(
+            collection,
+            projection,
+            null,
+            null,
+            "${MediaStore.Audio.Media.DATE_MODIFIED} ${sortItem.order}"
+        )?.use { cursor ->
+            val idColumn = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
+            val displayNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
+            val mimeTypeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.MIME_TYPE)
+            val titleColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
+
+            while (cursor.moveToNext()) {
+                val id = cursor.getLong(idColumn)
+                val displayName = cursor.getString(displayNameColumn)
+                val mimeType = cursor.getString(mimeTypeColumn)
+                val title = cursor.getString(titleColumn)
+                val contentUri = ContentUris.withAppendedId(
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    id
+                )
+                Log.d(TAG, "loadAudio: $contentUri, $id, $displayName, $mimeType , $title")
+                try {
+                    audioList.add(ContentChoiceFileData(audio = contentUri))
+                } catch (e: Exception) {
+                    Log.e(TAG, "loadAudio-(): ", e)
+                    e.printStackTrace()
+                }
+            }
+            Log.d(TAG, "loadAudio: size ${audioList.size}")
+            audioList
+        } ?: run {
+            Log.d(TAG, "loadAudio: size Empty")
+            listOf()
         }
     }
 

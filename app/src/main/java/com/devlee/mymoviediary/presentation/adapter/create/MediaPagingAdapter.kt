@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.fetch.VideoFrameUriFetcher
 import coil.load
 import coil.request.videoFrameMillis
+import com.devlee.mymoviediary.databinding.ItemContentChoiceAudioBinding
 import com.devlee.mymoviediary.databinding.ItemContentChoiceVideoBinding
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceFileData
 import com.devlee.mymoviediary.domain.use_case.ContentType
@@ -65,8 +66,20 @@ class MediaPagingAdapter(
         }
     }
 
-    inner class ContentAudioViewHolder(val binding: ItemContentChoiceVideoBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ContentAudioViewHolder(val binding: ItemContentChoiceAudioBinding) : RecyclerView.ViewHolder(binding.root) {
 
+
+        fun bind(fileData: ContentChoiceFileData) {
+            binding.apply {
+                // 선택된 오디오 리스트에 있을 경우에 check
+                itemContentAudioCheck.isSelected = selectedVideoList.contains(fileData.video)
+                clickListener = View.OnClickListener { v ->
+                    Log.i(TAG, "audio click")
+                }
+
+                executePendingBindings()
+            }
+        }
     }
 
 
@@ -81,8 +94,8 @@ class MediaPagingAdapter(
             }
             // 오디오
             else -> {
-                ContentVideoViewHolder(
-                    ItemContentChoiceVideoBinding.inflate(layoutInflater, parent, false)
+                ContentAudioViewHolder(
+                    ItemContentChoiceAudioBinding.inflate(layoutInflater, parent, false)
                 )
             }
         }
@@ -97,10 +110,13 @@ class MediaPagingAdapter(
                 if (i == 0) {
                     resultCallback.invoke(getItem(i))
                 }
-                Log.d(TAG, "onBindViewHolder: ${getItem(i)}, $i")
+                Log.d(TAG, "onBindViewHolder: video ${getItem(i)}, $i")
             }
             is ContentAudioViewHolder -> {
-                Log.d(TAG, "onBindViewHolder: ")
+                getItem(i)?.let {
+                    holder.bind(it)
+                }
+                Log.d(TAG, "onBindViewHolder: audio ${getItem(i)}, $i")
             }
         }
     }

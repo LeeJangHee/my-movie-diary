@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.BottomContentChoiceBinding
 import com.devlee.mymoviediary.databinding.ItemSortPopupBinding
@@ -19,11 +20,9 @@ import com.devlee.mymoviediary.domain.use_case.ContentChoiceFileData
 import com.devlee.mymoviediary.domain.use_case.ContentType
 import com.devlee.mymoviediary.presentation.adapter.create.MediaPagingAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseBottomSheetFragment
+import com.devlee.mymoviediary.utils.*
 import com.devlee.mymoviediary.utils.Constants.MEDIA_PAGE_SIZE
-import com.devlee.mymoviediary.utils.delayUiThread
-import com.devlee.mymoviediary.utils.hide
-import com.devlee.mymoviediary.utils.selectedMediaItemCallback
-import com.devlee.mymoviediary.utils.show
+import com.devlee.mymoviediary.utils.recyclerview.CustomDecoration
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
 import com.devlee.mymoviediary.viewmodels.MediaViewModel
 import com.devlee.mymoviediary.viewmodels.MediaViewModelProviderFactory
@@ -67,6 +66,7 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
     override fun setView() {
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
+            type = args.contentType
             if (args.contentType == ContentType.VIDEO) {
                 setVideo()
             } else {
@@ -275,7 +275,15 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
 
     /** Audio setting */
     private fun BottomContentChoiceBinding.setAudio() {
-
+        contentChoiceRecyclerView.apply {
+            setHasFixedSize(true)
+            setItemViewCacheSize(MEDIA_PAGE_SIZE)
+            itemAnimator = null
+            adapter = mediaPagingAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            val customDecoration = CustomDecoration(1.toDp(), 0f, getColorRes(requireContext(), R.color.color_efefef))
+            addItemDecoration(customDecoration)
+        }
     }
 
     private fun updateSeekBar() {

@@ -6,6 +6,7 @@
     <data>
         <import type="android.view.View" />
         <import type="com.devlee.mymoviediary.viewmodels.SortItem" />
+        <import type="com.devlee.mymoviediary.domain.use_case.ContentType" />
         <variable
             name="title"
             type="String" />
@@ -15,6 +16,9 @@
         <variable
             name="selectedSortItem"
             type="SortItem" />
+        <variable
+            name="type"
+            type="ContentType" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -82,12 +86,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <!--    비디오 플레이어    -->
                 <com.google.android.exoplayer2.ui.PlayerView
                     android:id="@+id/contentChoicePreviewVideo"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:background="@color/black"
                     android:clickable="true"
+                    android:visibility="@{type == ContentType.VIDEO ? View.VISIBLE : View.GONE}"
                     app:layout_constraintDimensionRatio="16:9"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -95,6 +101,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:use_controller="false" />
+
+                <!--    오디오 플레이어    -->
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -107,6 +115,7 @@
                 android:progressDrawable="@drawable/video_seek_bar_drawable"
                 android:thumb="@drawable/video_seek_thumb"
                 android:clipChildren="false"
+                android:visibility="@{type == ContentType.VIDEO ? View.VISIBLE : View.GONE}"
                 tools:progress="40"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -139,6 +148,12 @@
                     app:layout_constraintTop_toTopOf="@+id/contentChoicePopupText" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:visibility="@{type == ContentType.AUDIO ? View.VISIBLE : View.GONE}"
+                android:background="@color/color_efefef" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/contentChoiceRecyclerView"
