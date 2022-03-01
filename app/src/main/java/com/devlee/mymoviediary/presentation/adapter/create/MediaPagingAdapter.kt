@@ -54,7 +54,7 @@ class MediaPagingAdapter(
                     itemContentVideoCheck.isSelected = !itemContentVideoCheck.isSelected
 
                     Log.d(TAG, "selectedVideoList: ${selectedVideoList.size}")
-                    contentCreateViewModel.setSelectVideo(selectedVideoList)
+                    contentCreateViewModel.setSelectMedia(selectedVideoList)
                 }
 
                 itemContentVideoThumbnail.load(fileData.video) {
@@ -71,10 +71,29 @@ class MediaPagingAdapter(
 
         fun bind(fileData: ContentChoiceFileData) {
             binding.apply {
+                audioTitle = fileData.title
                 // 선택된 오디오 리스트에 있을 경우에 check
-                itemContentAudioCheck.isSelected = selectedVideoList.contains(fileData.video)
+                itemContentAudioCheck.isSelected = selectedVideoList.contains(fileData.audio)
+
                 clickListener = View.OnClickListener { v ->
-                    Log.i(TAG, "audio click")
+                    fileData.audio?.let { uri ->
+                        if (!itemContentAudioCheck.isSelected) {
+                            // MAX = 4, 추가 선택시 오류문구
+                            if (selectedAudioList.size >= 4) {
+                                contentCreateViewModel.maxChoiceItemCallback?.invoke()
+                                return@OnClickListener
+                            }
+                            selectedAudioList.add(uri)
+                        } else {
+                            selectedAudioList.remove(uri)
+                        }
+
+
+                    }
+                    itemContentAudioCheck.isSelected = !itemContentAudioCheck.isSelected
+
+                    Log.d(TAG, "selectedAudioList: ${selectedAudioList.size}")
+                    contentCreateViewModel.setSelectMedia(selectedAudioList)
                 }
 
                 executePendingBindings()
@@ -107,9 +126,6 @@ class MediaPagingAdapter(
                 getItem(i)?.let {
                     holder.bind(it)
                 }
-                if (i == 0) {
-                    resultCallback.invoke(getItem(i))
-                }
                 Log.d(TAG, "onBindViewHolder: video ${getItem(i)}, $i")
             }
             is ContentAudioViewHolder -> {
@@ -118,6 +134,9 @@ class MediaPagingAdapter(
                 }
                 Log.d(TAG, "onBindViewHolder: audio ${getItem(i)}, $i")
             }
+        }
+        if (i == 0) {
+            resultCallback.invoke(getItem(i))
         }
     }
 

@@ -12,6 +12,7 @@ data class ContentChoiceData(           // [새 게시물] - 오디오, 비디�
 data class ContentChoiceFileData(
     val video: Uri? = null,
     val audio: Uri? = null,
+    val title: String? = null
 ) {
     companion object {
         fun ContentChoiceFileData.toContentChoiceData(): ContentChoiceData {

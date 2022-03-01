@@ -28,4 +28,10 @@ object DateFormatUtil {
     fun getYear(date: LocalDate): String {
         return yearFormatter.format(date)
     }
+
+    fun getAudioTimeLine(time: Long): String {
+        val timelineFormatter = "mm:ss"
+        val dateFormat = SimpleDateFormat(timelineFormatter)
+        return dateFormat.format(time)
+    }
 }

@@ -41,8 +41,8 @@ class ContentCreateViewModel : ViewModel() {
     var contentChoiceDataList = MutableLiveData(arrayListOf(ContentChoiceData(CreateViewType.ADD.type)))
 
     var choiceBottomSheetList: MutableSharedFlow<List<ChoiceBottomSheetData>> = MutableSharedFlow()
-    private var _selectedVideoList: MutableSharedFlow<List<Uri>> = MutableSharedFlow()
-    val selectedVideoList = _selectedVideoList.asSharedFlow()
+    private var _selectedMediaList: MutableSharedFlow<List<Uri>> = MutableSharedFlow()
+    val selectedMediaList = _selectedMediaList.asSharedFlow()
 
     var deniedPermissionCallback: (() -> Unit)? = null
     var bottomChoiceViewCallback: ((BottomChoiceType) -> Unit)? = null
@@ -141,8 +141,8 @@ class ContentCreateViewModel : ViewModel() {
         return BitmapDrawable(context.resources, bitmap)
     }
 
-    fun setSelectVideo(videoList: List<Uri>) = viewModelScope.launch {
-        _selectedVideoList.emit(videoList)
+    fun setSelectMedia(mediaList: List<Uri>) = viewModelScope.launch {
+        _selectedMediaList.emit(mediaList)
     }
 
     fun setSortItem(item: SortItem?) = viewModelScope.launch {

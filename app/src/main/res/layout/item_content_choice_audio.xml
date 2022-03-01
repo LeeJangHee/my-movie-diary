@@ -9,6 +9,9 @@
         <variable
             name="clickListener"
             type="View.OnClickListener" />
+        <variable
+            name="audioTitle"
+            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,6 +25,7 @@
             style="@style/ContentChoiceAudioTextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@{audioTitle}"
             android:layout_marginStart="@dimen/dp_16"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/itemContentAudioCheck"
@@ -32,11 +36,11 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/itemContentAudioCheck"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
             android:layout_marginEnd="@dimen/dp_16"
             android:clickable="false"
-            android:src="@drawable/check_selector_icon"
+            android:src="@drawable/audio_check_selector_icon"
             app:layout_constraintBottom_toBottomOf="@+id/itemContentAudioTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

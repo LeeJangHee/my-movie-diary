@@ -3,6 +3,7 @@ package com.devlee.mymoviediary.presentation.fragment.main_bottom.create
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.SeekBar
@@ -12,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil.load
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.BottomContentChoiceBinding
 import com.devlee.mymoviediary.databinding.ItemSortPopupBinding
@@ -49,6 +51,7 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
     private val args: ContentChoiceFragmentArgs by navArgs()
 
     private val mediaPagingAdapter by lazy { MediaPagingAdapter(args.contentType, contentChoiceViewModel, onFirstItemCallback) }
+    private val audioDecoration by lazy { CustomDecoration(1.toDp(), 0f, getColorRes(requireContext(), R.color.color_efefef)) }
 
     private val exoPlayer: ExoPlayer by lazy { ExoPlayer.Builder(requireContext()).build() }
     private val updateSeekRunnable = Runnable { updateSeekBar() }
@@ -57,8 +60,15 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
     private var onFirstItemCallback: (ContentChoiceFileData?) -> Unit = { choiceFileData ->
         // 인스타 처럼 선택된 아이템이 없으면 처음 아이템으로 비디오 시작
         choiceFileData?.let {
-            if (it.video != null && selectedMediaItem == null) {
-                setVideoItem(MediaItem.fromUri(it.video))
+            Log.d(TAG, "contentType: ${args.contentType.name}")
+            if (args.contentType == ContentType.VIDEO) {
+                if (it.video != null && selectedMediaItem == null) {
+                    setMediaItem(MediaItem.fromUri(it.video))
+                }
+            } else {
+                if (it.audio != null && selectedMediaItem == null) {
+                    setMediaItem(MediaItem.fromUri(it.audio))
+                }
             }
         }
     }
@@ -72,6 +82,7 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
             } else {
                 setAudio()
             }
+            // fragment 제목
             title = args.contentType.text
 
             // 정렬 item 클릭
@@ -99,6 +110,8 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
                 selectedMediaItemCallback?.invoke()
                 dismiss()
             }
+            // 오디오 버튼 클릭
+            audioPlayButton.setOnClickListener(::audioControlClick)
 
             // 아이템 선택 max 일 경우 경고 문구
             contentChoiceViewModel.maxChoiceItemCallback = {
@@ -127,7 +140,7 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
         initExoPlayer()
         initSortItem()
         initMediaData()
-        setSelectVideoItem()
+        setSelectMediaItem()
         setTopCornerRadius(4, 4)
     }
 
@@ -162,31 +175,38 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
         }
     }
 
-    private fun setSelectVideoItem() = lifecycleScope.launch {
-        contentChoiceViewModel.selectedVideoList.collect { uriList ->
+    private fun setSelectMediaItem() = lifecycleScope.launch {
+        contentChoiceViewModel.selectedMediaList.collect { uriList ->
             uriList.lastOrNull()?.let {
                 Log.d(TAG, "stateFlow start ${uriList.size}")
                 selectedMediaItem = MediaItem.fromUri(it)
             } ?: run {
+                Log.d(TAG, "stateFlow null")
                 selectedMediaItem = null
                 onFirstItemCallback.invoke(mediaPagingAdapter.getItemPosition())
                 return@collect
             }
             uriList.forEachIndexed { i, uri ->
                 Log.w(TAG, "uriList.forEachIndexed: $i $uri")
-                contentChoiceViewModel.fileList.add(ContentChoiceFileData(video = uri))
+                if (binding.type == ContentType.VIDEO) {
+                    contentChoiceViewModel.fileList.add(ContentChoiceFileData(video = uri))
+                } else {
+                    contentChoiceViewModel.fileList.add(ContentChoiceFileData(audio = uri))
+                }
             }
 
-            setVideoItem(selectedMediaItem)
+            setMediaItem(selectedMediaItem)
         }
     }
 
     private fun PlayerView.currentIsPlaying() = run {
         val pvPlayer = player ?: return@run
         Log.d(TAG, "currentIsPlaying: ${pvPlayer.currentMediaItem}")
+        binding.audioPlayButton.load(R.drawable.ic_play)
     }
 
-    private fun setVideoItem(mediaItem: MediaItem? = null) {
+    private fun setMediaItem(mediaItem: MediaItem? = null) {
+        Log.w(TAG, "setMediaItem: ${mediaItem?.mediaId}")
         mediaItem?.let {
             exoPlayer.apply {
                 setMediaItem(mediaItem)
@@ -255,6 +275,15 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
             override fun onPlaybackStateChanged(playbackState: Int) {
                 super.onPlaybackStateChanged(playbackState)
                 updateSeekBar()
+
+                binding.audioPlayButton.load(R.drawable.ic_pause)
+                when (playbackState) {
+                    Player.STATE_IDLE, Player.STATE_ENDED -> {
+                        // audio가 멈추면 다시 재생버튼으로 변경
+                        binding.audioPlayButton.load(R.drawable.ic_play)
+                        isPause = false
+                    }
+                }
             }
         })
     }
@@ -277,12 +306,10 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
     private fun BottomContentChoiceBinding.setAudio() {
         contentChoiceRecyclerView.apply {
             setHasFixedSize(true)
-            setItemViewCacheSize(MEDIA_PAGE_SIZE)
             itemAnimator = null
             adapter = mediaPagingAdapter
             layoutManager = LinearLayoutManager(requireContext())
-            val customDecoration = CustomDecoration(1.toDp(), 0f, getColorRes(requireContext(), R.color.color_efefef))
-            addItemDecoration(customDecoration)
+            addItemDecoration(audioDecoration)
         }
     }
 
@@ -295,13 +322,46 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
         val state = exoPlayer.playbackState
         binding.root.removeCallbacks(updateSeekRunnable)
         if (state != Player.STATE_IDLE && state != Player.STATE_ENDED) {
-            binding.root.postDelayed(updateSeekRunnable, 1000L)
+            binding.root.postDelayed(updateSeekRunnable, 300L)
         }
     }
 
-    private fun updateSeekUi(duration: Long, pos: Long) = with(binding.contentChoiceSeekBar) {
-        max = (duration / 1000).toInt()
-        progress = (pos / 1000).toInt()
+    private fun updateSeekUi(duration: Long, pos: Long) = when (binding.type) {
+        ContentType.VIDEO -> {
+            with(binding.contentChoiceSeekBar) {
+                max = (duration / 300).toInt()
+                progress = (pos / 300).toInt()
+            }
+        }
+        else -> {
+            with(binding) {
+                contentChoiceAudioSeekbar.apply {
+                    max = (duration / 300).toInt()
+                    progress = (pos / 300).toInt()
+                }
+                currentTimeline.text = DateFormatUtil.getAudioTimeLine(pos)
+                totalTimeline.text = DateFormatUtil.getAudioTimeLine(duration)
+            }
+        }
+    }
+
+    private var isPause = false // 일시정지 했는지 알기 위해
+    private fun audioControlClick(v: View) {
+        if (exoPlayer.isPlaying) {
+            // 일시정지 해야함
+            exoPlayer.pause()
+            isPause = true
+            (v as ImageView).load(R.drawable.ic_play)
+        } else {
+            // 플레이
+            if (isPause) {
+                exoPlayer.play()
+                isPause = false
+            } else {
+                exoPlayer.seekTo(0)
+            }
+            (v as ImageView).load(R.drawable.ic_pause)
+        }
     }
 
     private fun releaseVideo() {

@@ -47,7 +47,8 @@ class MediaPagingRepository(
         val projection = arrayOf(
             MediaStore.Video.Media._ID,
             MediaStore.Video.Media.DISPLAY_NAME,
-            MediaStore.Video.Media.MIME_TYPE
+            MediaStore.Video.Media.MIME_TYPE,
+            MediaStore.Video.Media.TITLE
         )
 
         val videoList = mutableListOf<ContentChoiceFileData>()
@@ -62,18 +63,20 @@ class MediaPagingRepository(
             val idColumn = cursor.getColumnIndex(MediaStore.Video.Media._ID)
             val displayNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)
             val mimeTypeColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.MIME_TYPE)
+            val titleColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE)
 
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(idColumn)
                 val displayName = cursor.getString(displayNameColumn)
                 val mimeType = cursor.getString(mimeTypeColumn)
+                val title = cursor.getString(titleColumn)
                 val contentUri = ContentUris.withAppendedId(
                     MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                     id
                 )
                 Log.d(TAG, "loadVideo: $contentUri, $id, $displayName, $mimeType")
                 try {
-                    videoList.add(ContentChoiceFileData(video = contentUri))
+                    videoList.add(ContentChoiceFileData(video = contentUri, title = title))
                 } catch (e: Exception) {
                     Log.e(TAG, "loadVideo-(): ", e)
                     e.printStackTrace()
@@ -122,12 +125,12 @@ class MediaPagingRepository(
                 val mimeType = cursor.getString(mimeTypeColumn)
                 val title = cursor.getString(titleColumn)
                 val contentUri = ContentUris.withAppendedId(
-                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     id
                 )
                 Log.d(TAG, "loadAudio: $contentUri, $id, $displayName, $mimeType , $title")
                 try {
-                    audioList.add(ContentChoiceFileData(audio = contentUri))
+                    audioList.add(ContentChoiceFileData(audio = contentUri, title = title))
                 } catch (e: Exception) {
                     Log.e(TAG, "loadAudio-(): ", e)
                     e.printStackTrace()
