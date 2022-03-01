@@ -73,7 +73,7 @@ class MediaPagingAdapter(
             binding.apply {
                 audioTitle = fileData.title
                 // 선택된 오디오 리스트에 있을 경우에 check
-                itemContentAudioCheck.isSelected = selectedVideoList.contains(fileData.audio)
+                itemContentAudioCheck.isSelected = selectedAudioList.contains(fileData.audio)
 
                 clickListener = View.OnClickListener { v ->
                     fileData.audio?.let { uri ->
