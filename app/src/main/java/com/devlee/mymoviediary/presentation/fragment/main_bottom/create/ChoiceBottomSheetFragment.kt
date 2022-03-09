@@ -5,6 +5,7 @@ import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navGraphViewModels
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.BottomChoiceViewBinding
 import com.devlee.mymoviediary.presentation.adapter.create.CreateBottomSheetAdapter
@@ -22,7 +23,7 @@ class ChoiceBottomSheetFragment : BaseBottomSheetFragment<BottomChoiceViewBindin
         private const val TAG = "ChoiceBottomSheet"
     }
 
-    private val bottomSheetViewModel: ContentCreateViewModel by viewModels()
+    private val bottomSheetViewModel: ContentCreateViewModel by navGraphViewModels(R.id.home_nav)
 
     private val choiceBottomSheetAdapter by lazy { CreateBottomSheetAdapter(args.bottomChoiceType, bottomSheetViewModel) }
 
@@ -48,7 +49,7 @@ class ChoiceBottomSheetFragment : BaseBottomSheetFragment<BottomChoiceViewBindin
             }
             lifecycleOwner = viewLifecycleOwner
             cancelString = requireContext().getString(R.string.no_kr)
-            bottomChoiceCancel.root.setOnClickListener { dismiss() }
+            bottomChoiceCancel.bottomSheetItemClickListener = View.OnClickListener { dismiss() }
         }
 
         setBottomChoiceType()

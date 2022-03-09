@@ -11,11 +11,16 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.FragmentCreateMyDiaryBinding
 import com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData
+import com.devlee.mymoviediary.domain.use_case.ContentChoiceData
+import com.devlee.mymoviediary.domain.use_case.ContentChoiceFileData.Companion.toContentChoiceData
 import com.devlee.mymoviediary.domain.use_case.ContentType
 import com.devlee.mymoviediary.presentation.activity.main.MainActivity
+import com.devlee.mymoviediary.presentation.adapter.create.CreateAdapter
+import com.devlee.mymoviediary.presentation.adapter.create.CreateViewType
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
 import com.devlee.mymoviediary.utils.*
@@ -30,7 +35,8 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
         private const val TAG = "CreateMyDiaryFragment"
     }
 
-    private val createViewModel: ContentCreateViewModel by viewModels()
+    private val createViewModel: ContentCreateViewModel by navGraphViewModels(R.id.home_nav)
+    private val contentCreateAdapter by lazy { CreateAdapter(createViewModel) }
 
     override fun setView() {
         setAppbar()
@@ -38,6 +44,7 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
         isMainBottomNavLayout.value = false
 
         binding.apply {
+            initRecyclerView()
             viewModel = createViewModel.apply {
                 // 권한 체크
                 deniedPermissionCallback = {
@@ -70,7 +77,9 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
                         findNavController().navigate(action)
                     }
                 }
-                selectedMediaItemCallback = ::updateChoiceMediaData
+                contentChoiceDataList.observe(viewLifecycleOwner) {
+                    contentCreateAdapter.setDiaryList(it)
+                }
             }
             lifecycleOwner = viewLifecycleOwner
             createDateLayout.setOnClickListener(::setupSelectedDate)
@@ -94,6 +103,8 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
                 findNavController().navigate(action)
             }
         }
+        // 아이템 선택
+        selectedMediaItemCallback = ::updateChoiceMediaData
     }
 
     override fun onResume() {
@@ -104,8 +115,27 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
         Log.d(TAG, "onResume: dateStr = ${createViewModel.dateStr.get()}")
     }
 
+    private fun FragmentCreateMyDiaryBinding.initRecyclerView() {
+        createRecyclerView.adapter = contentCreateAdapter.apply {
+            setDiaryList(arrayListOf(ContentChoiceData(CreateViewType.ADD.type)))
+        }
+    }
+
     private fun setupSelectedDate(view: View) {
         view.findNavController().navigate(R.id.action_createMyDiaryFragment_to_calendarSelectedFragment)
+    }
+
+    private fun updateChoiceMediaData() {
+        Log.i(TAG, "updateChoiceMediaData-()")
+        val convertList = arrayListOf(ContentChoiceData(CreateViewType.ADD.type))
+        // Video or Audio 선택
+        with(createViewModel) {
+            fileList.forEach {
+                convertList.add(it.toContentChoiceData())
+            }
+            contentChoiceDataList.postValue(convertList)
+        }
+
     }
 
     private fun setOnBackPressed() {

@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import androidx.databinding.ObservableField
 import androidx.fragment.app.viewModels
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.DialogCalendarBinding
@@ -39,7 +40,7 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
         private const val TAG = "CalendarDialogFragment"
     }
 
-    private val calendarDialogViewModel: ContentCreateViewModel by viewModels()
+    private val calendarDialogViewModel: ContentCreateViewModel by navGraphViewModels(R.id.home_nav)
 
     private var selectedDate = LocalDate.now()
 

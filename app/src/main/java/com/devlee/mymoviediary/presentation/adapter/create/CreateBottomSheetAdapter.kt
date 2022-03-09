@@ -11,7 +11,7 @@ import com.devlee.mymoviediary.databinding.ItemBottomChoiceBinding
 import com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData
 import com.devlee.mymoviediary.domain.use_case.ContentType
 import com.devlee.mymoviediary.presentation.fragment.main_bottom.create.BottomChoiceType
-import com.devlee.mymoviediary.utils.MyDiaryDiffUtil
+import com.devlee.mymoviediary.utils.recyclerview.MyDiaryDiffUtil
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
 
 class CreateBottomSheetAdapter(

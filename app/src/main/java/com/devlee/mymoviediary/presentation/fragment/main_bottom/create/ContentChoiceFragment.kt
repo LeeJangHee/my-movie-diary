@@ -11,6 +11,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
@@ -43,7 +44,7 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
         private const val TAG = "ContentChoiceFragment"
     }
 
-    private val contentChoiceViewModel: ContentCreateViewModel by viewModels()
+    private val contentChoiceViewModel: ContentCreateViewModel by navGraphViewModels(R.id.home_nav)
     private val mediaViewModel by viewModels<MediaViewModel> {
         val repository = MediaPagingRepository(requireContext(), args.contentType)
         MediaViewModelProviderFactory(repository)
@@ -107,6 +108,7 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
             contentChoiceOk.setOnClickListener {
                 // 확인
                 Log.d(TAG, "확인 클릭")
+                contentChoiceViewModel.setSelectMedia(listOf())
                 selectedMediaItemCallback?.invoke()
                 dismiss()
             }
@@ -186,6 +188,7 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
                 onFirstItemCallback.invoke(mediaPagingAdapter.getItemPosition())
                 return@collect
             }
+            contentChoiceViewModel.fileList.clear()
             uriList.forEachIndexed { i, uri ->
                 Log.w(TAG, "uriList.forEachIndexed: $i $uri")
                 if (binding.type == ContentType.VIDEO) {
@@ -264,10 +267,10 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
     }
 
     private fun initSortItem() {
-        contentChoiceViewModel.popupMenuSortItem.set(SortItem.DESC)
-        contentChoiceViewModel.setSortItem(SortItem.ASC)
-        binding.selectedSortItem = SortItem.ASC
-        mediaViewModel.setSortItemFlow(SortItem.ASC)
+        contentChoiceViewModel.popupMenuSortItem.set(SortItem.ASC)
+        contentChoiceViewModel.setSortItem(SortItem.DESC)
+        binding.selectedSortItem = SortItem.DESC
+        mediaViewModel.setSortItemFlow(SortItem.DESC)
     }
 
     private fun initExoPlayer() {

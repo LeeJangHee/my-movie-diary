@@ -16,10 +16,10 @@ class ViewModelProviderFactory(
 }
 
 class MediaViewModelProviderFactory(
-    private val MediaRepository: MediaPagingRepository
+    private val mediaRepository: MediaPagingRepository
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return MediaViewModel(MediaRepository) as T
+        return MediaViewModel(mediaRepository) as T
     }
 
 }

@@ -4,19 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.devlee.mymoviediary.R" />
         <variable
-            name="myDiary"
-            type="com.devlee.mymoviediary.data.model.MyDiary" />
+            name="contentData"
+            type="com.devlee.mymoviediary.domain.use_case.ContentChoiceData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="@dimen/create_item_width"
         android:layout_height="@dimen/create_item_height"
-        android:background="@color/color_efefef">
+        android:padding="2dp">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            allCornerSize="@{4}"
+            setBackgroundColor="@{R.color.color_f4f4f4}" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            contentChoiceItem="@{contentData}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +45,9 @@
             style="@style/CreateItemTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            contentChoiceItem="@{contentData}"
+            android:paddingHorizontal="2dp"
+            android:layout_marginEnd="6dp"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -46,11 +56,17 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/itemCreateAudioTitle"
             style="@style/CreateItemTextStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            contentChoiceItem="@{contentData}"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:layout_marginStart="8dp"
+            android:layout_marginEnd="4dp"
             android:layout_marginBottom="8dp"
+            app:layout_goneMarginEnd="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/itemCreateTimeText"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="음성 메모 1" />
 

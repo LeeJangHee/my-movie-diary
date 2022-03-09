@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.model.Mood
 import com.devlee.mymoviediary.databinding.FragmentMoodBinding
@@ -16,7 +17,7 @@ import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
 
 class MoodFragment : BaseFragment<FragmentMoodBinding>() {
 
-    private val moodViewModel: ContentCreateViewModel by viewModels()
+    private val moodViewModel: ContentCreateViewModel by navGraphViewModels(R.id.home_nav)
 
     override fun setView() {
         setAppbar()

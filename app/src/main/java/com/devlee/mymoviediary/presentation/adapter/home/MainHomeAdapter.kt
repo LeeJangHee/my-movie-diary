@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.devlee.mymoviediary.data.model.MyDiary
 import com.devlee.mymoviediary.databinding.ItemMainBinding
-import com.devlee.mymoviediary.utils.MyDiaryDiffUtil
+import com.devlee.mymoviediary.utils.recyclerview.MyDiaryDiffUtil
 
 class MainHomeAdapter : RecyclerView.Adapter<MainHomeAdapter.MyViewHolder>() {
 

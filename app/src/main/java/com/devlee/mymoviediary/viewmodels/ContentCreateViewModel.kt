@@ -37,7 +37,6 @@ class ContentCreateViewModel : ViewModel() {
 
     private val TAG = "ContentCreateViewModel"
 
-    var contentCreateAdapter = CreateAdapter(this)
     var contentChoiceDataList = MutableLiveData(arrayListOf(ContentChoiceData(CreateViewType.ADD.type)))
 
     var choiceBottomSheetList: MutableSharedFlow<List<ChoiceBottomSheetData>> = MutableSharedFlow()
@@ -62,11 +61,6 @@ class ContentCreateViewModel : ViewModel() {
     private var _selectedSortItem: MutableSharedFlow<SortItem> = MutableSharedFlow()
     val selectedSortItem get() = _selectedSortItem.asSharedFlow()
     var popupMenuSortItem: ObservableField<SortItem> = ObservableField(SortItem.DESC)
-
-
-    init {
-        contentCreateAdapter.setDiaryList(contentChoiceDataList.value ?: arrayListOf())
-    }
 
 
     fun contentAddItemClick(view: View) {
@@ -151,18 +145,9 @@ class ContentCreateViewModel : ViewModel() {
         }
     }
 
-    fun updateChoiceMediaData() {
-        Log.i(TAG, "updateChoiceMediaData-()")
-        // Video or Audio 선택
-        fileList.forEach {
-            contentChoiceDataList.value?.add(it.toContentChoiceData())
-        }
-        contentCreateAdapter.setDiaryList(contentChoiceDataList.value ?: arrayListOf())
-    }
-
 }
 
 enum class SortItem(val title: String, val order: String) {
-    ASC("최신 순", "ASC"),
-    DESC("오래된 순", "DESC")
+    ASC("오래된 순", "ASC"),
+    DESC("최신 순", "DESC")
 }

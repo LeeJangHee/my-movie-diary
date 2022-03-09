@@ -1,20 +1,14 @@
 package com.devlee.mymoviediary.presentation.adapter.create
 
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.ItemCreateAddBinding
 import com.devlee.mymoviediary.databinding.ItemCreateContentBinding
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceData
-import com.devlee.mymoviediary.utils.MyDiaryDiffUtil
-import com.devlee.mymoviediary.utils.dialog.CustomDialog
+import com.devlee.mymoviediary.utils.recyclerview.MyDiaryDiffUtil
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
 
 class CreateAdapter(
@@ -39,9 +33,9 @@ class CreateAdapter(
     inner class ContentDiaryViewHolder(val binding: ItemCreateContentBinding): RecyclerView.ViewHolder(binding.root) {
 
 
-        fun bind() {
+        fun bind(contentChoiceData: ContentChoiceData) {
             binding.apply {
-
+                contentData = contentChoiceData
                 executePendingBindings()
             }
         }
@@ -59,10 +53,10 @@ class CreateAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, i: Int) {
         when (holder) {
             is ContentAddViewHolder -> holder.bind()
-            is ContentDiaryViewHolder -> holder.bind()
+            is ContentDiaryViewHolder -> holder.bind(myDiaryList[i])
         }
     }
 

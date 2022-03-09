@@ -13,6 +13,7 @@ import androidx.paging.PagingData
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceFileData
 import com.devlee.mymoviediary.domain.use_case.ContentType
 import com.devlee.mymoviediary.utils.Constants.MEDIA_PAGE_SIZE
+import com.devlee.mymoviediary.utils.FileUtil
 import com.devlee.mymoviediary.utils.paging.MediaPagingSource
 import com.devlee.mymoviediary.viewmodels.SortItem
 import kotlinx.coroutines.Dispatchers
@@ -38,18 +39,8 @@ class MediaPagingRepository(
 
     private fun loadVideo(sortItem: SortItem): List<ContentChoiceFileData> {
 
-        val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
-        } else {
-            MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-        }
-
-        val projection = arrayOf(
-            MediaStore.Video.Media._ID,
-            MediaStore.Video.Media.DISPLAY_NAME,
-            MediaStore.Video.Media.MIME_TYPE,
-            MediaStore.Video.Media.TITLE
-        )
+        val collection = FileUtil.getVideoCollection()
+        val projection = FileUtil.getVideoProjection()
 
         val videoList = mutableListOf<ContentChoiceFileData>()
 
@@ -92,18 +83,8 @@ class MediaPagingRepository(
     }
 
     private fun loadAudio(sortItem: SortItem): List<ContentChoiceFileData> {
-        val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
-        } else {
-            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-        }
-
-        val projection = arrayOf(
-            MediaStore.Audio.Media._ID,
-            MediaStore.Audio.Media.DISPLAY_NAME,
-            MediaStore.Audio.Media.MIME_TYPE,
-            MediaStore.Audio.Media.TITLE
-        )
+        val collection = FileUtil.getAudioCollection()
+        val projection = FileUtil.getAudioProjection()
 
         val audioList = mutableListOf<ContentChoiceFileData>()
 

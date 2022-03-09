@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+        <import type="com.devlee.mymoviediary.R" />
         <variable
             name="clickListener"
             type="android.view.View.OnClickListener" />
@@ -13,7 +14,13 @@
         android:layout_width="@dimen/create_item_width"
         android:layout_height="@dimen/create_item_height"
         android:onClick="@{clickListener}"
-        android:background="@color/color_f4f4f4">
+        android:padding="2dp" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            allCornerSize="@{4}"
+            setBackgroundColor="@{R.color.color_f4f4f4}" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"

@@ -2,16 +2,13 @@ package com.devlee.mymoviediary.presentation.adapter.create
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.ItemDialogCalendarYearBinding
 import com.devlee.mymoviediary.utils.DateFormatUtil
-import com.devlee.mymoviediary.utils.MyDiaryDiffUtil
 import com.devlee.mymoviediary.utils.getColorRes
 import com.devlee.mymoviediary.utils.toDp
 import com.google.android.material.shape.CornerFamily

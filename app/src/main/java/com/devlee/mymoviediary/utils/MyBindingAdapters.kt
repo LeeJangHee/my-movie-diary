@@ -2,6 +2,7 @@ package com.devlee.mymoviediary.utils
 
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.EditText
@@ -9,13 +10,18 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.fetch.VideoFrameUriFetcher
 import coil.load
+import coil.request.videoFrameMillis
+import coil.size.Scale
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.data.model.Mood
+import com.devlee.mymoviediary.domain.use_case.ContentChoiceData
 import com.devlee.mymoviediary.presentation.adapter.category.CategoryViewType
 import com.devlee.mymoviediary.utils.recyclerview.CategoryDecoration
 import com.devlee.mymoviediary.utils.recyclerview.CustomDecoration
@@ -170,5 +176,78 @@ fun TextView.setSortItem(item: SortItem?) {
             }
             background = shapePopupMenu
         }
+    }
+}
+
+@BindingAdapter("contentChoiceItem")
+fun View.setContentChoiceItem(data: ContentChoiceData) {
+    var title: String? = null
+    var time: String? = null
+    var isAudio = false
+
+    data.video?.let { videoUri ->
+        context.contentResolver.query(videoUri, FileUtil.getVideoProjection(), null, null, null)?.use { cursor ->
+            val durationIndex = cursor.getColumnIndex(MediaStore.Video.Media.DURATION)
+            cursor.moveToFirst()
+            time = DateFormatUtil.getAudioTimeLine(cursor.getString(durationIndex).toLong())
+        }
+    }
+
+    data.audio?.let { audioUri ->
+        isAudio = true
+        context.contentResolver.query(audioUri, FileUtil.getAudioProjection(), null, null, null)?.use { cursor ->
+            val titleIndex = cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)
+            val durationIndex = cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)
+            cursor.moveToFirst()
+            title = cursor.getString(titleIndex)
+            time = DateFormatUtil.getAudioTimeLine(cursor.getString(durationIndex).toLong())
+        }
+    }
+
+    when (this) {
+        is ImageView -> {
+            if (isAudio) {
+                load(R.drawable.content_item_audio_icon) {
+                    scale(Scale.FILL)
+                }
+            } else {
+                load(data.video) {
+                    fetcher(VideoFrameUriFetcher(context))
+                    videoFrameMillis(0)
+                }
+            }
+        }
+        is TextView -> {
+            when (id) {
+                R.id.itemCreateAudioTitle -> {
+                    text = title
+                }
+                R.id.itemCreateTimeText -> {
+                    if (isAudio) {
+                        setTextColor(getColorRes(context, R.color.color_1c1c1c))
+                        background = null
+                    } else {
+                        setTextColor(getColorRes(context, R.color.white))
+                        background = MaterialShapeDrawable(ShapeAppearanceModel().toBuilder().apply {
+                            setAllCorners(CornerFamily.ROUNDED, 4.toDp())
+                        }.build()).apply {
+                            fillColor = ColorStateList.valueOf(getColorRes(context, R.color.color_99000000))
+                        }
+                    }
+                    text = time
+                }
+            }
+        }
+    }
+}
+
+@BindingAdapter("allCornerSize", "setBackgroundColor", requireAll = false)
+fun View.setAllCorner(size: Int, @ColorRes color: Int = android.R.color.transparent) {
+    val model = ShapeAppearanceModel().toBuilder().apply {
+        setAllCorners(CornerFamily.ROUNDED, size.toDp())
+    }.build()
+
+    background = MaterialShapeDrawable(model).apply {
+        fillColor = ColorStateList.valueOf(getColorRes(context, color))
     }
 }

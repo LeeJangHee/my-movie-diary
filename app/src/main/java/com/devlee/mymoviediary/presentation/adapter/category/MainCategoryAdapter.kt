@@ -18,6 +18,7 @@ import com.devlee.mymoviediary.databinding.LayoutColorFirstPickerBinding
 import com.devlee.mymoviediary.utils.*
 import com.devlee.mymoviediary.utils.dialog.CustomDialog
 import com.devlee.mymoviediary.utils.recyclerview.CategoryTouchCallback
+import com.devlee.mymoviediary.utils.recyclerview.MyDiaryDiffUtil
 import com.devlee.mymoviediary.viewmodels.MyDiaryViewModel
 import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerView

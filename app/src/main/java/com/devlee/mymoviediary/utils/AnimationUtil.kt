@@ -5,7 +5,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import com.devlee.mymoviediary.R
 
-object AnimationUtils {
+object AnimationUtil {
 
     fun downToUp(context: Context): Animation
         = AnimationUtils.loadAnimation(context, R.anim.down_to_up_arrow)

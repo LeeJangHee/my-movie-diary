@@ -1,4 +1,4 @@
-package com.devlee.mymoviediary.utils
+package com.devlee.mymoviediary.utils.recyclerview
 
 import androidx.recyclerview.widget.DiffUtil
 
