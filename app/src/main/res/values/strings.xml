@@ -39,4 +39,9 @@
     <!--  권한 설정  -->
     <string name="permission_dialog_title">필수 권한</string>
     <string name="permission_dialog_content_choice_message">영상 또는 음성 파일을 추가하시려면 권한을 설정해 주세요.</string>
+
+
+    <!--  다이얼로그  -->
+    <string name="create_back_dialog_title">주의</string>
+    <string name="create_back_dialog_message">작성중인 게시물이 모두 삭제됩니다.\n정말 취소하시겠습니까?</string>
 </resources>

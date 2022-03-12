@@ -93,7 +93,7 @@
         <item name="android:textSize">17dp</item>
         <item name="android:textColor">@color/color_de000000</item>
         <item name="android:lineHeight" tools:ignore="NewApi">24dp</item>
-        <item name="android:layout_marginTop">@dimen/dp_24</item>
+        <item name="android:layout_marginTop">@dimen/dp_17</item>
     </style>
 
     <style name="DialogButtonTextStyle" parent="AppTheme.DefaultTextStyle">

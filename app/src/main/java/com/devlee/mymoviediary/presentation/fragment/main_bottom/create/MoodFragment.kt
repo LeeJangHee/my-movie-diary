@@ -6,18 +6,26 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.devlee.mymoviediary.R
+import com.devlee.mymoviediary.data.database.MyDiaryDatabase
 import com.devlee.mymoviediary.data.model.Mood
+import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.databinding.FragmentMoodBinding
 import com.devlee.mymoviediary.presentation.activity.main.MainActivity
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
 import com.devlee.mymoviediary.utils.isBottomNav
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
+import com.devlee.mymoviediary.viewmodels.MyDiaryViewModel
+import com.devlee.mymoviediary.viewmodels.ViewModelProviderFactory
 
 
 class MoodFragment : BaseFragment<FragmentMoodBinding>() {
 
     private val moodViewModel: ContentCreateViewModel by navGraphViewModels(R.id.home_nav)
+    private val myDiaryViewModel by viewModels<MyDiaryViewModel> {
+        val repository = MyDiaryRepository(MyDiaryDatabase.getInstance(requireActivity()))
+        ViewModelProviderFactory(repository)
+    }
 
     override fun setView() {
         setAppbar()

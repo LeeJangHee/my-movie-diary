@@ -13,12 +13,11 @@ import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
 
 class CreateAdapter(
     private val contentCreateViewModel: ContentCreateViewModel
-): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var myDiaryList = arrayListOf<ContentChoiceData>()
 
-    inner class ContentAddViewHolder(val binding: ItemCreateAddBinding): RecyclerView.ViewHolder(binding.root) {
-
+    inner class ContentAddViewHolder(val binding: ItemCreateAddBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind() {
             binding.apply {
@@ -30,8 +29,16 @@ class CreateAdapter(
         }
     }
 
-    inner class ContentDiaryViewHolder(val binding: ItemCreateContentBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class ContentDiaryViewHolder(val binding: ItemCreateContentBinding) : RecyclerView.ViewHolder(binding.root) {
 
+        init {
+            // 아이템 삭제
+            binding.itemCreateDelBtn.setOnClickListener {
+                myDiaryList.removeAt(bindingAdapterPosition)
+                contentCreateViewModel.setContentChoice(myDiaryList)
+                notifyItemRemoved(bindingAdapterPosition)
+            }
+        }
 
         fun bind(contentChoiceData: ContentChoiceData) {
             binding.apply {

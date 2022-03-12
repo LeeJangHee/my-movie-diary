@@ -7,7 +7,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
-import androidx.fragment.app.viewModels
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -24,8 +24,10 @@ import com.devlee.mymoviediary.presentation.adapter.create.CreateViewType
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
 import com.devlee.mymoviediary.utils.*
+import com.devlee.mymoviediary.utils.dialog.CustomDialog
 import com.devlee.mymoviediary.utils.dialog.calendarDialogCallback
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @SuppressLint("NewApi")
@@ -45,6 +47,8 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
 
         binding.apply {
             initRecyclerView()
+            addTextWatch()
+            lifecycleOwner = viewLifecycleOwner
             viewModel = createViewModel.apply {
                 // 권한 체크
                 deniedPermissionCallback = {
@@ -77,11 +81,7 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
                         findNavController().navigate(action)
                     }
                 }
-                contentChoiceDataList.observe(viewLifecycleOwner) {
-                    contentCreateAdapter.setDiaryList(it)
-                }
             }
-            lifecycleOwner = viewLifecycleOwner
             createDateLayout.setOnClickListener(::setupSelectedDate)
         }
         // 날짜 선택
@@ -105,6 +105,15 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
         }
         // 아이템 선택
         selectedMediaItemCallback = ::updateChoiceMediaData
+
+        updateContentChoiceData()
+    }
+
+    private fun updateContentChoiceData() = lifecycleScope.launch {
+        createViewModel.contentChoiceDataFlow.collectLatest {
+            Log.i(TAG, "updateContentChoiceData flow: ${it.size}")
+            contentCreateAdapter.setDiaryList(it)
+        }
     }
 
     override fun onResume() {
@@ -121,6 +130,14 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
         }
     }
 
+    private fun FragmentCreateMyDiaryBinding.addTextWatch() {
+        createContentEditView.addTextChangedListener { editable ->
+            editable?.let {
+                createViewModel.memo.set(it.toString())
+            }
+        }
+    }
+
     private fun setupSelectedDate(view: View) {
         view.findNavController().navigate(R.id.action_createMyDiaryFragment_to_calendarSelectedFragment)
     }
@@ -133,7 +150,7 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
             fileList.forEach {
                 convertList.add(it.toContentChoiceData())
             }
-            contentChoiceDataList.postValue(convertList)
+            setContentChoice(convertList)
         }
 
     }
@@ -141,10 +158,24 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
     private fun setOnBackPressed() {
         requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                handleBackPressed()
+            }
+        })
+    }
+
+    private fun handleBackPressed() {
+        CustomDialog.Builder(requireContext())
+            .setTitle(R.string.create_back_dialog_title)
+            .setMessage(R.string.create_back_dialog_message)
+            .setNegativeButton(R.string.no_kr)
+            .setPositiveButton(R.string.ok_kr, R.color.color_ff3939) {
+                // 데이터 초기화
+                createViewModel.initCreateValue()
+
                 findNavController().popBackStack()
                 (requireActivity() as MainActivity).isBottomNav(true)
             }
-        })
+            .show()
     }
 
     override fun getLayoutId(): Int = R.layout.fragment_create_my_diary
@@ -152,8 +183,7 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
     private fun setAppbar() {
         setTitleToolbar(title = getString(R.string.home_create_toolbar_title))
         setMenuToolbar(type = AppToolbarLayout.LEFT, strId = R.string.no_kr) {
-            findNavController().popBackStack()
-            (requireActivity() as MainActivity).isBottomNav(true)
+            handleBackPressed()
         }
         setMenuToolbar(type = AppToolbarLayout.RIGHT, strId = R.string.next_kr) {
             findNavController().navigate(R.id.action_createMyDiaryFragment_to_moodFragment)

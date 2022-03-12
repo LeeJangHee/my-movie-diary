@@ -211,6 +211,7 @@ fun View.setContentChoiceItem(data: ContentChoiceData) {
                     scale(Scale.FILL)
                 }
             } else {
+                scaleType = ImageView.ScaleType.CENTER_CROP
                 load(data.video) {
                     fetcher(VideoFrameUriFetcher(context))
                     videoFrameMillis(0)

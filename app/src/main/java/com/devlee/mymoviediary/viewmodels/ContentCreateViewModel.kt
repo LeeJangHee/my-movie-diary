@@ -13,7 +13,6 @@ import android.view.View
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devlee.mymoviediary.R
@@ -22,22 +21,26 @@ import com.devlee.mymoviediary.data.model.Mood
 import com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceData
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceFileData
-import com.devlee.mymoviediary.domain.use_case.ContentChoiceFileData.Companion.toContentChoiceData
 import com.devlee.mymoviediary.domain.use_case.ContentType
-import com.devlee.mymoviediary.presentation.adapter.create.CreateAdapter
 import com.devlee.mymoviediary.presentation.adapter.create.CreateViewType
 import com.devlee.mymoviediary.presentation.fragment.main_bottom.create.BottomChoiceType
+import com.devlee.mymoviediary.utils.DateFormatUtil
 import com.devlee.mymoviediary.utils.dialog.CustomDialog
 import com.gun0912.tedpermission.coroutine.TedPermission
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ContentCreateViewModel : ViewModel() {
 
     private val TAG = "ContentCreateViewModel"
 
-    var contentChoiceDataList = MutableLiveData(arrayListOf(ContentChoiceData(CreateViewType.ADD.type)))
+    private var _contentChoiceDataFlow: MutableStateFlow<ArrayList<ContentChoiceData>> =
+        MutableStateFlow(arrayListOf(ContentChoiceData(CreateViewType.ADD.type)))
+    val contentChoiceDataFlow = _contentChoiceDataFlow.asStateFlow()
 
     var choiceBottomSheetList: MutableSharedFlow<List<ChoiceBottomSheetData>> = MutableSharedFlow()
     private var _selectedMediaList: MutableSharedFlow<List<Uri>> = MutableSharedFlow()
@@ -56,6 +59,7 @@ class ContentCreateViewModel : ViewModel() {
     var fileList: ObservableArrayList<ContentChoiceFileData> = ObservableArrayList()
     var selectedCategory: ObservableField<Category?> = ObservableField()
     var start: ObservableBoolean = ObservableBoolean(false)
+    var memo: ObservableField<String?> = ObservableField()
     var mood: ObservableField<Mood> = ObservableField(Mood.NONE)
 
     private var _selectedSortItem: MutableSharedFlow<SortItem> = MutableSharedFlow()
@@ -143,6 +147,18 @@ class ContentCreateViewModel : ViewModel() {
         item?.let {
             _selectedSortItem.emit(item)
         }
+    }
+
+    fun setContentChoice(data: ArrayList<ContentChoiceData>) = viewModelScope.launch(Dispatchers.IO) {
+        _contentChoiceDataFlow.emit(data)
+    }
+
+    fun initCreateValue() {
+        setContentChoice(arrayListOf(ContentChoiceData(CreateViewType.ADD.type)))
+        selectedCategory.set(null)
+        dateStr.set(DateFormatUtil.getTodayDate())
+        memo.set(null)
+        mood.set(Mood.NONE)
     }
 
 }

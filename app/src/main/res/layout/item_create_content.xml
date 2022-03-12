@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -16,19 +16,27 @@
         android:padding="2dp">
 
         <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             allCornerSize="@{4}"
-            setBackgroundColor="@{R.color.color_f4f4f4}" />
+            setBackgroundColor="@{R.color.color_f4f4f4}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            contentChoiceItem="@{contentData}"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                contentChoiceItem="@{contentData}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.card.MaterialCardView>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/itemCreateDelBtn"
@@ -43,12 +51,12 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/itemCreateTimeText"
             style="@style/CreateItemTextStyle"
+            contentChoiceItem="@{contentData}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            contentChoiceItem="@{contentData}"
-            android:paddingHorizontal="2dp"
             android:layout_marginEnd="6dp"
             android:layout_marginBottom="8dp"
+            android:paddingHorizontal="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="1:30" />
@@ -56,18 +64,18 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/itemCreateAudioTitle"
             style="@style/CreateItemTextStyle"
+            contentChoiceItem="@{contentData}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            contentChoiceItem="@{contentData}"
-            android:maxLines="1"
-            android:ellipsize="end"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="4dp"
             android:layout_marginBottom="8dp"
-            app:layout_goneMarginEnd="0dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/itemCreateTimeText"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_goneMarginEnd="0dp"
             tools:text="음성 메모 1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
