@@ -2,6 +2,7 @@ package com.devlee.mymoviediary.data.repository
 
 import com.devlee.mymoviediary.data.database.MyDiaryDatabase
 import com.devlee.mymoviediary.data.database.entity.CategoryEntity
+import com.devlee.mymoviediary.data.database.entity.MyDiaryEntity
 import com.devlee.mymoviediary.data.model.Category
 
 class MyDiaryRepository(
@@ -9,6 +10,8 @@ class MyDiaryRepository(
 ) {
     /** MyDiary Database */
     fun getMyDiaryAll() = db.dao().getMyDiaryAll()
+
+    suspend fun insertMyDiary(myDiaryEntity: MyDiaryEntity) = db.dao().insertMyDiary(myDiaryEntity)
 
     /** Category Database */
     fun getCategoryAll() = db.dao().getCategoryAll()

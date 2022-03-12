@@ -23,6 +23,17 @@ class MyDiaryConverter {
     }
 
     @TypeConverter
+    fun toUriList(data: String?): List<String?> {
+        val typeToken = object : TypeToken<List<String?>>() {}.type
+        return gson.fromJson(data, typeToken)
+    }
+
+    @TypeConverter
+    fun fromUriList(list: List<String?>): String? {
+        return gson.toJson(list)
+    }
+
+    @TypeConverter
     fun toCategory(data: String): Category {
         val typeToken = object : TypeToken<Category>() {}.type
         return gson.fromJson(data, typeToken)

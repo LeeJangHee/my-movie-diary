@@ -69,7 +69,7 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
                         binding.homeNoDataText.visibility = View.VISIBLE
                     } else {
                         binding.homeNoDataText.visibility = View.GONE
-                        diaryAdapter.setData(res.data!!)
+                        diaryAdapter.setData(res.data)
                     }
                 }
                 is Resource.Error -> {

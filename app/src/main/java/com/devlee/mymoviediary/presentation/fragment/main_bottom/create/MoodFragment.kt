@@ -57,9 +57,10 @@ class MoodFragment : BaseFragment<FragmentMoodBinding>() {
             findNavController().popBackStack()
         }
         setMenuToolbar(type = AppToolbarLayout.RIGHT, strId = R.string.create_content_btn_text) {
-            Toast.makeText(requireContext(), "게시 완료", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.action_moodFragment_to_mainHomeFragment)
-            (requireActivity() as MainActivity).isBottomNav(true)
+            myDiaryViewModel.insertMyDiary(moodViewModel.getMyDiaryEntity()) {
+                findNavController().navigate(R.id.action_moodFragment_to_mainHomeFragment)
+                (requireActivity() as MainActivity).isBottomNav(true)
+            }
         }
     }
 

@@ -16,6 +16,7 @@ import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.FragmentCreateMyDiaryBinding
 import com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceData
+import com.devlee.mymoviediary.domain.use_case.ContentChoiceData.Companion.toContentChoiceFileData
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceFileData.Companion.toContentChoiceData
 import com.devlee.mymoviediary.domain.use_case.ContentType
 import com.devlee.mymoviediary.presentation.activity.main.MainActivity
@@ -112,6 +113,11 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
     private fun updateContentChoiceData() = lifecycleScope.launch {
         createViewModel.contentChoiceDataFlow.collectLatest {
             Log.i(TAG, "updateContentChoiceData flow: ${it.size}")
+            createViewModel.fileList.clear()
+            val contentChoiceDataList = it.filterIndexed { index, _ -> index > 0 }.map { contentChoiceData ->  contentChoiceData }
+            contentChoiceDataList.forEach { contentChoiceData ->
+                createViewModel.fileList.add(contentChoiceData.toContentChoiceFileData())
+            }
             contentCreateAdapter.setDiaryList(it)
         }
     }

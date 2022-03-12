@@ -6,8 +6,8 @@ import com.devlee.mymoviediary.R
 data class MyDiary(
     val date: String,                   // 날짜
     val contents: String? = null,       // 일기 내용
-    val video: String? = null,          // 비디오 파일
-    val recording: String? = null,      // 음성 파일
+    val video: List<String?> = listOf(),          // 비디오 파일
+    val recording: List<String?> = listOf(),      // 음성 파일
     val category: Category? = null,     // 카테고리
     val star: Boolean = false,          // 즐겨찾기
     @DrawableRes

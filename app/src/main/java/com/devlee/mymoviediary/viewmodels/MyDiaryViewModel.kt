@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.database.entity.CategoryEntity
+import com.devlee.mymoviediary.data.database.entity.MyDiaryEntity
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.data.model.MyDiary
 import com.devlee.mymoviediary.data.repository.MyDiaryRepository
@@ -124,6 +125,13 @@ class MyDiaryViewModel(
         if (backgroundColor is ColorDrawable) {
             Log.d("firstItemClick", "color = ${backgroundColor.color}")
             categoryFirstItemClick?.invoke(backgroundColor.color)
+        }
+    }
+
+    fun insertMyDiary(myDiaryEntity: MyDiaryEntity, callback: () -> Unit) = viewModelScope.launch(Dispatchers.IO) {
+        repository.insertMyDiary(myDiaryEntity)
+        launch(Dispatchers.Main) {
+            callback.invoke()
         }
     }
 

@@ -16,8 +16,10 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devlee.mymoviediary.R
+import com.devlee.mymoviediary.data.database.entity.MyDiaryEntity
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.data.model.Mood
+import com.devlee.mymoviediary.data.model.MyDiary
 import com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceData
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceFileData
@@ -58,7 +60,7 @@ class ContentCreateViewModel : ViewModel() {
     var dateStr: ObservableField<String?> = ObservableField()
     var fileList: ObservableArrayList<ContentChoiceFileData> = ObservableArrayList()
     var selectedCategory: ObservableField<Category?> = ObservableField()
-    var start: ObservableBoolean = ObservableBoolean(false)
+    var star: ObservableBoolean = ObservableBoolean(false)
     var memo: ObservableField<String?> = ObservableField()
     var mood: ObservableField<Mood> = ObservableField(Mood.NONE)
 
@@ -159,6 +161,20 @@ class ContentCreateViewModel : ViewModel() {
         dateStr.set(DateFormatUtil.getTodayDate())
         memo.set(null)
         mood.set(Mood.NONE)
+    }
+
+    fun getMyDiaryEntity(): MyDiaryEntity {
+        val myDiary = MyDiary(
+            date = dateStr.get() ?: DateFormatUtil.getTodayDate(),
+            contents = memo.get(),
+            video = fileList.map { it.video?.path },
+            recording = fileList.map { it.audio?.path },
+            category = selectedCategory.get(),
+            star = star.get(),
+            mood = mood.get()?.resId
+        )
+
+        return MyDiaryEntity(0, myDiary)
     }
 
 }
