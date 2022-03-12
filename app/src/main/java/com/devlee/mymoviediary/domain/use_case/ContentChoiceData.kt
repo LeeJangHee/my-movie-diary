@@ -22,8 +22,7 @@ data class ContentChoiceFileData(
 ) {
     companion object {
         fun ContentChoiceFileData.toContentChoiceData(): ContentChoiceData {
-            val type = CreateViewType.DIARY.type
-            return ContentChoiceData(type, video, audio)
+            return ContentChoiceData(CreateViewType.DIARY.type, video, audio)
         }
     }
 }
