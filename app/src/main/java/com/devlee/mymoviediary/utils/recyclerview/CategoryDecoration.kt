@@ -8,7 +8,8 @@ import com.devlee.mymoviediary.presentation.adapter.category.MainCategoryAdapter
 
 class CategoryDecoration(
     private val height: Float,
-    private val padding: Float,
+    private val paddingLeft: Float,
+    private val paddingRight: Float,
     @ColorInt private val color: Int
 ) : RecyclerView.ItemDecoration() {
 
@@ -19,8 +20,8 @@ class CategoryDecoration(
     }
 
     override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-        val left = parent.paddingStart + padding
-        val right = parent.width - parent.paddingEnd - padding
+        val left = parent.paddingStart + paddingLeft
+        val right = parent.width - parent.paddingEnd - paddingRight
 
         val itemCount = parent.childCount
 

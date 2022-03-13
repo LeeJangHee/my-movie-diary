@@ -7,7 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 class CustomDecoration(
     private val height: Float,
-    private val padding: Float,
+    private val paddingLeft: Float,
+    private val paddingRight: Float,
     @ColorInt private val color: Int
 ) : RecyclerView.ItemDecoration() {
 
@@ -18,8 +19,8 @@ class CustomDecoration(
     }
 
     override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-        val left = parent.paddingStart + padding
-        val right = parent.width - parent.paddingEnd - padding
+        val left = parent.paddingStart + paddingLeft
+        val right = parent.width - parent.paddingEnd - paddingRight
 
         for (i in 0 until parent.childCount) {
             val child = parent.getChildAt(i)

@@ -13,9 +13,9 @@ class MainHomeAdapter : RecyclerView.Adapter<MainHomeAdapter.MyViewHolder>() {
     private var myDiaryList = emptyList<MyDiary>()
 
     inner class MyViewHolder(private val binding: ItemMainBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind() {
+        fun bind(myDiary: MyDiary) {
             binding.apply {
-
+                this.myDiary = myDiary
                 executePendingBindings()
             }
         }
@@ -27,8 +27,8 @@ class MainHomeAdapter : RecyclerView.Adapter<MainHomeAdapter.MyViewHolder>() {
         return MyViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind()
+    override fun onBindViewHolder(holder: MyViewHolder, i: Int) {
+        holder.bind(myDiaryList[i])
     }
 
     override fun getItemCount(): Int = myDiaryList.size

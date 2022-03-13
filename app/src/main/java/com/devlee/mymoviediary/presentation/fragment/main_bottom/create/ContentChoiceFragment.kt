@@ -52,7 +52,7 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
     private val args: ContentChoiceFragmentArgs by navArgs()
 
     private val mediaPagingAdapter by lazy { MediaPagingAdapter(args.contentType, contentChoiceViewModel, onFirstItemCallback) }
-    private val audioDecoration by lazy { CustomDecoration(1.toDp(), 0f, getColorRes(requireContext(), R.color.color_efefef)) }
+    private val audioDecoration by lazy { CustomDecoration(1.toDp(), 0f, 0f, getColorRes(requireContext(), R.color.color_efefef)) }
 
     private val exoPlayer: ExoPlayer by lazy { ExoPlayer.Builder(requireContext()).build() }
     private val updateSeekRunnable = Runnable { updateSeekBar() }

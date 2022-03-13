@@ -18,7 +18,7 @@ class MyDiaryConverter {
     }
 
     @TypeConverter
-    fun fromCategory(myDiary: MyDiary): String {
+    fun fromMyDiary(myDiary: MyDiary): String {
         return gson.toJson(myDiary)
     }
 
@@ -34,13 +34,13 @@ class MyDiaryConverter {
     }
 
     @TypeConverter
-    fun toCategory(data: String): Category {
+    fun toCategory(data: String?): Category? {
         val typeToken = object : TypeToken<Category>() {}.type
         return gson.fromJson(data, typeToken)
     }
 
     @TypeConverter
-    fun fromCategory(category: Category): String {
+    fun fromCategory(category: Category?): String? {
         return gson.toJson(category)
     }
 }

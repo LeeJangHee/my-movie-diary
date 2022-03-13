@@ -1,7 +1,6 @@
 package com.devlee.mymoviediary.presentation.fragment.main_bottom.create
 
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
@@ -17,7 +16,6 @@ import com.devlee.mymoviediary.utils.isBottomNav
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
 import com.devlee.mymoviediary.viewmodels.MyDiaryViewModel
 import com.devlee.mymoviediary.viewmodels.ViewModelProviderFactory
-
 
 class MoodFragment : BaseFragment<FragmentMoodBinding>() {
 
@@ -58,6 +56,7 @@ class MoodFragment : BaseFragment<FragmentMoodBinding>() {
         }
         setMenuToolbar(type = AppToolbarLayout.RIGHT, strId = R.string.create_content_btn_text) {
             myDiaryViewModel.insertMyDiary(moodViewModel.getMyDiaryEntity()) {
+                moodViewModel.initCreateValue()
                 findNavController().navigate(R.id.action_moodFragment_to_mainHomeFragment)
                 (requireActivity() as MainActivity).isBottomNav(true)
             }

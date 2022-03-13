@@ -3,6 +3,7 @@ package com.devlee.mymoviediary.utils
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.util.TypedValue
@@ -87,4 +88,15 @@ fun View.startFadeInAnimation() {
 }
 fun View.startFadeOutAnimation() {
     startAnimation(AnimationUtil.fadeOut(this.context))
+}
+
+fun List<String?>.toUri(): List<Uri?> {
+    val uriList = this.map { uriStr ->
+        if (uriStr != null) {
+            return@map Uri.parse(Constants.MEDIA_PREFIX + uriStr)
+        } else {
+            return@map null
+        }
+    }
+    return uriList
 }

@@ -5,10 +5,7 @@ import android.graphics.Color
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.appcompat.widget.AppCompatTextView
@@ -47,22 +44,24 @@ fun bindSetSubTitle(view: AppCompatTextView, subtitle: String?) {
 }
 
 @BindingAdapter(
-    value = ["divHeight", "divPadding", "divColor", "divType"],
+    value = ["divHeight", "divPaddingLeft", "divPaddingRight", "divColor", "divType"],
     requireAll = false
 )
-fun RecyclerView.setDivider(divHeight: Float?, divPadding: Float?, @ColorInt divColor: Int?, divType: Int = 0) {
+fun RecyclerView.setDivider(divHeight: Float?, divPaddingLeft: Float?, divPaddingRight: Float?, @ColorInt divColor: Int?, divType: Int = 0) {
     val decoration = when (divType) {
         1 -> {
             CategoryDecoration(
                 height = divHeight ?: 0f,
-                padding = divPadding ?: 0f,
+                paddingLeft = divPaddingLeft ?: 0f,
+                paddingRight = divPaddingRight ?: 0f,
                 color = divColor ?: Color.TRANSPARENT
             )
         }
         else -> {
             CustomDecoration(
                 height = divHeight ?: 0f,
-                padding = divPadding ?: 0f,
+                paddingLeft = divPaddingLeft ?: 0f,
+                paddingRight = divPaddingRight ?: 0f,
                 color = divColor ?: Color.TRANSPARENT
             )
         }
@@ -251,4 +250,43 @@ fun View.setAllCorner(size: Int, @ColorRes color: Int = android.R.color.transpar
     background = MaterialShapeDrawable(model).apply {
         fillColor = ColorStateList.valueOf(getColorRes(context, color))
     }
+}
+
+@BindingAdapter("videoThumbnail", "recordingImage", requireAll = false)
+fun ImageView.uriThumbnail(videoUri: List<String?>?, audioUri: List<String?>?) {
+    when (id) {
+        R.id.videoImage -> {
+            gone()
+            if (!videoUri.isNullOrEmpty()) {
+                (layoutParams as FrameLayout.LayoutParams).apply {
+                    width = 103.dp()
+                    height = 103.dp()
+                }
+                videoUri.toUri().first()?.let {
+                    show()
+                    scaleType = ImageView.ScaleType.CENTER_CROP
+                    load(it) {
+                        fetcher(VideoFrameUriFetcher(context))
+                        videoFrameMillis(0)
+                    }
+                }
+            }
+        }
+        R.id.audioImage -> {
+            gone()
+            if (!audioUri.isNullOrEmpty()) {
+                (layoutParams as FrameLayout.LayoutParams).apply {
+                    width = 24.dp()
+                    height = 24.dp()
+                }
+                audioUri.toUri().first()?.let {
+                    show()
+                    load(R.drawable.content_item_audio_icon) {
+                        scale(Scale.FILL)
+                    }
+                }
+            }
+        }
+    }
+
 }

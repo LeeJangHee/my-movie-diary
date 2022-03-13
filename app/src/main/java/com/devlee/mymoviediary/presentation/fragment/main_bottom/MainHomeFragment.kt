@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.database.MyDiaryDatabase
 import com.devlee.mymoviediary.data.repository.MyDiaryRepository
@@ -65,7 +66,7 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
                 is Resource.Loading -> loadingLiveData.postValue(true)
                 is Resource.Success -> {
                     loadingLiveData.postValue(false)
-                    if (res.data!!.isNullOrEmpty()) {
+                    if (res.data.isNullOrEmpty()) {
                         binding.homeNoDataText.visibility = View.VISIBLE
                     } else {
                         binding.homeNoDataText.visibility = View.GONE
@@ -80,6 +81,21 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
         }
         binding.mainHomeRecyclerView.apply {
             adapter = diaryAdapter
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    when {
+                        dy < 0 && binding.addDiaryButton.visibility != View.VISIBLE -> {
+                            // 위로 스크롤
+                            binding.addDiaryButton.show()
+                        }
+                        dy > 0 && binding.addDiaryButton.visibility == View.VISIBLE -> {
+                            // 아래로 스크롤
+                            binding.addDiaryButton.hide()
+                        }
+                    }
+                }
+            })
         }
     }
 

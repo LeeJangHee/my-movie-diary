@@ -2,6 +2,7 @@ package com.devlee.mymoviediary.data.model
 
 import androidx.annotation.DrawableRes
 import com.devlee.mymoviediary.R
+import com.devlee.mymoviediary.utils.Constants.MEDIA_PREFIX
 
 data class MyDiary(
     val date: String,                   // 날짜

@@ -4,7 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View" />
+        <import type="com.devlee.mymoviediary.utils.ExtentionsKt" />
+        <variable
+            name="myDiary"
+            type="com.devlee.mymoviediary.data.model.MyDiary" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,45 +17,61 @@
         android:minHeight="57dp"
         android:paddingStart="@dimen/dp_16">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/categoryImage"
-            android:layout_width="7dp"
-            android:layout_height="7dp"
-            android:layout_marginEnd="5dp"
-            android:src="@mipmap/ic_launcher"
-            android:background="@android:color/transparent"
-            app:shapeAppearanceOverlay="@style/circleImage"
-            app:layout_constraintBottom_toBottomOf="@+id/dayText"
-            app:layout_constraintEnd_toStartOf="@+id/dayText"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/dayText" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/dayText"
-            style="@style/MainItemDayTextStyle"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="21dp"
-            android:text="DEC. 20th. 2021"
-            app:layout_constraintEnd_toStartOf="@+id/guidelineVideoView"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/categoryImage"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/contentText"
-            style="@style/AppTheme.DefaultTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:layout_marginEnd="13dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:text="가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라"
+            android:paddingVertical="19dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guidelineVideoView"
-            app:layout_constraintStart_toStartOf="@+id/guideline2" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/categoryImage"
+                categoryColor="@{myDiary.category.color}"
+                android:layout_width="7dp"
+                android:layout_height="7dp"
+                android:layout_marginEnd="5dp"
+                android:background="@android:color/transparent"
+                app:layout_constraintBottom_toBottomOf="@+id/dayText"
+                app:layout_constraintEnd_toStartOf="@+id/dayText"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/dayText"
+                app:shapeAppearanceOverlay="@style/circleImage"
+                tools:src="@mipmap/ic_launcher" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/dayText"
+                style="@style/MainItemDayTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{myDiary.date}"
+                app:layout_constraintBottom_toTopOf="@+id/contentText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/categoryImage"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="DEC. 20th. 2021" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/contentText"
+                style="@style/AppTheme.DefaultTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="11dp"
+                android:layout_marginEnd="13dp"
+                android:maxLines="2"
+                android:text="@{myDiary.contents}"
+                android:visibility="@{myDiary.contents != null ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dayText"
+                app:layout_goneMarginTop="0dp"
+                tools:text="가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라가나다라" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline2"
@@ -61,22 +81,26 @@
             app:layout_constraintGuide_begin="0dp" />
 
         <FrameLayout
-            android:layout_width="103dp"
-            android:layout_height="103dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" >
+            app:layout_constraintStart_toStartOf="@+id/guidelineVideoView"
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/videoView"
+                android:id="@+id/videoImage"
+                videoThumbnail="@{myDiary.video}"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 tools:src="@tools:sample/avatars" />
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/voiceImage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:id="@+id/audioImage"
+                recordingImage="@{myDiary.recording}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 tools:src="@tools:sample/avatars" />
 
         </FrameLayout>
@@ -88,6 +112,7 @@
             android:layout_marginEnd="@dimen/dp_16"
             android:layout_marginBottom="8dp"
             android:src="@drawable/star_icon"
+            android:visibility="@{myDiary.star ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
