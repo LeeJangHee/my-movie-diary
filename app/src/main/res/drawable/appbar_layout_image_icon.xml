@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/selected"
+        android:drawable="@drawable/appbar_grid_icon"
+        android:state_selected="false" />
+    <item android:id="@+id/unselected"
+        android:drawable="@drawable/appbar_linear_icon"
+        android:state_selected="true" />
+
+    <transition
+        android:fromId="@+id/selected"
+        android:toId="@+id/unselected">
+        <animation-list android:oneshot="true">
+            <item android:drawable="@drawable/appbar_grid_icon"
+                android:duration="15" />
+            <item android:drawable="@drawable/appbar_linear_icon"
+                android:duration="15" />
+        </animation-list>
+    </transition>
+
+    <transition
+        android:fromId="@+id/unselected"
+        android:toId="@+id/selected">
+        <animation-list android:oneshot="true">
+            <item android:drawable="@drawable/appbar_linear_icon"
+                android:duration="15" />
+            <item android:drawable="@drawable/appbar_grid_icon"
+                android:duration="15" />
+        </animation-list>
+    </transition>
+
+</animated-selector>

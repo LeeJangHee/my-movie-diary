@@ -93,32 +93,40 @@ class AppToolbarLayout(
         }
 
         if (type == LEFT) {
-            setLeftMenuView(view, onClickListener)
+            setLeftMenuView(view)
         } else {
-            setRightMenuView(view, onClickListener)
+            setRightMenuView(view)
         }
     }
 
-    private fun setLeftMenuView(view: View, onClickListener: View.OnClickListener?) {
+    fun setCustomView(view: View, type: Int) {
+
+        if (type == LEFT) {
+            setLeftMenuView(view)
+        } else {
+            setRightMenuView(view)
+        }
+    }
+
+    private fun setLeftMenuView(view: View) {
         val lp = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        view.applyMenu(lp, onClickListener)
+        view.applyMenu(lp)
 
         binding.layoutLeftMenu.addView(view)
         leftMenu.add(view)
     }
 
-    private fun setRightMenuView(view: View, onClickListener: View.OnClickListener?) {
+    private fun setRightMenuView(view: View) {
         val lp = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        view.applyMenu(lp, onClickListener)
+        view.applyMenu(lp)
 
         binding.layoutRightMenu.addView(view)
         rightMenu.add(view)
     }
 
     /** Menu - LinearLayout set */
-    private fun View.applyMenu(lp: LinearLayout.LayoutParams, onClickListener: View.OnClickListener?) = apply {
+    private fun View.applyMenu(lp: LinearLayout.LayoutParams) = apply {
         layoutParams = lp
-        setOnClickListener(onClickListener)
     }
 
     fun gone() {

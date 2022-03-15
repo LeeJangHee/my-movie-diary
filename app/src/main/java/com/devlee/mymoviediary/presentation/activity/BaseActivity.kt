@@ -90,6 +90,10 @@ abstract class BaseActivity<V : ViewBinding> : AppCompatActivity(), BaseFragment
         appToolbarLayout?.setImageOrTextMenu(type, resId, strId, onClickListener)
     }
 
+    override fun setToolbarMenu(type: Int, view: View) {
+        appToolbarLayout?.setCustomView(view, type)
+    }
+
     override fun showProgress() {
         showProgressDialog()
     }

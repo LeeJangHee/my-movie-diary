@@ -59,6 +59,10 @@ abstract class BaseFragment<V : ViewBinding> : Fragment() {
         toolbarControl?.setToolbarMenu(type, resId, strId, onClickListener)
     }
 
+    open fun setMenuToolbar(type: Int, view: View) {
+        toolbarControl?.setToolbarMenu(type, view)
+    }
+
     open fun getLayoutId(): Int = 0
 
     abstract fun setView()
@@ -85,6 +89,11 @@ abstract class BaseFragment<V : ViewBinding> : Fragment() {
             @DrawableRes resId: Int? = null,
             @StringRes strId: Int? = null,
             onClickListener: View.OnClickListener? = null
+        )
+
+        fun setToolbarMenu(
+            type: Int,
+            view: View
         )
     }
 }
