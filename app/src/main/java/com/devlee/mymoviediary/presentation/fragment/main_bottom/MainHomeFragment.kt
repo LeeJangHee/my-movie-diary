@@ -10,6 +10,7 @@ import androidx.core.view.setPadding
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.size.Scale
@@ -18,6 +19,7 @@ import com.devlee.mymoviediary.data.database.MyDiaryDatabase
 import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.databinding.FragmentMainHomeBinding
 import com.devlee.mymoviediary.presentation.activity.main.MainActivity
+import com.devlee.mymoviediary.presentation.adapter.home.HomeLayoutType
 import com.devlee.mymoviediary.presentation.adapter.home.MainHomeAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
@@ -38,11 +40,13 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
         ViewModelProviderFactory(repository)
     }
 
-    private val diaryAdapter: MainHomeAdapter by lazy { MainHomeAdapter() }
+    private var diaryLayoutManager: GridLayoutManager? = null
+    private val diaryAdapter: MainHomeAdapter by lazy { MainHomeAdapter(diaryLayoutManager) }
 
     override fun getLayoutId(): Int = R.layout.fragment_main_home
 
     override fun setView() {
+        diaryLayoutManager = GridLayoutManager(requireContext(), 1)
         setAppbar()
         setRecyclerView()
         isMainBottomNavLayout.value = true
@@ -84,6 +88,7 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
         }
         binding.mainHomeRecyclerView.apply {
             adapter = diaryAdapter
+            layoutManager = diaryLayoutManager
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
@@ -99,6 +104,15 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
                     }
                 }
             })
+        }
+
+        homeViewModel.homeLayoutType.observe(viewLifecycleOwner) { homeType ->
+            val recyclerLayoutManager = binding.mainHomeRecyclerView.layoutManager
+            val recyclerAdapter = binding.mainHomeRecyclerView.adapter
+            if (recyclerLayoutManager is GridLayoutManager) {
+                recyclerLayoutManager.spanCount = homeType.spanCount
+                recyclerAdapter?.notifyItemRangeChanged(0, recyclerAdapter.itemCount)
+            }
         }
     }
 
@@ -116,13 +130,18 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
             setPadding(0, 0, 11.dp(), 0)
         }
         val layoutImageView = ImageView(requireContext()).apply {
-
+            isSelected = homeViewModel.homeLayoutType.value == HomeLayoutType.GRID
             // 벡터 이미지 애니메이션 적용
             setImageDrawable(getDrawable(context, R.drawable.appbar_layout_v_image_icon))
             setPadding(5.dp())
             setOnClickListener {
                 isSelected = !isSelected
-                Toast.makeText(it.context, "grid", Toast.LENGTH_SHORT).show()
+                delayUiThread(500) {
+                    if (isSelected)
+                        homeViewModel.homeLayoutType.postValue(HomeLayoutType.GRID)
+                    else
+                        homeViewModel.homeLayoutType.postValue(HomeLayoutType.LINEAR)
+                }
             }
         }
         val rangeImageView = ImageView(requireContext()).apply {

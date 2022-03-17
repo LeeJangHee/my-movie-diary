@@ -14,6 +14,7 @@ import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.data.model.MyDiary
 import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.presentation.adapter.category.CategoryViewType
+import com.devlee.mymoviediary.presentation.adapter.home.HomeLayoutType
 import com.devlee.mymoviediary.utils.Resource
 import com.devlee.mymoviediary.utils.SharedPreferencesUtil
 import com.devlee.mymoviediary.utils.categoryFirstItemClick
@@ -38,6 +39,8 @@ class MyDiaryViewModel(
     /** home item */
     var myDiaries = repository.getMyDiaryAll()
     var handlerMyDiaryList: MutableLiveData<Resource<ArrayList<MyDiary>>> = MutableLiveData()
+
+    var homeLayoutType: MutableLiveData<HomeLayoutType> = MutableLiveData(HomeLayoutType.LINEAR)
 
     fun getCategoryList(): List<Category> {
         var list = listOf<Category>()

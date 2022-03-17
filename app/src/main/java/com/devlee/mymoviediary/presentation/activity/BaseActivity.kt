@@ -62,7 +62,7 @@ abstract class BaseActivity<V : ViewBinding> : AppCompatActivity(), BaseFragment
         dismissProgressDialog()
     }
 
-    open fun getLayout(): Int = 0
+    abstract fun getLayout(): Int
 
     open fun hideBottomNav() {
         bottomNavLayoutBinding?.root?.gone()

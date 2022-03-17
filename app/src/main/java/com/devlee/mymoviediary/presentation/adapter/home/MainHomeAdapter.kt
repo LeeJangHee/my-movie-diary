@@ -3,16 +3,18 @@ package com.devlee.mymoviediary.presentation.adapter.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.devlee.mymoviediary.data.model.MyDiary
-import com.devlee.mymoviediary.databinding.ItemMainBinding
+import com.devlee.mymoviediary.databinding.ItemGridHomeBinding
+import com.devlee.mymoviediary.databinding.ItemLinearHomeBinding
 import com.devlee.mymoviediary.utils.recyclerview.MyDiaryDiffUtil
 
-class MainHomeAdapter : RecyclerView.Adapter<MainHomeAdapter.MyViewHolder>() {
+class MainHomeAdapter(private val layoutManager: GridLayoutManager? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var myDiaryList = emptyList<MyDiary>()
 
-    inner class MyViewHolder(private val binding: ItemMainBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MyLinearViewHolder(private val binding: ItemLinearHomeBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(myDiary: MyDiary) {
             binding.apply {
                 this.myDiary = myDiary
@@ -21,17 +23,43 @@ class MainHomeAdapter : RecyclerView.Adapter<MainHomeAdapter.MyViewHolder>() {
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val binding = ItemMainBinding.inflate(layoutInflater, parent, false)
-        return MyViewHolder(binding)
+    inner class MyGirdViewHolder(private val binding: ItemGridHomeBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(myDiary: MyDiary) {
+            binding.apply {
+                this.myDiary = myDiary
+                executePendingBindings()
+            }
+        }
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, i: Int) {
-        holder.bind(myDiaryList[i])
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        return when (viewType) {
+            HomeLayoutType.LINEAR.ordinal -> {
+                val binding = ItemLinearHomeBinding.inflate(layoutInflater, parent, false)
+                MyLinearViewHolder(binding)
+            }
+            else -> {
+                val binding = ItemGridHomeBinding.inflate(layoutInflater, parent, false)
+                MyGirdViewHolder(binding)
+            }
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, i: Int) {
+        when (holder) {
+            is MyLinearViewHolder -> holder.bind(myDiaryList[i])
+            is MyGirdViewHolder -> holder.bind(myDiaryList[i])
+        }
     }
 
     override fun getItemCount(): Int = myDiaryList.size
+
+    override fun getItemViewType(position: Int): Int {
+        return if (layoutManager?.spanCount == HomeLayoutType.GRID.spanCount) HomeLayoutType.GRID.ordinal
+        else HomeLayoutType.LINEAR.ordinal
+    }
 
     fun setData(newDiaryList: List<MyDiary>) {
         val mainDiffUtil = MyDiaryDiffUtil(myDiaryList, newDiaryList)
@@ -39,4 +67,8 @@ class MainHomeAdapter : RecyclerView.Adapter<MainHomeAdapter.MyViewHolder>() {
         myDiaryList = newDiaryList
         diffUtilResult.dispatchUpdatesTo(this)
     }
+}
+
+enum class HomeLayoutType(val spanCount: Int) {
+    LINEAR(1), GRID(3)
 }

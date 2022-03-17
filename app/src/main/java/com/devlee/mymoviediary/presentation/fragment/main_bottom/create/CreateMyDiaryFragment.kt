@@ -178,7 +178,7 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
                 // 데이터 초기화
                 createViewModel.initCreateValue()
 
-                findNavController().popBackStack()
+                findNavController().navigate(R.id.action_createMyDiaryFragment_to_mainHomeFragment)
                 (requireActivity() as MainActivity).isBottomNav(true)
             }
             .show()
