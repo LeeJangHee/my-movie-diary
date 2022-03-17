@@ -117,7 +117,8 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
         }
         val layoutImageView = ImageView(requireContext()).apply {
 
-            setImageDrawable(getDrawable(context, R.drawable.appbar_layout_image_icon))
+            // 벡터 이미지 애니메이션 적용
+            setImageDrawable(getDrawable(context, R.drawable.appbar_layout_v_image_icon))
             setPadding(5.dp())
             setOnClickListener {
                 isSelected = !isSelected

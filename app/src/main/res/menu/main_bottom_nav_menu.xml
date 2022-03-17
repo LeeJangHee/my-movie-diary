@@ -18,6 +18,6 @@
 
     <item
         android:id="@+id/mainProfileFragment"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/bottom_menu_mypage_icon"
         android:title="Profile" />
 </menu>

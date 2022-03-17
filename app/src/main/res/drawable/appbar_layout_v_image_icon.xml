@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/selected"
+        android:drawable="@drawable/grid_v_icon"
+        android:state_selected="false" />
+    <item android:id="@+id/unselected"
+        android:drawable="@drawable/linear_v_ion"
+        android:state_selected="true" />
+
+    <transition
+        android:fromId="@+id/selected"
+        android:toId="@+id/unselected"
+        android:drawable="@drawable/grid_v_anim">
+    </transition>
+
+    <transition
+        android:fromId="@+id/unselected"
+        android:toId="@+id/selected"
+        android:drawable="@drawable/linear_v_anim">
+    </transition>
+
+</animated-selector>
