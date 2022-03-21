@@ -56,6 +56,23 @@
             app:backgroundTint="@color/color_fffefc"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/homeSortText"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            style="@style/MainSortTextStyle"
+            android:visibility="gone"
+            android:text="@{viewModel.homeSortType.title}"
+            android:gravity="center_horizontal"
+            android:paddingTop="10dp"
+            android:background="@drawable/home_sort_text_bg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible"
+            tools:text="최신 순" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

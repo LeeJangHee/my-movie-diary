@@ -67,6 +67,12 @@
         <item name="android:textColor">@color/color_535353</item>
         <item name="android:textSize">9dp</item>
     </style>
+    
+    <style name="MainSortTextStyle" parent="AppTheme.DefaultTextStyle">
+        <item name="android:fontFamily">@font/noto_sans_kr_medium</item>
+        <item name="android:textColor">@color/color_151515</item>
+        <item name="android:textSize">13dp</item>
+    </style>
 
     <!--  Category  -->
     <style name="CategoryTitleStyle" parent="AppTheme.DefaultTextStyle">

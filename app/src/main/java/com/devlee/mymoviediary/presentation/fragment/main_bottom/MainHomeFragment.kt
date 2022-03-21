@@ -25,6 +25,7 @@ import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
 import com.devlee.mymoviediary.utils.*
 import com.devlee.mymoviediary.viewmodels.MyDiaryViewModel
+import com.devlee.mymoviediary.viewmodels.SortItem
 import com.devlee.mymoviediary.viewmodels.ViewModelProviderFactory
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -77,6 +78,9 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
                         binding.homeNoDataText.visibility = View.VISIBLE
                     } else {
                         binding.homeNoDataText.visibility = View.GONE
+                        with(binding.mainHomeRecyclerView) {
+                            post { smoothScrollToPosition(0) }
+                        }
                         diaryAdapter.setData(res.data)
                     }
                 }
@@ -106,6 +110,7 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
             })
         }
 
+        // 레이아웃 타입 변경
         homeViewModel.homeLayoutType.observe(viewLifecycleOwner) { homeType ->
             val recyclerLayoutManager = binding.mainHomeRecyclerView.layoutManager
             val recyclerAdapter = binding.mainHomeRecyclerView.adapter
@@ -113,6 +118,11 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
                 recyclerLayoutManager.spanCount = homeType.spanCount
                 recyclerAdapter?.notifyItemRangeChanged(0, recyclerAdapter.itemCount)
             }
+        }
+
+        // 정렬 타입 변경
+        homeViewModel.homeSortType.observe(viewLifecycleOwner) { homeSortItem ->
+            homeViewModel.readMyDiary()
         }
     }
 
@@ -150,7 +160,17 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
             }
             setPadding(5.dp())
             setOnClickListener {
-                Toast.makeText(it.context, "range", Toast.LENGTH_SHORT).show()
+                if (binding.homeSortText.visibility != View.GONE) {
+                    Log.d(TAG, "sort click ignore")
+                    return@setOnClickListener
+                }
+                binding.homeSortText.show()
+                delayUiThread(2000) {
+                    binding.homeSortText.gone()
+                }
+                val currentHomeSortType = homeViewModel.homeSortType.value ?: SortItem.DESC
+                homeViewModel.homeSortType.value = if (currentHomeSortType == SortItem.DESC) SortItem.ASC else SortItem.DESC
+                Log.v(TAG, "homeSortType : ${homeViewModel.homeSortType.value}")
             }
         }
         rightMenuView.addView(layoutImageView)

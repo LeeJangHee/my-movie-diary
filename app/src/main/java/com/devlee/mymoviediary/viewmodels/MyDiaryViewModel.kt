@@ -41,6 +41,7 @@ class MyDiaryViewModel(
     var handlerMyDiaryList: MutableLiveData<Resource<ArrayList<MyDiary>>> = MutableLiveData()
 
     var homeLayoutType: MutableLiveData<HomeLayoutType> = MutableLiveData(HomeLayoutType.LINEAR)
+    var homeSortType: MutableLiveData<SortItem> = MutableLiveData(SortItem.DESC)
 
     fun getCategoryList(): List<Category> {
         var list = listOf<Category>()
@@ -74,7 +75,12 @@ class MyDiaryViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             delay(1000)
             try {
-                handlerMyDiaryList.postValue(Resource.Success(myDiary as ArrayList))
+                val sortMyDiary = if (homeSortType.value == SortItem.ASC)
+                    myDiary.sortedBy { it.date }
+                else
+                    myDiary.sortedByDescending { it.date }
+
+                handlerMyDiaryList.postValue(Resource.Success(sortMyDiary.toCollection(ArrayList())))
             } catch (e: Exception) {
                 handlerMyDiaryList.postValue(Resource.Error(e.message ?: "home data Error!!!"))
             }
