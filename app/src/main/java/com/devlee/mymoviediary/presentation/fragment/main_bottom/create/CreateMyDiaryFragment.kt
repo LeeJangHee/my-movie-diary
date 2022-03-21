@@ -70,8 +70,18 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
                                 itemList.add(ChoiceBottomSheetData(contentType = ContentType.AUDIO))
                             }
                             BottomChoiceType.CATEGORY -> {
-                                SharedPreferencesUtil.getCategoryListPref().forEach {
-                                    itemList.add(ChoiceBottomSheetData(category = it))
+                                val categories = SharedPreferencesUtil.getCategoryListPref()
+                                if (categories.isNullOrEmpty()) {
+                                    CustomDialog.Builder(requireContext())
+                                        .setTitle(R.string.create_choice_item_empty_title)
+                                        .setMessage(R.string.create_choice_item_empty_category_message)
+                                        .setPositiveButton(R.string.ok_kr)
+                                        .show()
+                                    return@launch
+                                } else {
+                                    categories.forEach {
+                                        itemList.add(ChoiceBottomSheetData(category = it))
+                                    }
                                 }
                             }
                         }

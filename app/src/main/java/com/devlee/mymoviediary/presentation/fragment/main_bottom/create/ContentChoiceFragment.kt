@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
@@ -25,6 +26,7 @@ import com.devlee.mymoviediary.presentation.adapter.create.MediaPagingAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseBottomSheetFragment
 import com.devlee.mymoviediary.utils.*
 import com.devlee.mymoviediary.utils.Constants.MEDIA_PAGE_SIZE
+import com.devlee.mymoviediary.utils.dialog.CustomDialog
 import com.devlee.mymoviediary.utils.recyclerview.CustomDecoration
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
 import com.devlee.mymoviediary.viewmodels.MediaViewModel
@@ -36,6 +38,7 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding>(R.layout.bottom_content_choice) {
@@ -146,12 +149,29 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
         setTopCornerRadius(4, 4)
     }
 
-    private fun initMediaData() {
+    private fun initMediaData() = lifecycleScope.launchWhenResumed {
         mediaViewModel.mediaPagingData.observe(viewLifecycleOwner) { pagingData ->
             lifecycleScope.launch {
                 Log.w(TAG, "initMediaData: $pagingData")
 
                 mediaPagingAdapter.submitData(pagingData)
+            }
+        }
+
+        mediaPagingAdapter.loadStateFlow.collectLatest { loadStates ->
+            when (loadStates.refresh) {
+                is LoadState.Error -> {
+                    Log.d(TAG, "initMediaData: refresh error")
+                    dismiss()
+                    // 동영상 및 오디오가 없을 때, 다이얼로그 생성
+                    CustomDialog.Builder(requireContext())
+                        .setTitle(R.string.create_choice_item_empty_title)
+                        .setMessage(R.string.create_choice_item_empty_message)
+                        .setPositiveButton(R.string.ok_kr)
+                        .show()
+                }
+                is LoadState.NotLoading -> Log.d(TAG, "initMediaData: refresh notLoading")
+                else -> Log.d(TAG, "initMediaData: refresh Loading")
             }
         }
     }

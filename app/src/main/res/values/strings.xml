@@ -44,4 +44,8 @@
     <!--  다이얼로그  -->
     <string name="create_back_dialog_title">주의</string>
     <string name="create_back_dialog_message">작성중인 게시물이 모두 삭제됩니다.\n정말 취소하시겠습니까?</string>
+    <string name="create_choice_item_empty_title">선택 불가</string>
+    <string name="create_choice_item_empty_message">선택할 수 있는 아이템이 없습니다.\n동영상 및 오디오를 준비해주세요.</string>
+    <string name="create_choice_item_empty_category_message">선택할 수 있는 카테고리가 없습니다.\n카테고리를 만들어 주세요.</string>
+
 </resources>

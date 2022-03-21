@@ -25,6 +25,7 @@ class MediaPagingSource(
         val page = params.key ?: 1
         return try {
             Log.d(TAG, "load: $items")
+            if (items.isNullOrEmpty()) throw Exception()
             LoadResult.Page(
                 data = items,
                 prevKey = if (page == 1) null else page - 1,
