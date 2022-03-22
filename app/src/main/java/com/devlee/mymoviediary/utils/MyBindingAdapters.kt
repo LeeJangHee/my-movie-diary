@@ -18,6 +18,7 @@ import coil.size.Scale
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.data.model.Mood
+import com.devlee.mymoviediary.data.model.MyDiary
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceData
 import com.devlee.mymoviediary.presentation.adapter.category.CategoryViewType
 import com.devlee.mymoviediary.utils.recyclerview.CategoryDecoration
@@ -47,7 +48,13 @@ fun bindSetSubTitle(view: AppCompatTextView, subtitle: String?) {
     value = ["divHeight", "divPaddingLeft", "divPaddingRight", "divColor", "divType"],
     requireAll = false
 )
-fun RecyclerView.setDivider(divHeight: Float?, divPaddingLeft: Float?, divPaddingRight: Float?, @ColorInt divColor: Int?, divType: Int = 0) {
+fun RecyclerView.setDivider(
+    divHeight: Float?,
+    divPaddingLeft: Float?,
+    divPaddingRight: Float?,
+    @ColorInt divColor: Int?,
+    divType: Int = 0
+) {
     val decoration = when (divType) {
         1 -> {
             CategoryDecoration(
@@ -255,12 +262,14 @@ fun View.setAllCorner(size: Int, @ColorRes color: Int = android.R.color.transpar
 @BindingAdapter("videoThumbnail", "recordingImage", requireAll = false)
 fun ImageView.uriThumbnail(videoUri: List<String?>?, audioUri: List<String?>?) {
     when (id) {
-        R.id.videoImage -> {
+        R.id.videoImage, R.id.gridVideoImage -> {
             gone()
             if (!videoUri.isNullOrEmpty()) {
                 (layoutParams as FrameLayout.LayoutParams).apply {
-                    width = 103.dp()
-                    height = 103.dp()
+                    if (id == R.id.videoImage) {
+                        width = 103.dp()
+                        height = 103.dp()
+                    }
                 }
                 videoUri.toUri().first()?.let {
                     show()
@@ -272,7 +281,7 @@ fun ImageView.uriThumbnail(videoUri: List<String?>?, audioUri: List<String?>?) {
                 }
             }
         }
-        R.id.audioImage -> {
+        R.id.audioImage, R.id.gridAudioImage -> {
             gone()
             if (!audioUri.isNullOrEmpty()) {
                 (layoutParams as FrameLayout.LayoutParams).apply {
@@ -287,6 +296,19 @@ fun ImageView.uriThumbnail(videoUri: List<String?>?, audioUri: List<String?>?) {
                 }
             }
         }
+    }
+
+}
+
+@BindingAdapter("homeEmptyImage")
+fun View.setHomeEmptyImage(myDiary: MyDiary) {
+    if (myDiary.video.isNullOrEmpty() && myDiary.recording.isNullOrEmpty()) {
+        show()
+        Log.d("janghee", "setHomeLayoutVisible: show-()")
+    }
+    else {
+        gone()
+        Log.d("janghee", "setHomeLayoutVisible: gone-()")
     }
 
 }

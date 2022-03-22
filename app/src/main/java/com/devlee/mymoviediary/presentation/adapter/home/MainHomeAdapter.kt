@@ -1,5 +1,6 @@
 package com.devlee.mymoviediary.presentation.adapter.home
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -10,9 +11,11 @@ import com.devlee.mymoviediary.databinding.ItemGridHomeBinding
 import com.devlee.mymoviediary.databinding.ItemLinearHomeBinding
 import com.devlee.mymoviediary.utils.recyclerview.MyDiaryDiffUtil
 
-class MainHomeAdapter(private val layoutManager: GridLayoutManager? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MainHomeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private val TAG = "MainHomeAdapter"
     private var myDiaryList = emptyList<MyDiary>()
+    private var layoutManager: GridLayoutManager? = null
 
     inner class MyLinearViewHolder(private val binding: ItemLinearHomeBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(myDiary: MyDiary) {
@@ -57,8 +60,10 @@ class MainHomeAdapter(private val layoutManager: GridLayoutManager? = null) : Re
     override fun getItemCount(): Int = myDiaryList.size
 
     override fun getItemViewType(position: Int): Int {
-        return if (layoutManager?.spanCount == HomeLayoutType.GRID.spanCount) HomeLayoutType.GRID.ordinal
+        val type = if (layoutManager?.spanCount == HomeLayoutType.GRID.spanCount) HomeLayoutType.GRID.ordinal
         else HomeLayoutType.LINEAR.ordinal
+        Log.d(TAG, "getItemViewType: $type")
+        return type
     }
 
     fun setData(newDiaryList: List<MyDiary>) {
@@ -66,6 +71,10 @@ class MainHomeAdapter(private val layoutManager: GridLayoutManager? = null) : Re
         val diffUtilResult = DiffUtil.calculateDiff(mainDiffUtil)
         myDiaryList = newDiaryList
         diffUtilResult.dispatchUpdatesTo(this)
+    }
+
+    fun setLayoutManager(layoutManager: GridLayoutManager?) {
+        this.layoutManager = layoutManager
     }
 }
 

@@ -24,6 +24,7 @@ import com.devlee.mymoviediary.presentation.adapter.home.MainHomeAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
 import com.devlee.mymoviediary.utils.*
+import com.devlee.mymoviediary.utils.recyclerview.CustomDecoration
 import com.devlee.mymoviediary.viewmodels.MyDiaryViewModel
 import com.devlee.mymoviediary.viewmodels.SortItem
 import com.devlee.mymoviediary.viewmodels.ViewModelProviderFactory
@@ -42,12 +43,21 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
     }
 
     private var diaryLayoutManager: GridLayoutManager? = null
-    private val diaryAdapter: MainHomeAdapter by lazy { MainHomeAdapter(diaryLayoutManager) }
+    private val diaryAdapter: MainHomeAdapter by lazy { MainHomeAdapter() }
+
+    private val diaryItemDecoration by lazy {
+        CustomDecoration(
+            1.toDp(),
+            16.toDp(),
+            0f,
+            requireContext().resources.getColor(R.color.color_efefef, null)
+        )
+    }
 
     override fun getLayoutId(): Int = R.layout.fragment_main_home
 
     override fun setView() {
-        diaryLayoutManager = GridLayoutManager(requireContext(), 1)
+        diaryLayoutManager = GridLayoutManager(requireContext(), homeViewModel.homeLayoutType.value?.spanCount ?: 1)
         setAppbar()
         setRecyclerView()
         isMainBottomNavLayout.value = true
@@ -116,7 +126,15 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
             val recyclerAdapter = binding.mainHomeRecyclerView.adapter
             if (recyclerLayoutManager is GridLayoutManager) {
                 recyclerLayoutManager.spanCount = homeType.spanCount
+                diaryAdapter.setLayoutManager(recyclerLayoutManager)
                 recyclerAdapter?.notifyItemRangeChanged(0, recyclerAdapter.itemCount)
+
+                // decoration homeType에 따라 생성 및 제거
+                if (homeType.spanCount == HomeLayoutType.GRID.spanCount) {
+                    binding.mainHomeRecyclerView.removeItemDecoration(diaryItemDecoration)
+                } else {
+                    binding.mainHomeRecyclerView.addItemDecoration(diaryItemDecoration)
+                }
             }
         }
 
@@ -147,6 +165,7 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
             setOnClickListener {
                 isSelected = !isSelected
                 delayUiThread(500) {
+                    binding.addDiaryButton.show()
                     if (isSelected)
                         homeViewModel.homeLayoutType.postValue(HomeLayoutType.GRID)
                     else

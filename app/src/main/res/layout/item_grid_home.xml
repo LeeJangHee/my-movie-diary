@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+        <import type="android.view.View" />
         <variable
             name="myDiary"
             type="com.devlee.mymoviediary.data.model.MyDiary" />
@@ -15,16 +16,49 @@
         app:layout_constraintDimensionRatio="1"
         android:padding="2dp">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/black"
+            android:foregroundGravity="center"
+            android:background="@color/color_f4f4f4"
             app:layout_constraintDimensionRatio="H, 1:1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/gridAudioImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                recordingImage="@{myDiary.recording}" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/gridVideoImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                videoThumbnail="@{myDiary.video}" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                homeEmptyImage="@{myDiary}"
+                android:src="@drawable/home_text_data_icon" />
+        </FrameLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/gridStarImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/star_icon"
+            android:visibility="@{myDiary.star ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
