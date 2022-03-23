@@ -1,13 +1,11 @@
 package com.devlee.mymoviediary.presentation.layout
 
 import android.content.Context
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -15,7 +13,6 @@ import coil.load
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.LayoutAppbarBinding
 import com.devlee.mymoviediary.databinding.LayoutAppbarTitleBinding
-import com.devlee.mymoviediary.utils.convertDpToPx
 import com.devlee.mymoviediary.utils.dp
 import com.devlee.mymoviediary.utils.gone
 
@@ -31,10 +28,8 @@ class AppToolbarLayout(
     var leftMenu: ArrayDeque<View> = ArrayDeque()
     var rightMenu: ArrayDeque<View> = ArrayDeque()
 
-    var layoutTitle: RelativeLayout? = null
-
     private val appbarTitleBinding: LayoutAppbarTitleBinding by lazy {
-        LayoutAppbarTitleBinding.inflate(LayoutInflater.from(context), binding.layoutTitle, true)
+        LayoutAppbarTitleBinding.inflate(LayoutInflater.from(context))
     }
 
     var titleView: View? = null
@@ -63,7 +58,10 @@ class AppToolbarLayout(
             binding.layoutLeftMenu.removeAllViews()
             leftMenu.clear()
         }
-        layoutTitle?.addView(titleView)
+        if (binding.layoutTitle.childCount > 0) {
+            binding.layoutTitle.removeAllViews()
+        }
+        binding.layoutTitle.addView(titleView)
     }
 
     /** image menu */
@@ -136,7 +134,8 @@ class AppToolbarLayout(
     fun clearView() {
         binding.layoutRightMenu.removeAllViews()
         binding.layoutLeftMenu.removeAllViews()
-        binding.layoutTitle.removeAllViews()
+        if (binding.layoutTitle.childCount > 0)
+            binding.layoutTitle.removeAllViews()
         rightMenu.clear()
         leftMenu.clear()
     }

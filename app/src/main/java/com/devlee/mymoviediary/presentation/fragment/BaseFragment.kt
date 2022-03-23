@@ -63,6 +63,10 @@ abstract class BaseFragment<V : ViewBinding> : Fragment() {
         toolbarControl?.setToolbarMenu(type, view)
     }
 
+    open fun clearMenu() {
+        toolbarControl?.clearMenu()
+    }
+
     abstract fun getLayoutId(): Int
 
     abstract fun setView()
@@ -95,5 +99,7 @@ abstract class BaseFragment<V : ViewBinding> : Fragment() {
             type: Int,
             view: View
         )
+
+        fun clearMenu()
     }
 }

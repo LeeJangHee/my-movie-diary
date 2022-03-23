@@ -94,6 +94,10 @@ abstract class BaseActivity<V : ViewBinding> : AppCompatActivity(), BaseFragment
         appToolbarLayout?.setCustomView(view, type)
     }
 
+    override fun clearMenu() {
+        appToolbarLayout?.clearView()
+    }
+
     override fun showProgress() {
         showProgressDialog()
     }

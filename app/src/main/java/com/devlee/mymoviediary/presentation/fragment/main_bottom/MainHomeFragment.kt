@@ -145,11 +145,12 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
     }
 
     private fun setAppbar() {
-        setTitleToolbar(title = "12월", subTitle = "BC12의 ", rightImage = R.drawable.down_arrow_icon) {
+        setTitleToolbar(title = "12월", subTitle = "BC12의 ") {
             Toast.makeText(requireContext(), "click", Toast.LENGTH_SHORT).show()
         }
         setMenuToolbar(type = AppToolbarLayout.LEFT, resId = R.drawable.search_icon) {
-            Toast.makeText(it.context, "left", Toast.LENGTH_SHORT).show()
+            clearMenu()
+            findNavController().navigate(R.id.action_mainHomeFragment_to_searchFragment)
         }
 
         val rightMenuView = LinearLayout(requireContext()).apply {
