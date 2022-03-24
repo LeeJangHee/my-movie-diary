@@ -185,4 +185,13 @@
     <style name="ContentChoiceAudioTimelineTextStyle" parent="ContentChoiceAudioTextStyle">
         <item name="android:textSize">14dp</item>
     </style>
+
+    <!--  SearchFragment theme  -->
+    <style name="SearchEditTextStyle" parent="AppTheme.DefaultEditStyle">
+        <item name="android:hint">@string/search_edit_hint</item>
+        <item name="android:textColorHint">@color/color_999999</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_light</item>
+        <item name="android:textColor">@color/color_1c1c1c</item>
+        <item name="android:textSize">15dp</item>
+    </style>
 </resources>

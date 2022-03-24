@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
@@ -38,6 +39,13 @@ abstract class BaseFragment<V : ViewBinding> : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setView()
+    }
+
+    open fun setSearchToolbar(
+        editorActionListener: TextView.OnEditorActionListener? = null,
+        removeClickListener: View.OnClickListener? = null
+    ) {
+        toolbarControl?.setToolbarSearch(editorActionListener, removeClickListener)
     }
 
     open fun setTitleToolbar(
@@ -80,6 +88,11 @@ abstract class BaseFragment<V : ViewBinding> : Fragment() {
     }
 
     interface ToolbarControl {
+        fun setToolbarSearch(
+            editorActionListener: TextView.OnEditorActionListener? = null,
+            removeClickListener: View.OnClickListener? = null
+        )
+
         fun setToolbarTitle(
             title: String,
             subTitle: String? = null,

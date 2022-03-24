@@ -1,5 +1,7 @@
 package com.devlee.mymoviediary.presentation.fragment.main_bottom
 
+import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.navigation.fragment.findNavController
 import com.devlee.mymoviediary.R
@@ -16,6 +18,18 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
     }
 
     private fun setAppbar() {
+        setSearchToolbar(editorActionListener = { textView, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                if (textView.text.isNullOrEmpty()) {
+                    false
+                } else {
+                    Toast.makeText(requireContext(), "${textView.text}", Toast.LENGTH_SHORT).show()
+                    true
+                }
+            } else {
+                false
+            }
+        })
         setMenuToolbar(type = AppToolbarLayout.LEFT, resId = R.drawable.back_icon) {
             handleBackPressed()
         }

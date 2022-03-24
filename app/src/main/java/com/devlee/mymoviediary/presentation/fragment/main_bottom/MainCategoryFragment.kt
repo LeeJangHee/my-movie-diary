@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.database.MyDiaryDatabase
 import com.devlee.mymoviediary.data.repository.MyDiaryRepository
@@ -27,7 +26,7 @@ class MainCategoryFragment : BaseFragment<FragmentMainCategoryBinding>() {
     private val TAG = "MainCategoryFragment"
 
 
-    val categoryViewModel: MyDiaryViewModel by viewModels {
+    private val categoryViewModel: MyDiaryViewModel by viewModels {
         val repository = MyDiaryRepository(MyDiaryDatabase.getInstance(requireActivity()))
         ViewModelProviderFactory(repository)
     }

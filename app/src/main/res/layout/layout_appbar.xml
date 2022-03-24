@@ -37,12 +37,12 @@
 
                 <RelativeLayout
                     android:id="@+id/layoutTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
                     android:gravity="center"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintStart_toEndOf="@id/layoutLeftMenu"
+                    app:layout_constraintEnd_toStartOf="@id/layoutRightMenu" />
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/layoutRightMenu"

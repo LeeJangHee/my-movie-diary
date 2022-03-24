@@ -9,9 +9,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.constraintlayout.widget.ConstraintLayout
 import coil.load
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.LayoutAppbarBinding
+import com.devlee.mymoviediary.databinding.LayoutAppbarSearchBinding
 import com.devlee.mymoviediary.databinding.LayoutAppbarTitleBinding
 import com.devlee.mymoviediary.utils.dp
 import com.devlee.mymoviediary.utils.gone
@@ -25,14 +27,45 @@ class AppToolbarLayout(
         const val LEFT = 1
     }
 
-    var leftMenu: ArrayDeque<View> = ArrayDeque()
-    var rightMenu: ArrayDeque<View> = ArrayDeque()
+    private var leftMenu: ArrayDeque<View> = ArrayDeque()
+    private var rightMenu: ArrayDeque<View> = ArrayDeque()
 
     private val appbarTitleBinding: LayoutAppbarTitleBinding by lazy {
         LayoutAppbarTitleBinding.inflate(LayoutInflater.from(context))
     }
 
-    var titleView: View? = null
+    private val appbarSearchBinding: LayoutAppbarSearchBinding by lazy {
+        LayoutAppbarSearchBinding.inflate(LayoutInflater.from(context))
+    }
+
+    private var titleView: View? = null
+    private var searchView: View? = null
+
+    /** 검색 메뉴 */
+    fun setSearchView(
+        editorActionListener: TextView.OnEditorActionListener? = null,
+        removeListener: View.OnClickListener? = null
+    ) {
+        searchView = appbarSearchBinding.run {
+            val lp = ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 36.dp()).apply {
+                setMargins(0, 0, 16.dp(), 0)
+            }
+            searchEdit.setOnEditorActionListener(editorActionListener)
+            val removeButtonListener = removeListener ?: View.OnClickListener {
+                searchEdit.text = null
+            }
+            this.removeListener = removeButtonListener
+            root.apply {
+                layoutParams = lp
+                setPadding(10.dp(), 0, 10.dp(), 0)
+            }
+        }
+
+        if (binding.layoutTitle.childCount > 0) {
+            binding.layoutTitle.removeAllViews()
+        }
+        binding.layoutTitle.addView(searchView)
+    }
 
     /** 타이틀 메뉴 */
     fun setTitleView(

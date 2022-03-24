@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -75,6 +76,10 @@ abstract class BaseActivity<V : ViewBinding> : AppCompatActivity(), BaseFragment
     open fun getAppbar() = appToolbarLayout
 
     abstract fun setToolbar()
+
+    override fun setToolbarSearch(editorActionListener: TextView.OnEditorActionListener?, removeClickListener: View.OnClickListener?) {
+        appToolbarLayout?.setSearchView(editorActionListener, removeClickListener)
+    }
 
     override fun setToolbarTitle(
         title: String,
