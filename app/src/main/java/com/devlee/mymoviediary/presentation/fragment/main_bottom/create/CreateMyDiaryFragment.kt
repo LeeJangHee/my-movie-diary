@@ -148,9 +148,8 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
 
     private fun FragmentCreateMyDiaryBinding.addTextWatch() {
         createContentEditView.addTextChangedListener { editable ->
-            editable?.let {
-                createViewModel.memo.set(it.toString())
-            }
+            Log.i(TAG, "create memo : ${editable?.toString()}")
+            createViewModel.memo.set(editable?.toString())
         }
     }
 

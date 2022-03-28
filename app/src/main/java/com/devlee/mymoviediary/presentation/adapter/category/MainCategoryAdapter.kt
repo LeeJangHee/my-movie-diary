@@ -141,7 +141,16 @@ class MainCategoryAdapter(
                     color = categoryColor,
                     drawableRes = null
                 )
-                categoryViewModel.insertCategory(CategoryEntity(0, categoryData))
+                categoryViewModel.insertCategory(
+                    CategoryEntity(
+                        categoryId = 0,
+                        title = title,
+                        type = CategoryViewType.CATEGORY.type,
+                        color = categoryColor,
+                        drawableRes = null,
+                        category = categoryData
+                    )
+                )
                 reset(addBinding)
             }
 

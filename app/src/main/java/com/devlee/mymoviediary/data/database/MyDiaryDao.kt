@@ -4,7 +4,6 @@ import androidx.room.*
 import com.devlee.mymoviediary.data.database.entity.CategoryEntity
 import com.devlee.mymoviediary.data.database.entity.MyDiaryEntity
 import com.devlee.mymoviediary.data.model.Category
-import com.devlee.mymoviediary.utils.Resource
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -14,12 +13,18 @@ interface MyDiaryDao {
     @Query("SELECT * FROM mydiary_table")
     fun getMyDiaryAll(): Flow<List<MyDiaryEntity>>
 
+    @Query("SELECT * FROM mydiary_table WHERE contents LIKE :contents")
+    fun searchMyDiary(contents: String?): Flow<List<MyDiaryEntity>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMyDiary(myDiaryEntity: MyDiaryEntity)
 
     /** Category */
     @Query("SELECT * FROM category_table")
     fun getCategoryAll(): Flow<List<CategoryEntity>>
+
+    @Query("SELECT * FROM category_table WHERE title LIKE :title")
+    fun searchCategory(title: String?): Flow<List<CategoryEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCategory(categoryEntity: CategoryEntity)

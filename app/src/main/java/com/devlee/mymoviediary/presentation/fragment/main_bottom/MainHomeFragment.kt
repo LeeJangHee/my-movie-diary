@@ -149,8 +149,8 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
             Toast.makeText(requireContext(), "click", Toast.LENGTH_SHORT).show()
         }
         setMenuToolbar(type = AppToolbarLayout.LEFT, resId = R.drawable.search_icon) {
-            clearMenu()
-            findNavController().navigate(R.id.action_mainHomeFragment_to_searchFragment)
+            val action = MainHomeFragmentDirections.actionMainHomeFragmentToSearchFragment(SearchType.Main)
+            findNavController().navigate(action)
         }
 
         val rightMenuView = LinearLayout(requireContext()).apply {

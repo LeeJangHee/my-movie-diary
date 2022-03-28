@@ -30,6 +30,7 @@ abstract class BaseFragment<V : ViewBinding> : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return if (getLayoutId() > 0) {
             _binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
+            clearMenu()
             binding.root
         } else {
             super.onCreateView(inflater, container, savedInstanceState)

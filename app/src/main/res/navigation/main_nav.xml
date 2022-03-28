@@ -13,7 +13,11 @@
         android:id="@+id/mainCategoryFragment"
         android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.MainCategoryFragment"
         android:label="fragment_main_category"
-        tools:layout="@layout/fragment_main_category" />
+        tools:layout="@layout/fragment_main_category" >
+        <action
+            android:id="@+id/action_mainCategoryFragment_to_mainSearchFragment"
+            app:destination="@id/mainSearchFragment" />
+    </fragment>
     <fragment
         android:id="@+id/mainProfileFragment"
         android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.MainProfileFragment"
@@ -22,4 +26,12 @@
 
     <include app:graph="@navigation/calendar_nav" />
     <include app:graph="@navigation/home_nav" />
+    <fragment
+        android:id="@+id/mainSearchFragment"
+        android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.SearchFragment"
+        android:label="SearchFragment" >
+        <argument
+            android:name="searchType"
+            app:argType="com.devlee.mymoviediary.presentation.fragment.main_bottom.SearchType" />
+    </fragment>
 </navigation>

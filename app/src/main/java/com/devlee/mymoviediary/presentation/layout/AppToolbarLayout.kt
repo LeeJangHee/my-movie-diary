@@ -47,6 +47,7 @@ class AppToolbarLayout(
         removeListener: View.OnClickListener? = null
     ) {
         searchView = appbarSearchBinding.run {
+            searchEdit.text = null
             val lp = ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 36.dp()).apply {
                 setMargins(0, 0, 16.dp(), 0)
             }

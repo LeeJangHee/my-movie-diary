@@ -81,5 +81,9 @@
         android:id="@+id/searchFragment"
         android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <argument
+            android:name="searchType"
+            app:argType="com.devlee.mymoviediary.presentation.fragment.main_bottom.SearchType" />
+    </fragment>
 </navigation>

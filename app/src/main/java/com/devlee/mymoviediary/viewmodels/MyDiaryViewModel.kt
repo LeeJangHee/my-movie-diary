@@ -21,6 +21,7 @@ import com.devlee.mymoviediary.utils.categoryFirstItemClick
 import com.devlee.mymoviediary.utils.categoryUserPickItemClick
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -31,6 +32,7 @@ class MyDiaryViewModel(
     /** category item */
     var categories = repository.getCategoryAll()
     var handlerCategoryList: MutableLiveData<Resource<ArrayList<Category>>> = MutableLiveData()
+    var searchCategoryFlow: MutableSharedFlow<Resource<List<Category>>> = MutableSharedFlow()
 
     /** category Edit mode */
     val editMode = ObservableBoolean(false)
@@ -39,18 +41,31 @@ class MyDiaryViewModel(
     /** home item */
     var myDiaries = repository.getMyDiaryAll()
     var handlerMyDiaryList: MutableLiveData<Resource<ArrayList<MyDiary>>> = MutableLiveData()
+    var searchMyDiaryFlow: MutableSharedFlow<Resource<List<MyDiary>>> = MutableSharedFlow()
 
     var homeLayoutType: MutableLiveData<HomeLayoutType> = MutableLiveData(HomeLayoutType.LINEAR)
     var homeSortType: MutableLiveData<SortItem> = MutableLiveData(SortItem.DESC)
 
-    fun getCategoryList(): List<Category> {
-        var list = listOf<Category>()
-        viewModelScope.launch {
-            categories.collect {
-                list = it.map { entity -> entity.category }
+    fun searchCategory(title: String?) = viewModelScope.launch(Dispatchers.IO) {
+        searchCategoryFlow.emit(Resource.Loading())
+        repository.searchCategory(title).collect { categoryEntityList ->
+            try {
+                searchCategoryFlow.emit(Resource.Success(categoryEntityList.map { it.category }))
+            } catch (e: Exception) {
+                searchCategoryFlow.emit(Resource.Error(e.localizedMessage ?: "search Category error!!"))
             }
         }
-        return list
+    }
+
+    fun searchMyDiary(contents: String?) = viewModelScope.launch(Dispatchers.IO) {
+        searchMyDiaryFlow.emit(Resource.Loading())
+        repository.searchMyDiary(contents).collect { myDiaryEntityList ->
+            try {
+                searchMyDiaryFlow.emit(Resource.Success(myDiaryEntityList.map { it.myDiary }))
+            } catch (e: Exception) {
+                searchMyDiaryFlow.emit(Resource.Error(e.localizedMessage ?: "search MyDiary error!!"))
+            }
+        }
     }
 
 

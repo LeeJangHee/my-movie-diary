@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.database.MyDiaryDatabase
@@ -75,7 +76,9 @@ class MainCategoryFragment : BaseFragment<FragmentMainCategoryBinding>() {
                 is Resource.Loading -> loadingLiveData.postValue(true)
                 is Resource.Success -> {
                     loadingLiveData.postValue(false)
-                    categoryAdapter.setCategoryList(res.data!!)
+                    res.data?.let {
+                        categoryAdapter.setCategoryList(res.data)
+                    }
                 }
                 is Resource.Error -> {
                     loadingLiveData.postValue(false)
@@ -92,7 +95,8 @@ class MainCategoryFragment : BaseFragment<FragmentMainCategoryBinding>() {
 
         }
         setMenuToolbar(type = AppToolbarLayout.LEFT, resId = R.drawable.search_icon) {
-
+            val action = MainCategoryFragmentDirections.actionMainCategoryFragmentToMainSearchFragment(SearchType.Category)
+            findNavController().navigate(action)
         }
     }
 

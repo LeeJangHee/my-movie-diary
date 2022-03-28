@@ -11,10 +11,14 @@ class MyDiaryRepository(
     /** MyDiary Database */
     fun getMyDiaryAll() = db.dao().getMyDiaryAll()
 
+    fun searchMyDiary(contents: String?) = db.dao().searchMyDiary(contents?.let { "%$contents%" })
+
     suspend fun insertMyDiary(myDiaryEntity: MyDiaryEntity) = db.dao().insertMyDiary(myDiaryEntity)
 
     /** Category Database */
     fun getCategoryAll() = db.dao().getCategoryAll()
+
+    fun searchCategory(title: String?) = db.dao().searchCategory(title?.let { "%$title%" })
 
     suspend fun insertCategory(categoryEntity: CategoryEntity) {
         db.dao().insertCategory(categoryEntity)
