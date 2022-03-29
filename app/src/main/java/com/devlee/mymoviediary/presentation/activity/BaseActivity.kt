@@ -1,5 +1,6 @@
 package com.devlee.mymoviediary.presentation.activity
 
+import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -38,6 +39,7 @@ abstract class BaseActivity<V : ViewBinding> : AppCompatActivity(), BaseFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         supportActionBar?.hide()
         if (getLayout() != 0) {
             defaultBinding = DataBindingUtil.setContentView(this, R.layout.activity_default)
