@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/category_nav"
+    app:startDestination="@id/mainCategoryFragment">
+
+    <fragment
+        android:id="@+id/mainCategoryFragment"
+        android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.MainCategoryFragment"
+        android:label="fragment_main_category"
+        tools:layout="@layout/fragment_main_category" >
+        <action
+            android:id="@+id/action_mainCategoryFragment_to_mainSearchFragment"
+            app:destination="@id/mainSearchFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainSearchFragment"
+        android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.SearchFragment"
+        android:label="SearchFragment"
+        tools:layout="@layout/fragment_search" >
+        <argument
+            android:name="searchType"
+            app:argType="com.devlee.mymoviediary.presentation.fragment.main_bottom.SearchType" />
+    </fragment>
+</navigation>

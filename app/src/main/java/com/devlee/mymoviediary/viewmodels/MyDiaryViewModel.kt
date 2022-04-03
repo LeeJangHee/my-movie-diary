@@ -15,12 +15,10 @@ import com.devlee.mymoviediary.data.model.MyDiary
 import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.presentation.adapter.category.CategoryViewType
 import com.devlee.mymoviediary.presentation.adapter.home.HomeLayoutType
-import com.devlee.mymoviediary.utils.Resource
-import com.devlee.mymoviediary.utils.SharedPreferencesUtil
-import com.devlee.mymoviediary.utils.categoryFirstItemClick
-import com.devlee.mymoviediary.utils.categoryUserPickItemClick
+import com.devlee.mymoviediary.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -29,9 +27,13 @@ class MyDiaryViewModel(
     private val repository: MyDiaryRepository
 ) : ViewModel() {
 
+    companion object {
+        private const val TAG = "MyDiaryViewModel"
+    }
+
     /** category item */
-    var categories = repository.getCategoryAll()
-    var handlerCategoryList: MutableLiveData<Resource<ArrayList<Category>>> = MutableLiveData()
+    var categories: Flow<List<CategoryEntity>> = repository.getCategoryAll()
+    var handlerCategoryList: MutableLiveData<Resource<ArrayList<Pair<Category, Int>>>> = MutableLiveData()
     var searchCategoryFlow: MutableSharedFlow<Resource<List<Category>>> = MutableSharedFlow()
 
     /** category Edit mode */
@@ -39,7 +41,7 @@ class MyDiaryViewModel(
 
 
     /** home item */
-    var myDiaries = repository.getMyDiaryAll()
+    var myDiaries: Flow<List<MyDiaryEntity>> = repository.getMyDiaryAll()
     var handlerMyDiaryList: MutableLiveData<Resource<ArrayList<MyDiary>>> = MutableLiveData()
     var searchMyDiaryFlow: MutableSharedFlow<Resource<List<MyDiary>>> = MutableSharedFlow()
 
@@ -109,24 +111,53 @@ class MyDiaryViewModel(
                 val allCategoryList = arrayListOf<Category>()
                 // 기본 카테고리
                 val defaultCategory = listOf(
-                    Category("전체보기", CategoryViewType.DEFAULT.type, null, R.drawable.category_all_icon),
-                    Category("즐겨찾기", CategoryViewType.DEFAULT.type, null, R.drawable.star_icon)
+                    Category(
+                        title = getStringRes(stringRes = R.string.category_item_all),
+                        type = CategoryViewType.DEFAULT.type,
+                        color = null,
+                        drawableRes = R.drawable.category_all_icon
+                    ),
+                    Category(
+                        title = getStringRes(stringRes = R.string.category_item_favorite),
+                        type = CategoryViewType.DEFAULT.type,
+                        color = null,
+                        drawableRes = R.drawable.star_icon
+                    )
                 )
                 // 카테고리 추가
                 val addCategory = listOf(
-                    Category("카테고리 추가", CategoryViewType.ADD.type, null, R.drawable.category_add_icon)
+                    Category(
+                        title = getStringRes(stringRes = R.string.category_item_add),
+                        type = CategoryViewType.ADD.type,
+                        color = null,
+                        drawableRes = R.drawable.category_add_icon
+                    )
                 )
 
                 allCategoryList.addAll(defaultCategory)
                 allCategoryList.addAll(category)
                 allCategoryList.addAll(addCategory)
 
-                handlerCategoryList.postValue(Resource.Success(allCategoryList))
+                readCategoryCount(allCategoryList)
+                val pairCategoryList: ArrayList<Pair<Category, Int>> =
+                    allCategoryList.zip(readCategoryCount(allCategoryList)).toCollection(ArrayList())
+                handlerCategoryList.postValue(Resource.Success(pairCategoryList))
             } catch (e: Exception) {
                 e.printStackTrace()
                 handlerCategoryList.postValue(Resource.Error(e.message ?: "Category Error!!!"))
             }
         }
+    }
+
+    private fun readCategoryCount(categoryList: List<Category>): ArrayList<Int> {
+        val categoryCountList = arrayListOf<Int>()
+        categoryList.forEach { category ->
+            val categoryCount = repository.getCategoryCount(category)
+            Log.e(TAG, "category count = $categoryCount")
+            categoryCountList.add(categoryCount)
+        }
+        Log.e(TAG, "category count list size: ${categoryCountList.size}")
+        return categoryCountList
     }
 
     fun insertCategory(categoryEntity: CategoryEntity) =

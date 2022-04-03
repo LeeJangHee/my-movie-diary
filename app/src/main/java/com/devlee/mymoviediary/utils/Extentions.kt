@@ -13,6 +13,7 @@ import android.widget.EditText
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.RestrictTo
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.devlee.mymoviediary.App
 import com.devlee.mymoviediary.presentation.activity.main.MainActivity
@@ -54,6 +55,10 @@ fun getColorRes(context: Context = App.getInstance().applicationContext, @ColorR
 
 fun getDrawable(context: Context = App.getInstance().applicationContext, @DrawableRes drawable: Int): Drawable? {
     return ContextCompat.getDrawable(context, drawable)
+}
+
+fun getStringRes(context: Context = App.getInstance().applicationContext, @StringRes stringRes: Int): String {
+    return context.getString(stringRes)
 }
 
 /** 키보드 제어 */

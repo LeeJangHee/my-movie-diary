@@ -15,8 +15,11 @@ import com.devlee.mymoviediary.data.database.entity.CategoryEntity
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.databinding.ItemCategoryBinding
 import com.devlee.mymoviediary.databinding.LayoutColorFirstPickerBinding
-import com.devlee.mymoviediary.utils.*
+import com.devlee.mymoviediary.utils.categoryErrorView
+import com.devlee.mymoviediary.utils.categoryFirstItemClick
+import com.devlee.mymoviediary.utils.categoryUserPickItemClick
 import com.devlee.mymoviediary.utils.dialog.CustomDialog
+import com.devlee.mymoviediary.utils.getColorRes
 import com.devlee.mymoviediary.utils.recyclerview.CategoryTouchCallback
 import com.devlee.mymoviediary.utils.recyclerview.MyDiaryDiffUtil
 import com.devlee.mymoviediary.viewmodels.MyDiaryViewModel
@@ -32,7 +35,7 @@ class MainCategoryAdapter(
     private val TAG = "MainCategoryAdapter"
     private val MAX_CATEGORY_NAME_BYTE = 20
 
-    private var categoryList = listOf<Category>()
+    private var categoryList = listOf<Pair<Category, Int>>()
 
     private var itemTouchCallback: CategoryTouchCallback? = null
 
@@ -55,7 +58,7 @@ class MainCategoryAdapter(
                     .setMessage(R.string.category_delete_message)
                     .setPositiveButton(R.string.ok_kr, R.color.color_ff3939) {
                         // 삭제
-                        categoryViewModel.deleteCategory(categoryList[bindingAdapterPosition])
+                        categoryViewModel.deleteCategory(categoryList[bindingAdapterPosition].first)
                     }
                     .setNegativeButton(R.string.no_kr)
                     .show()
@@ -63,7 +66,7 @@ class MainCategoryAdapter(
 
             categoryBinding.categoryMenuChange.setOnClickListener {
                 itemTouchCallback?.removePreviousClamp(this)
-                setEditMode(categoryBinding, true, categoryList[bindingAdapterPosition])
+                setEditMode(categoryBinding, true, categoryList[bindingAdapterPosition].first)
             }
 
             categoryBinding.categoryEdit.addTextWatch(categoryBinding)
@@ -78,7 +81,7 @@ class MainCategoryAdapter(
             categoryBinding.categoryEditOk.setOnClickListener {
                 if (!isVerifyText(it)) return@setOnClickListener
 
-                val preCategory = categoryList[bindingAdapterPosition]
+                val preCategory = categoryList[bindingAdapterPosition].first
                 val category = Category(
                     title = title,
                     type = CategoryViewType.CATEGORY.type,
@@ -90,9 +93,10 @@ class MainCategoryAdapter(
             }
         }
 
-        fun categoryBind(category: Category) {
+        fun categoryBind(category: Category, categoryCount: Int?) {
             categoryBinding.apply {
                 categoryModel = category
+                this.categoryCount = categoryCount
                 executePendingBindings()
             }
         }
@@ -182,13 +186,13 @@ class MainCategoryAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is DefaultHolder -> {
-                holder.defaultBind(categoryList[position])
+                holder.defaultBind(categoryList[position].first)
             }
             is CategoryHolder -> {
-                holder.categoryBind(categoryList[position])
+                holder.categoryBind(categoryList[position].first, categoryList[position].second)
             }
             is AddHolder -> {
-                holder.addBinding(categoryList[position])
+                holder.addBinding(categoryList[position].first)
             }
         }
     }
@@ -196,17 +200,15 @@ class MainCategoryAdapter(
     override fun getItemCount(): Int = categoryList.size
 
 
-    override fun getItemViewType(position: Int): Int = categoryList[position].type
+    override fun getItemViewType(position: Int): Int = categoryList[position].first.type
 
 
-    fun setCategoryList(newCategoryList: List<Category>) {
+    fun setCategoryList(newCategoryList: List<Pair<Category, Int>>) {
         val categoryDiffUtil = MyDiaryDiffUtil(categoryList, newCategoryList)
         val diffUtilResult = DiffUtil.calculateDiff(categoryDiffUtil)
         categoryList = newCategoryList
         diffUtilResult.dispatchUpdatesTo(this)
     }
-
-    fun getCategoryList() = categoryList
 
     fun setItemTouchCallback(itemTouchCallback: CategoryTouchCallback) {
         this.itemTouchCallback = itemTouchCallback

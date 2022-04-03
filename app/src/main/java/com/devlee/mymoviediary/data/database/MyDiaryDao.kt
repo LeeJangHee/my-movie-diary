@@ -26,6 +26,9 @@ interface MyDiaryDao {
     @Query("SELECT * FROM category_table WHERE title LIKE :title")
     fun searchCategory(title: String?): Flow<List<CategoryEntity>>
 
+    @Query("SELECT DISTINCT count(*) AS count FROM mydiary_table WHERE category = :category")
+    fun getCategoryCount(category: Category): Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCategory(categoryEntity: CategoryEntity)
 
@@ -34,5 +37,4 @@ interface MyDiaryDao {
 
     @Query("UPDATE category_table SET category = :category WHERE category = :preCategory")
     suspend fun updateCategory(category: Category, preCategory: Category)
-
 }

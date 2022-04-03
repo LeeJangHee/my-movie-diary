@@ -16,6 +16,9 @@
         <variable
             name="editMode"
             type="Boolean" />
+        <variable
+            name="categoryCount"
+            type="Integer" />
     </data>
 
     <FrameLayout
@@ -111,6 +114,7 @@
                     android:layout_width="36dp"
                     android:layout_height="24dp"
                     android:layout_marginBottom="15dp"
+                    categoryCountText="@{categoryCount}"
                     android:gravity="center"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/categoryArrowImage"

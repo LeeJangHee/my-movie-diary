@@ -128,6 +128,20 @@ fun EditText.setAddMode(mode: Boolean) {
     }
 }
 
+@BindingAdapter("categoryCountText")
+fun TextView.setCategoryCount(categoryCount: Int?) {
+    Log.e("MyBindingAdapter", "category count = $categoryCount")
+    text = if (categoryCount != null) {
+        if (categoryCount >= 1000) {
+            context.getString(R.string.category_max_count_text)
+        } else {
+            categoryCount.toString()
+        }
+    } else {
+        null
+    }
+}
+
 @BindingAdapter("moodButton")
 fun ImageButton.setMood(mood: Mood) = run {
     Log.d("moodRadioButton", "setMood: ${mood.name}")
@@ -305,8 +319,7 @@ fun View.setHomeEmptyImage(myDiary: MyDiary) {
     if (myDiary.video.isNullOrEmpty() && myDiary.recording.isNullOrEmpty()) {
         show()
         Log.d("janghee", "setHomeLayoutVisible: show-()")
-    }
-    else {
+    } else {
         gone()
         Log.d("janghee", "setHomeLayoutVisible: gone-()")
     }

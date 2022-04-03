@@ -7,17 +7,21 @@ import com.devlee.mymoviediary.utils.SharedPreferencesUtil
 class App : Application() {
 
     companion object {
-        private class AppHelper {
-            companion object {
-                val INSTANCE = App()
-            }
-        }
+        @Volatile
+        private var instance: App? = null
 
-        fun getInstance() = AppHelper.INSTANCE
+        @JvmStatic
+        fun getInstance(): App =
+            instance ?: synchronized(this) {
+                instance ?: App().also {
+                    instance = it
+                }
+            }
     }
 
     override fun onCreate() {
         super.onCreate()
         SharedPreferencesUtil.init(this)
+        instance = this
     }
 }
