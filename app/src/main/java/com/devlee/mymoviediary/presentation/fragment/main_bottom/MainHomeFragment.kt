@@ -20,7 +20,8 @@ import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.databinding.FragmentMainHomeBinding
 import com.devlee.mymoviediary.presentation.activity.main.MainActivity
 import com.devlee.mymoviediary.presentation.adapter.home.HomeLayoutType
-import com.devlee.mymoviediary.presentation.adapter.home.MainHomeAdapter
+import com.devlee.mymoviediary.presentation.adapter.home.MainHomeLoadStateAdapter
+import com.devlee.mymoviediary.presentation.adapter.home.MainHomePagingAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
 import com.devlee.mymoviediary.utils.*
@@ -43,14 +44,16 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
     }
 
     private var diaryLayoutManager: GridLayoutManager? = null
-    private val diaryAdapter: MainHomeAdapter by lazy { MainHomeAdapter() }
+
+    //    private val diaryAdapter: MainHomeAdapter by lazy { MainHomeAdapter() }
+    private val diaryAdapter by lazy { MainHomePagingAdapter() }
 
     private val diaryItemDecoration by lazy {
         CustomDecoration(
-            1.toDp(),
-            16.toDp(),
-            0f,
-            requireContext().resources.getColor(R.color.color_efefef, null)
+            height = 1.toDp(),
+            paddingLeft = 16.toDp(),
+            paddingRight = 0f,
+            color = requireContext().resources.getColor(R.color.color_efefef, null)
         )
     }
 
@@ -58,6 +61,7 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
 
     override fun setView() {
         diaryLayoutManager = GridLayoutManager(requireContext(), homeViewModel.homeLayoutType.value?.spanCount ?: 1)
+//        diaryAdapter.withLoadStateFooter(MainHomeLoadStateAdapter(diaryAdapter::retry))
         setAppbar()
         setRecyclerView()
         isMainBottomNavLayout.value = true
@@ -77,21 +81,23 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
         }
     }
 
-    private fun setRecyclerView() {
-        homeViewModel.readMyDiary()
+    private fun setRecyclerView() = lifecycleScope.launchWhenResumed {
+
         homeViewModel.handlerMyDiaryList.observe(viewLifecycleOwner) { res ->
             when (res) {
                 is Resource.Loading -> loadingLiveData.postValue(true)
                 is Resource.Success -> {
                     loadingLiveData.postValue(false)
-                    if (res.data.isNullOrEmpty()) {
+                    if (res.data == null) {
                         binding.homeNoDataText.visibility = View.VISIBLE
                     } else {
                         binding.homeNoDataText.visibility = View.GONE
                         with(binding.mainHomeRecyclerView) {
                             post { smoothScrollToPosition(0) }
                         }
-                        diaryAdapter.setData(res.data)
+                        lifecycleScope.launch {
+                            diaryAdapter.submitData(res.data)
+                        }
                     }
                 }
                 is Resource.Error -> {
@@ -100,6 +106,7 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
                 }
             }
         }
+
         binding.mainHomeRecyclerView.apply {
             adapter = diaryAdapter
             layoutManager = diaryLayoutManager

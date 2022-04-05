@@ -131,9 +131,9 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
             contentChoiceViewModel.selectedSortItem.collect { sortItem ->
                 Log.d(TAG, "selectedSortItem: $sortItem")
                 binding.selectedSortItem = sortItem
-                delayUiThread(50) {
-                    // delay를 적용해야 scroll 이동함.. 왜 그러지?
-                    // 공부가 필요하다..
+
+                // 변경되면 처음으로 이동
+                binding.contentChoiceRecyclerView.post {
                     binding.contentChoiceRecyclerView.smoothScrollToPosition(0)
                 }
 

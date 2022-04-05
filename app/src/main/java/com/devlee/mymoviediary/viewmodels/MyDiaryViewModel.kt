@@ -4,9 +4,11 @@ import android.graphics.drawable.ColorDrawable
 import android.util.Log
 import android.view.View
 import androidx.databinding.ObservableBoolean
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.database.entity.CategoryEntity
 import com.devlee.mymoviediary.data.database.entity.MyDiaryEntity
@@ -16,11 +18,10 @@ import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.presentation.adapter.category.CategoryViewType
 import com.devlee.mymoviediary.presentation.adapter.home.HomeLayoutType
 import com.devlee.mymoviediary.utils.*
+import com.devlee.mymoviediary.utils.paging.MyDiaryPagingSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class MyDiaryViewModel(
@@ -42,7 +43,7 @@ class MyDiaryViewModel(
 
     /** home item */
     var myDiaries: Flow<List<MyDiaryEntity>> = repository.getMyDiaryAll()
-    var handlerMyDiaryList: MutableLiveData<Resource<ArrayList<MyDiary>>> = MutableLiveData()
+    var handlerMyDiaryList: MutableLiveData<Resource<PagingData<MyDiary>>> = MutableLiveData()
     var searchMyDiaryFlow: MutableSharedFlow<Resource<List<MyDiary>>> = MutableSharedFlow()
 
     var homeLayoutType: MutableLiveData<HomeLayoutType> = MutableLiveData(HomeLayoutType.LINEAR)
@@ -97,11 +98,20 @@ class MyDiaryViewModel(
                 else
                     myDiary.sortedByDescending { it.date }
 
-                handlerMyDiaryList.postValue(Resource.Success(sortMyDiary.toCollection(ArrayList())))
+                myDiaryPaging(sortMyDiary).collectLatest {
+                    handlerMyDiaryList.postValue(Resource.Success(it))
+                }
             } catch (e: Exception) {
                 handlerMyDiaryList.postValue(Resource.Error(e.message ?: "home data Error!!!"))
             }
         }
+    }
+
+    private fun myDiaryPaging(myDiaryList: List<MyDiary>): Flow<PagingData<MyDiary>> {
+        val myDiaryPagingSize = 10
+        return Pager(PagingConfig(pageSize = myDiaryPagingSize)) {
+            MyDiaryPagingSource(myDiaryList, myDiaryPagingSize)
+        }.flow.cachedIn(viewModelScope)
     }
 
     private fun setCategory(category: List<Category>) {

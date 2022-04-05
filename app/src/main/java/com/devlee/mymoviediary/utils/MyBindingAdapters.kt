@@ -325,3 +325,19 @@ fun View.setHomeEmptyImage(myDiary: MyDiary) {
     }
 
 }
+
+@BindingAdapter("pagingFooterState")
+fun View.setPagingFooterState(isLoading: Boolean?) {
+    when (this) {
+        is ProgressBar -> {
+            if (isLoading == true) show()
+            else gone()
+        }
+
+        is Button -> {
+            if (isLoading == false) show()
+            else gone()
+        }
+
+    }
+}

@@ -2,11 +2,8 @@ package com.devlee.mymoviediary.domain.repository
 
 import android.content.ContentUris
 import android.content.Context
-import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -16,9 +13,7 @@ import com.devlee.mymoviediary.utils.Constants.MEDIA_PAGE_SIZE
 import com.devlee.mymoviediary.utils.FileUtil
 import com.devlee.mymoviediary.utils.paging.MediaPagingSource
 import com.devlee.mymoviediary.viewmodels.SortItem
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 
 class MediaPagingRepository(
     private val context: Context,
@@ -33,7 +28,7 @@ class MediaPagingRepository(
         return Pager(PagingConfig(pageSize = MEDIA_PAGE_SIZE, enablePlaceholders = false)) {
             val items = if (type == ContentType.VIDEO) loadVideo(sortItem) else loadAudio(sortItem)
             Log.d(TAG, "getMediaPagingData: ${items.size}")
-            MediaPagingSource(items)
+            MediaPagingSource(items, MEDIA_PAGE_SIZE)
         }.flow
     }
 

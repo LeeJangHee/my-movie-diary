@@ -50,12 +50,12 @@ class CreateAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        when (viewType) {
+        return when (viewType) {
             CreateViewType.ADD.type -> {
-                return ContentAddViewHolder(ItemCreateAddBinding.inflate(layoutInflater, parent, false))
+                ContentAddViewHolder(ItemCreateAddBinding.inflate(layoutInflater, parent, false))
             }
             else -> {
-                return ContentDiaryViewHolder(ItemCreateContentBinding.inflate(layoutInflater, parent, false))
+                ContentDiaryViewHolder(ItemCreateContentBinding.inflate(layoutInflater, parent, false))
             }
         }
     }
