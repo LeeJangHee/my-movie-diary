@@ -27,10 +27,11 @@
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/categorySwipeView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|center_vertical"
             android:gravity="end"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatTextView

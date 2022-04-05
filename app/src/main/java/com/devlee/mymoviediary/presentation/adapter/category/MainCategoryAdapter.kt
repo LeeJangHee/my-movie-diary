@@ -32,8 +32,10 @@ class MainCategoryAdapter(
     val categoryViewModel: MyDiaryViewModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val TAG = "MainCategoryAdapter"
-    private val MAX_CATEGORY_NAME_BYTE = 20
+    companion object {
+        private const val TAG = "MainCategoryAdapter"
+        private const val MAX_CATEGORY_NAME_BYTE = 20
+    }
 
     private var categoryList = listOf<Pair<Category, Int>>()
 
@@ -64,6 +66,7 @@ class MainCategoryAdapter(
                     .show()
             }
 
+            // 편집 버튼
             categoryBinding.categoryMenuChange.setOnClickListener {
                 itemTouchCallback?.removePreviousClamp(this)
                 setEditMode(categoryBinding, true, categoryList[bindingAdapterPosition].first)

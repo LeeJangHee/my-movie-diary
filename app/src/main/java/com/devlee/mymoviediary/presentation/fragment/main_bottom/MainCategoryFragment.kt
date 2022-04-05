@@ -11,6 +11,7 @@ import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.database.MyDiaryDatabase
 import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.databinding.FragmentMainCategoryBinding
+import com.devlee.mymoviediary.databinding.LayoutCategoryErrorViewBinding
 import com.devlee.mymoviediary.presentation.adapter.category.MainCategoryAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
@@ -58,7 +59,7 @@ class MainCategoryFragment : BaseFragment<FragmentMainCategoryBinding>() {
         setRecyclerView()
 
         categoryErrorView = {
-            val errorView = LayoutInflater.from(it.context).inflate(R.layout.layout_category_error_view, null)
+            val errorView = LayoutCategoryErrorViewBinding.inflate(LayoutInflater.from(it.context)).root
             val snackbarLayout = snackbar.view as Snackbar.SnackbarLayout
             snackbarLayout.apply {
                 setBackgroundColor(getColorRes(it.context, android.R.color.transparent))

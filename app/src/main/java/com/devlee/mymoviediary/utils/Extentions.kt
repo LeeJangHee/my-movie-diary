@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.TypedValue
 import android.view.View
+import android.view.animation.Animation
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.annotation.ColorRes
@@ -82,17 +83,17 @@ fun MainActivity.isBottomNav(set: Boolean) {
 }
 
 /** Animation */
-fun View.startDownToUpAnimation() {
-    startAnimation(AnimationUtil.downToUp(this.context))
+fun View.startDownToUpAnimation(downToTopAnim: Animation = AnimationUtil.downToUp(this.context)) {
+    startAnimation(downToTopAnim)
 }
-fun View.startUpToDownAnimation() {
-    startAnimation(AnimationUtil.upToDown(this.context))
+fun View.startUpToDownAnimation(upToDownAnim: Animation = AnimationUtil.upToDown(this.context)) {
+    startAnimation(upToDownAnim)
 }
-fun View.startFadeInAnimation() {
-    startAnimation(AnimationUtil.fadeIn(this.context))
+fun View.startFadeInAnimation(fadeInAnim: Animation = AnimationUtil.fadeIn(this.context)) {
+    startAnimation(fadeInAnim)
 }
-fun View.startFadeOutAnimation() {
-    startAnimation(AnimationUtil.fadeOut(this.context))
+fun View.startFadeOutAnimation(fadeOutAnim: Animation = AnimationUtil.fadeOut(this.context)) {
+    startAnimation(fadeOutAnim)
 }
 
 fun List<String?>.toUri(): List<Uri?> {
