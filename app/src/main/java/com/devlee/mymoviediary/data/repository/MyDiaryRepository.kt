@@ -16,6 +16,8 @@ class MyDiaryRepository(
 
     suspend fun insertMyDiary(myDiaryEntity: MyDiaryEntity) = db.dao().insertMyDiary(myDiaryEntity)
 
+    fun getMyDiaryByCategory(categoryId: Int): Category? = db.dao().getMyDiaryByCategory(categoryId)
+
     /** Category Database */
     fun getCategoryAll(): Flow<List<CategoryEntity>> = db.dao().getCategoryAll()
 
@@ -34,4 +36,6 @@ class MyDiaryRepository(
     suspend fun updateCategory(category: Category, preCategory: Category) {
         db.dao().updateCategory(category, preCategory)
     }
+
+    fun getCategoryId(category: Category?): Int = db.dao().getCategoryId(category)
 }

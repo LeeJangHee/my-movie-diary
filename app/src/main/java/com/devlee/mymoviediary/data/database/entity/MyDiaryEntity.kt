@@ -1,15 +1,28 @@
 package com.devlee.mymoviediary.data.database.entity
 
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.devlee.mymoviediary.data.model.MyDiary
+import com.devlee.mymoviediary.utils.Constants.CATEGORY_ID_NAME
+import com.devlee.mymoviediary.utils.Constants.MYDIARY_CATEGORY_ID_NAME
 import com.devlee.mymoviediary.utils.Constants.MYDIARY_TABLE
 
-@Entity(tableName = MYDIARY_TABLE)
+@Entity(
+    tableName = MYDIARY_TABLE,
+    foreignKeys = [
+        ForeignKey(
+            entity = CategoryEntity::class,
+            parentColumns = [CATEGORY_ID_NAME],
+            childColumns = [MYDIARY_CATEGORY_ID_NAME],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
+        )
+    ]
+)
 data class MyDiaryEntity(
     @PrimaryKey(autoGenerate = true)
-    var id: Int,
+    val id: Int,
     @Embedded
-    var myDiary: MyDiary
+    val myDiary: MyDiary,
+    @ColumnInfo(name = MYDIARY_CATEGORY_ID_NAME)
+    val categoryEntityId: Int
 )

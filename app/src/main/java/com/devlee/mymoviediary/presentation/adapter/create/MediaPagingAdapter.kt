@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.fetch.VideoFrameUriFetcher
 import coil.load
 import coil.request.videoFrameMillis
 import com.devlee.mymoviediary.databinding.ItemContentChoiceAudioBinding
@@ -58,7 +57,6 @@ class MediaPagingAdapter(
                 }
 
                 itemContentVideoThumbnail.load(fileData.video) {
-                    fetcher(VideoFrameUriFetcher(root.context))
                     videoFrameMillis(0)
                 }
                 executePendingBindings()

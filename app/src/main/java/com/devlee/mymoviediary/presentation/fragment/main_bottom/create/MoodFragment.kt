@@ -2,6 +2,7 @@ package com.devlee.mymoviediary.presentation.fragment.main_bottom.create
 
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.devlee.mymoviediary.R
@@ -16,10 +17,15 @@ import com.devlee.mymoviediary.utils.isBottomNav
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
 import com.devlee.mymoviediary.viewmodels.MyDiaryViewModel
 import com.devlee.mymoviediary.viewmodels.ViewModelProviderFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MoodFragment : BaseFragment<FragmentMoodBinding>() {
 
-    private val moodViewModel: ContentCreateViewModel by navGraphViewModels(R.id.home_nav)
+    private val moodViewModel: ContentCreateViewModel by navGraphViewModels(R.id.home_nav) {
+        val repository = MyDiaryRepository(MyDiaryDatabase.getInstance(requireActivity()))
+        ViewModelProviderFactory(repository)
+    }
     private val myDiaryViewModel by viewModels<MyDiaryViewModel> {
         val repository = MyDiaryRepository(MyDiaryDatabase.getInstance(requireActivity()))
         ViewModelProviderFactory(repository)
@@ -55,10 +61,12 @@ class MoodFragment : BaseFragment<FragmentMoodBinding>() {
             findNavController().popBackStack()
         }
         setMenuToolbar(type = AppToolbarLayout.RIGHT, strId = R.string.create_content_btn_text) {
-            myDiaryViewModel.insertMyDiary(moodViewModel.getMyDiaryEntity()) {
-                moodViewModel.initCreateValue()
-                findNavController().navigate(R.id.action_moodFragment_to_mainHomeFragment)
-                (requireActivity() as MainActivity).isBottomNav(true)
+            lifecycleScope.launch(Dispatchers.IO) {
+                myDiaryViewModel.insertMyDiary(moodViewModel.getMyDiaryEntity()) {
+                    moodViewModel.initCreateValue()
+                    findNavController().navigate(R.id.action_moodFragment_to_mainHomeFragment)
+                    (requireActivity() as MainActivity).isBottomNav(true)
+                }
             }
         }
     }

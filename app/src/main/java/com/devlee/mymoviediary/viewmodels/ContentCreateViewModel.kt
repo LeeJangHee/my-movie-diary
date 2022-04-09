@@ -20,6 +20,7 @@ import com.devlee.mymoviediary.data.database.entity.MyDiaryEntity
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.data.model.Mood
 import com.devlee.mymoviediary.data.model.MyDiary
+import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceData
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceFileData
@@ -36,7 +37,9 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class ContentCreateViewModel : ViewModel() {
+class ContentCreateViewModel(
+    private val repository: MyDiaryRepository
+) : ViewModel() {
 
     private val TAG = "ContentCreateViewModel"
 
@@ -164,17 +167,17 @@ class ContentCreateViewModel : ViewModel() {
     }
 
     fun getMyDiaryEntity(): MyDiaryEntity {
+        val categoryId = repository.getCategoryId(selectedCategory.get())
         val myDiary = MyDiary(
             date = dateStr.get() ?: DateFormatUtil.getTodayDate(),
             contents = memo.get(),
             video = fileList.map { it.video?.path },
             recording = fileList.map { it.audio?.path },
-            category = selectedCategory.get(),
             star = star.get(),
             mood = mood.get()?.resId
         )
 
-        return MyDiaryEntity(0, myDiary)
+        return MyDiaryEntity(0, myDiary, categoryId)
     }
 
 }

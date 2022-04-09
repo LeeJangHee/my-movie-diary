@@ -11,7 +11,6 @@ import androidx.annotation.ColorRes
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.fetch.VideoFrameUriFetcher
 import coil.load
 import coil.request.videoFrameMillis
 import coil.size.Scale
@@ -233,7 +232,6 @@ fun View.setContentChoiceItem(data: ContentChoiceData) {
             } else {
                 scaleType = ImageView.ScaleType.CENTER_CROP
                 load(data.video) {
-                    fetcher(VideoFrameUriFetcher(context))
                     videoFrameMillis(0)
                 }
             }
@@ -275,6 +273,7 @@ fun View.setAllCorner(size: Int, @ColorRes color: Int = android.R.color.transpar
 
 @BindingAdapter("videoThumbnail", "recordingImage", requireAll = false)
 fun ImageView.uriThumbnail(videoUri: List<String?>?, audioUri: List<String?>?) {
+    Log.i("janghee", "uriThumbnail-()")
     when (id) {
         R.id.videoImage, R.id.gridVideoImage -> {
             gone()
@@ -289,7 +288,6 @@ fun ImageView.uriThumbnail(videoUri: List<String?>?, audioUri: List<String?>?) {
                     show()
                     scaleType = ImageView.ScaleType.CENTER_CROP
                     load(it) {
-                        fetcher(VideoFrameUriFetcher(context))
                         videoFrameMillis(0)
                     }
                 }

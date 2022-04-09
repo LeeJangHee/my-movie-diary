@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.devlee.mymoviediary.R
+import com.devlee.mymoviediary.data.database.MyDiaryDatabase
+import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.databinding.BottomContentChoiceBinding
 import com.devlee.mymoviediary.databinding.ItemSortPopupBinding
 import com.devlee.mymoviediary.domain.repository.MediaPagingRepository
@@ -28,16 +30,12 @@ import com.devlee.mymoviediary.utils.*
 import com.devlee.mymoviediary.utils.Constants.MEDIA_PAGE_SIZE
 import com.devlee.mymoviediary.utils.dialog.CustomDialog
 import com.devlee.mymoviediary.utils.recyclerview.CustomDecoration
-import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
-import com.devlee.mymoviediary.viewmodels.MediaViewModel
-import com.devlee.mymoviediary.viewmodels.MediaViewModelProviderFactory
-import com.devlee.mymoviediary.viewmodels.SortItem
+import com.devlee.mymoviediary.viewmodels.*
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -47,7 +45,10 @@ class ContentChoiceFragment : BaseBottomSheetFragment<BottomContentChoiceBinding
         private const val TAG = "ContentChoiceFragment"
     }
 
-    private val contentChoiceViewModel: ContentCreateViewModel by navGraphViewModels(R.id.home_nav)
+    private val contentChoiceViewModel: ContentCreateViewModel by navGraphViewModels(R.id.home_nav) {
+        val repository = MyDiaryRepository(MyDiaryDatabase.getInstance(requireActivity()))
+        ViewModelProviderFactory(repository)
+    }
     private val mediaViewModel by viewModels<MediaViewModel> {
         val repository = MediaPagingRepository(requireContext(), args.contentType)
         MediaViewModelProviderFactory(repository)

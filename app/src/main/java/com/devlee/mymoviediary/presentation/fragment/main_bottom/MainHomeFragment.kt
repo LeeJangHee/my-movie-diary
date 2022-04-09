@@ -20,8 +20,7 @@ import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.databinding.FragmentMainHomeBinding
 import com.devlee.mymoviediary.presentation.activity.main.MainActivity
 import com.devlee.mymoviediary.presentation.adapter.home.HomeLayoutType
-import com.devlee.mymoviediary.presentation.adapter.home.MainHomeLoadStateAdapter
-import com.devlee.mymoviediary.presentation.adapter.home.MainHomePagingAdapter
+import com.devlee.mymoviediary.presentation.adapter.home.MainHomeAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
 import com.devlee.mymoviediary.utils.*
@@ -45,8 +44,7 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
 
     private var diaryLayoutManager: GridLayoutManager? = null
 
-    //    private val diaryAdapter: MainHomeAdapter by lazy { MainHomeAdapter() }
-    private val diaryAdapter by lazy { MainHomePagingAdapter() }
+        private val diaryAdapter: MainHomeAdapter by lazy { MainHomeAdapter(homeViewModel) }
 
     private val diaryItemDecoration by lazy {
         CustomDecoration(
@@ -60,8 +58,8 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
     override fun getLayoutId(): Int = R.layout.fragment_main_home
 
     override fun setView() {
+        Log.v(TAG, "setView-() MainHomeFragment")
         diaryLayoutManager = GridLayoutManager(requireContext(), homeViewModel.homeLayoutType.value?.spanCount ?: 1)
-//        diaryAdapter.withLoadStateFooter(MainHomeLoadStateAdapter(diaryAdapter::retry))
         setAppbar()
         setRecyclerView()
         isMainBottomNavLayout.value = true
@@ -88,21 +86,21 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
                 is Resource.Loading -> loadingLiveData.postValue(true)
                 is Resource.Success -> {
                     loadingLiveData.postValue(false)
-                    if (res.data == null) {
-                        binding.homeNoDataText.visibility = View.VISIBLE
+                    if (res.data.isNullOrEmpty()) {
+                        binding.homeNoDataText.show()
+                        binding.mainHomeRecyclerView.gone()
                     } else {
-                        binding.homeNoDataText.visibility = View.GONE
+                        binding.homeNoDataText.gone()
+                        binding.mainHomeRecyclerView.show()
                         with(binding.mainHomeRecyclerView) {
                             post { smoothScrollToPosition(0) }
                         }
-                        lifecycleScope.launch {
-                            diaryAdapter.submitData(res.data)
-                        }
+                        diaryAdapter.submitList(res.data)
                     }
                 }
                 is Resource.Error -> {
                     loadingLiveData.postValue(false)
-                    Log.d(TAG, "${res.message}")
+                    Log.e(TAG, "${res.message}")
                 }
             }
         }
@@ -168,7 +166,7 @@ class MainHomeFragment : BaseFragment<FragmentMainHomeBinding>() {
         val layoutImageView = ImageView(requireContext()).apply {
             isSelected = homeViewModel.homeLayoutType.value == HomeLayoutType.GRID
             // 벡터 이미지 애니메이션 적용
-            setImageDrawable(getDrawable(context, R.drawable.appbar_layout_v_image_icon))
+            setImageDrawable(getDrawableRes(context, R.drawable.appbar_layout_v_image_icon))
             setPadding(5.dp())
             setOnClickListener {
                 isSelected = !isSelected

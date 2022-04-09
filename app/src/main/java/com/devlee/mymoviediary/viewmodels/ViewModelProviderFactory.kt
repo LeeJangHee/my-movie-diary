@@ -11,7 +11,10 @@ class ViewModelProviderFactory(
     private val myDiaryRepository: MyDiaryRepository
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return MyDiaryViewModel(myDiaryRepository) as T
+        return when {
+            modelClass.isAssignableFrom(MyDiaryViewModel::class.java) -> MyDiaryViewModel(myDiaryRepository) as T
+            else -> ContentCreateViewModel(myDiaryRepository) as T
+        }
     }
 }
 

@@ -43,7 +43,8 @@ class MyDiaryViewModel(
 
     /** home item */
     var myDiaries: Flow<List<MyDiaryEntity>> = repository.getMyDiaryAll()
-    var handlerMyDiaryList: MutableLiveData<Resource<PagingData<MyDiary>>> = MutableLiveData()
+    var handlerMyDiaryList: MutableLiveData<Resource<ArrayList<Pair<MyDiary, Category?>>>> = MutableLiveData()
+
     var searchMyDiaryFlow: MutableSharedFlow<Resource<List<MyDiary>>> = MutableSharedFlow()
 
     var homeLayoutType: MutableLiveData<HomeLayoutType> = MutableLiveData(HomeLayoutType.LINEAR)
@@ -75,7 +76,7 @@ class MyDiaryViewModel(
     fun readMyDiary() = viewModelScope.launch(Dispatchers.IO) {
         myDiaries.collect { myDiaryEntities ->
             handlerMyDiaryList.postValue(Resource.Loading())
-            setMyDiary(myDiaryEntities.map { it.myDiary })
+            setMyDiary(myDiaryEntities)
         }
     }
 
@@ -89,27 +90,34 @@ class MyDiaryViewModel(
         }
     }
 
-    private fun setMyDiary(myDiary: List<MyDiary>) {
+    private fun setMyDiary(myDiaryEntities: List<MyDiaryEntity>) {
         viewModelScope.launch(Dispatchers.IO) {
             delay(1000)
             try {
                 val sortMyDiary = if (homeSortType.value == SortItem.ASC)
-                    myDiary.sortedBy { it.date }
+                    myDiaryEntities
+                        .sortedBy { it.myDiary.date }
+                        .map { Pair(it.myDiary, findCategoryById(it.categoryEntityId)) }
                 else
-                    myDiary.sortedByDescending { it.date }
+                    myDiaryEntities
+                        .sortedByDescending { it.myDiary.date }
+                        .map { Pair(it.myDiary, findCategoryById(it.categoryEntityId)) }
 
-                myDiaryPaging(sortMyDiary).collectLatest {
-                    handlerMyDiaryList.postValue(Resource.Success(it))
-                }
+
+                handlerMyDiaryList.postValue(Resource.Success(sortMyDiary.toCollection(ArrayList())))
             } catch (e: Exception) {
                 handlerMyDiaryList.postValue(Resource.Error(e.message ?: "home data Error!!!"))
             }
         }
     }
 
+    private fun findCategoryById(categoryId: Int): Category? {
+        return repository.getMyDiaryByCategory(categoryId)
+    }
+
     private fun myDiaryPaging(myDiaryList: List<MyDiary>): Flow<PagingData<MyDiary>> {
         val myDiaryPagingSize = 10
-        return Pager(PagingConfig(pageSize = myDiaryPagingSize)) {
+        return Pager(PagingConfig(pageSize = myDiaryPagingSize, enablePlaceholders = false)) {
             MyDiaryPagingSource(myDiaryList, myDiaryPagingSize)
         }.flow.cachedIn(viewModelScope)
     }
@@ -148,7 +156,6 @@ class MyDiaryViewModel(
                 allCategoryList.addAll(category)
                 allCategoryList.addAll(addCategory)
 
-                readCategoryCount(allCategoryList)
                 val pairCategoryList: ArrayList<Pair<Category, Int>> =
                     allCategoryList.zip(readCategoryCount(allCategoryList)).toCollection(ArrayList())
                 handlerCategoryList.postValue(Resource.Success(pairCategoryList))

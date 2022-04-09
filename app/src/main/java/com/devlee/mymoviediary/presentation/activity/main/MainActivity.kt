@@ -20,10 +20,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
 
-    private var imeShown = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        bottomNavLayout?.show()
 
         val navFragment = supportFragmentManager.findFragmentById(R.id.mainNavContainerView) as NavHostFragment
         navController = navFragment.navController
@@ -34,33 +34,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        hideBottomNavTooltip()
 
-        // 키보드가 올라올 경우 bottom nav layout 숨김
-        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
-            fun checkIMEShow(): Boolean {
-                val rootViewHeight = binding.root.rootView.height
-                val relativeHeight = binding.root.height
-                return (rootViewHeight - relativeHeight > 200 * resources.displayMetrics.density)
-            }
-
-            checkIMEShow().also {
-                if (isMainBottomNavLayout.value == false) return@addOnGlobalLayoutListener
-                if (imeShown != it) {
-                    imeShown = it
-
-                    bottomNavLayout?.show(!imeShown)
-                }
-            }
-        }
-    }
-
-    /** bottom nav layout longclick -> 이름 보이지 않기 */
-    private fun hideBottomNavTooltip() {
-        bottomNavLayout?.menu?.forEach {
-            val view = this.findViewById<View>(it.itemId)
-            view.setOnLongClickListener { true }
-        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -68,11 +42,5 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     override fun getLayout(): Int = R.layout.activity_main
-    override fun showBottomNav() {
-        super.showBottomNav()
-    }
 
-    override fun setToolbar() {
-
-    }
 }

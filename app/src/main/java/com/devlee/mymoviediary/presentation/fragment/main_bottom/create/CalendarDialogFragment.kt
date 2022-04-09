@@ -11,6 +11,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.devlee.mymoviediary.R
+import com.devlee.mymoviediary.data.database.MyDiaryDatabase
+import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.databinding.DialogCalendarBinding
 import com.devlee.mymoviediary.presentation.adapter.create.DialogYearAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseDialogFragment
@@ -19,6 +21,7 @@ import com.devlee.mymoviediary.utils.dialog.CalendarChoiceInterface
 import com.devlee.mymoviediary.utils.dialog.DayViewContainer
 import com.devlee.mymoviediary.utils.dialog.calendarDialogCallback
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
+import com.devlee.mymoviediary.viewmodels.ViewModelProviderFactory
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
@@ -40,7 +43,10 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
         private const val TAG = "CalendarDialogFragment"
     }
 
-    private val calendarDialogViewModel: ContentCreateViewModel by navGraphViewModels(R.id.home_nav)
+    private val calendarDialogViewModel: ContentCreateViewModel by navGraphViewModels(R.id.home_nav) {
+        val repository = MyDiaryRepository(MyDiaryDatabase.getInstance(requireActivity()))
+        ViewModelProviderFactory(repository)
+    }
 
     private var selectedDate = LocalDate.now()
 

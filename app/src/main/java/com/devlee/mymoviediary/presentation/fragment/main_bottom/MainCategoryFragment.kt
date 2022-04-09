@@ -49,11 +49,6 @@ class MainCategoryFragment : BaseFragment<FragmentMainCategoryBinding>() {
             categoryViewModel = categoryViewModel
         }
 
-        loadingLiveData.observe(viewLifecycleOwner) {
-            if (it) showProgressDialog()
-            else dismissProgressDialog()
-        }
-
         setAppbar()
         initList()
         setRecyclerView()

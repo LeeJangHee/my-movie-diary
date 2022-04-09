@@ -7,6 +7,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import com.devlee.mymoviediary.R
+import com.devlee.mymoviediary.data.database.MyDiaryDatabase
+import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.databinding.BottomChoiceViewBinding
 import com.devlee.mymoviediary.presentation.adapter.create.CreateBottomSheetAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseBottomSheetFragment
@@ -15,6 +17,7 @@ import com.devlee.mymoviediary.utils.selectedCategoryCallback
 import com.devlee.mymoviediary.utils.selectedContentCallback
 import com.devlee.mymoviediary.utils.startFadeInAnimation
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
+import com.devlee.mymoviediary.viewmodels.ViewModelProviderFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class ChoiceBottomSheetFragment : BaseBottomSheetFragment<BottomChoiceViewBinding>(R.layout.bottom_choice_view) {
@@ -23,7 +26,10 @@ class ChoiceBottomSheetFragment : BaseBottomSheetFragment<BottomChoiceViewBindin
         private const val TAG = "ChoiceBottomSheet"
     }
 
-    private val bottomSheetViewModel: ContentCreateViewModel by navGraphViewModels(R.id.home_nav)
+    private val bottomSheetViewModel: ContentCreateViewModel by navGraphViewModels(R.id.home_nav) {
+        val repository = MyDiaryRepository(MyDiaryDatabase.getInstance(requireActivity()))
+        ViewModelProviderFactory(repository)
+    }
 
     private val choiceBottomSheetAdapter by lazy { CreateBottomSheetAdapter(args.bottomChoiceType, bottomSheetViewModel) }
 

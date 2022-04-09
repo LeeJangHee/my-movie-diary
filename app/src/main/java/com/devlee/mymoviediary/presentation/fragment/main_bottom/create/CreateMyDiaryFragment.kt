@@ -13,6 +13,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.devlee.mymoviediary.R
+import com.devlee.mymoviediary.data.database.MyDiaryDatabase
+import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.databinding.FragmentCreateMyDiaryBinding
 import com.devlee.mymoviediary.domain.use_case.ChoiceBottomSheetData
 import com.devlee.mymoviediary.domain.use_case.ContentChoiceData
@@ -28,6 +30,7 @@ import com.devlee.mymoviediary.utils.*
 import com.devlee.mymoviediary.utils.dialog.CustomDialog
 import com.devlee.mymoviediary.utils.dialog.calendarDialogCallback
 import com.devlee.mymoviediary.viewmodels.ContentCreateViewModel
+import com.devlee.mymoviediary.viewmodels.ViewModelProviderFactory
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -38,7 +41,10 @@ class CreateMyDiaryFragment : BaseFragment<FragmentCreateMyDiaryBinding>() {
         private const val TAG = "CreateMyDiaryFragment"
     }
 
-    private val createViewModel: ContentCreateViewModel by navGraphViewModels(R.id.home_nav)
+    private val createViewModel: ContentCreateViewModel by navGraphViewModels(R.id.home_nav) {
+        val repository = MyDiaryRepository(MyDiaryDatabase.getInstance(requireActivity()))
+        ViewModelProviderFactory(repository)
+    }
     private val contentCreateAdapter by lazy { CreateAdapter(createViewModel) }
 
     override fun setView() {

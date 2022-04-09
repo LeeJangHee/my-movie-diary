@@ -73,7 +73,7 @@ android {
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
     // Material Design
     implementation 'com.google.android.material:material:1.4.0'
     // Constraint Layout
@@ -123,7 +123,7 @@ dependencies {
     implementation "com.airbnb.android:lottie:4.0.0"
 
     // Coil
-    def coil_version = "1.4.0"
+    def coil_version = "2.0.0-rc02"
     implementation "io.coil-kt:coil:$coil_version"
     implementation "io.coil-kt:coil-video:$coil_version"
 
@@ -134,12 +134,11 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
     // Navigation Component
-    def nav_version = "2.4.1"
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-runtime-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
+    implementation "androidx.navigation:navigation-runtime-ktx:$navigation_version"
     // Feature module Support
-    implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:$navigation_version"
 
     // Room
     def room_version = "2.4.2"

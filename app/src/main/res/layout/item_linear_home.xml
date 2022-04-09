@@ -5,10 +5,15 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="com.devlee.mymoviediary.utils.ExtentionsKt" />
         <variable
             name="myDiary"
             type="com.devlee.mymoviediary.data.model.MyDiary" />
+        <variable
+            name="category"
+            type="com.devlee.mymoviediary.data.model.Category" />
+        <variable
+            name="viewModel"
+            type="com.devlee.mymoviediary.viewmodels.MyDiaryViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,7 +33,7 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/categoryImage"
-                categoryColor="@{myDiary.category.color}"
+                categoryColor="@{category.color}"
                 android:layout_width="7dp"
                 android:layout_height="7dp"
                 android:layout_marginEnd="5dp"

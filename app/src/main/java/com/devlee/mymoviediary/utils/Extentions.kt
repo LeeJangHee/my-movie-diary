@@ -16,8 +16,9 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.RestrictTo
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.viewbinding.ViewBinding
 import com.devlee.mymoviediary.App
-import com.devlee.mymoviediary.presentation.activity.main.MainActivity
+import com.devlee.mymoviediary.presentation.activity.BaseActivity
 
 /** View visibility */
 fun View.show(isShow: Boolean? = null) {
@@ -54,7 +55,7 @@ fun getColorRes(context: Context = App.getInstance().applicationContext, @ColorR
     return ContextCompat.getColor(context, color)
 }
 
-fun getDrawable(context: Context = App.getInstance().applicationContext, @DrawableRes drawable: Int): Drawable? {
+fun getDrawableRes(context: Context = App.getInstance().applicationContext, @DrawableRes drawable: Int): Drawable? {
     return ContextCompat.getDrawable(context, drawable)
 }
 
@@ -74,7 +75,7 @@ fun View.hideKeyboardIME() {
     imm?.hideSoftInputFromWindow(windowToken, 0)
 }
 
-fun MainActivity.isBottomNav(set: Boolean) {
+fun <V : ViewBinding> BaseActivity<V>.isBottomNav(set: Boolean) {
     if (set) {
         this.showBottomNav()
     } else {
