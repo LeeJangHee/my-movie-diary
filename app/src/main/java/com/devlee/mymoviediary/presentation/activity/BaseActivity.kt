@@ -1,9 +1,7 @@
 package com.devlee.mymoviediary.presentation.activity
 
 import android.content.pm.ActivityInfo
-import android.graphics.Color
 import android.graphics.Rect
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -161,7 +159,6 @@ abstract class BaseActivity<V : ViewBinding> : AppCompatActivity(), BaseFragment
     open fun showProgressDialog() {
         if (isFinishing) return
 
-        progressDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         progressDialog.showProgress()
     }
 
