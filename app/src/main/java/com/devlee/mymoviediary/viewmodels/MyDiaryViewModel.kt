@@ -193,7 +193,8 @@ class MyDiaryViewModel(
 
     fun updateCategory(category: Category, preCategory: Category, title: String) =
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateCategory(category, preCategory, title)
+            val id = repository.getCategoryId(preCategory)
+            repository.updateCategory(category, id, title)
         }
 
     fun onFirstItemClick(view: View) {
