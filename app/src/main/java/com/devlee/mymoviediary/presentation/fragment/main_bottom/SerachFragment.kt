@@ -11,6 +11,8 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.database.MyDiaryDatabase
+import com.devlee.mymoviediary.data.model.Category
+import com.devlee.mymoviediary.data.model.MyDiary
 import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.databinding.FragmentSearchBinding
 import com.devlee.mymoviediary.presentation.adapter.search.SearchAdapter
@@ -29,6 +31,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
     }
 
     private var searchText: String? = null
+    private var isInitFlag = true
 
     private val searchViewModel: MyDiaryViewModel by viewModels {
         val repository = MyDiaryRepository(MyDiaryDatabase.getInstance(requireActivity()))
@@ -49,6 +52,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
     override fun getLayoutId(): Int = R.layout.fragment_search
 
     override fun setView() {
+        isInitFlag = true
         setAppbar()
         setOnBackPressed()
         Log.v(TAG, "Search Type :: ${args.searchType.name}")
@@ -66,12 +70,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
                             is Resource.Loading -> loadingLiveData.postValue(true)
                             is Resource.Success -> {
                                 loadingLiveData.postValue(false)
-                                if (resMyDiary.data.isNullOrEmpty()) {
-                                    binding.searchEmptyText.show()
-                                } else {
-                                    binding.searchEmptyText.gone()
-                                    searchAdapter.setSearchMainList(resMyDiary.data)
-                                }
+
+                                setSearchView(resMyDiary.data)
                             }
                             is Resource.Error -> {
                                 loadingLiveData.postValue(false)
@@ -87,12 +87,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
                             is Resource.Loading -> loadingLiveData.postValue(true)
                             is Resource.Success -> {
                                 loadingLiveData.postValue(false)
-                                if (resCategory.data.isNullOrEmpty()) {
-                                    binding.searchEmptyText.show()
-                                } else {
-                                    binding.searchEmptyText.gone()
-                                    searchAdapter.setSearchCategoryItemList(resCategory.data)
-                                }
+                                
+                                setSearchView(resCategory.data)
                             }
                             is Resource.Error -> {
                                 loadingLiveData.postValue(false)
@@ -151,6 +147,31 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
         findNavController().popBackStack()
     }
 
+    private fun <T> setSearchView(data: List<T>?) {
+        Log.d(TAG, "setSearchView: data size = ${data?.size ?: null}")
+        when {
+            isInitFlag -> {
+                binding.searchEmptyText.show()
+                binding.searchEmptyText.text = getString(R.string.search_init_data_text)
+                binding.searchRecyclerView.gone()
+                isInitFlag = false
+            }
+            data.isNullOrEmpty() -> {
+                binding.searchEmptyText.show()
+                binding.searchEmptyText.text = getString(R.string.search_empty_data_text)
+                binding.searchRecyclerView.gone()
+            }
+            else -> {
+                binding.searchEmptyText.gone()
+                binding.searchRecyclerView.show()
+                if (args.searchType == SearchType.Main) {
+                    searchAdapter.setSearchMainList(data as List<Pair<MyDiary, Category?>>)
+                } else {
+                    searchAdapter.setSearchCategoryItemList(data as List<Category>)
+                }
+            }
+        }
+    }
 }
 
 enum class SearchType {

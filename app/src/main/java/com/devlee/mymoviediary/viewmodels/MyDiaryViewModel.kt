@@ -4,7 +4,9 @@ import android.graphics.drawable.ColorDrawable
 import android.util.Log
 import android.view.View
 import androidx.databinding.ObservableBoolean
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -21,7 +23,8 @@ import com.devlee.mymoviediary.utils.*
 import com.devlee.mymoviediary.utils.paging.MyDiaryPagingSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 class MyDiaryViewModel(
@@ -45,7 +48,7 @@ class MyDiaryViewModel(
     var myDiaries: Flow<List<MyDiaryEntity>> = repository.getMyDiaryAll()
     var handlerMyDiaryList: MutableLiveData<Resource<ArrayList<Pair<MyDiary, Category?>>>> = MutableLiveData()
 
-    var searchMyDiaryFlow: MutableSharedFlow<Resource<List<MyDiary>>> = MutableSharedFlow()
+    var searchMyDiaryFlow: MutableSharedFlow<Resource<List<Pair<MyDiary, Category?>>>> = MutableSharedFlow()
 
     var homeLayoutType: MutableLiveData<HomeLayoutType> = MutableLiveData(HomeLayoutType.LINEAR)
     var homeSortType: MutableLiveData<SortItem> = MutableLiveData(SortItem.DESC)
@@ -65,7 +68,8 @@ class MyDiaryViewModel(
         searchMyDiaryFlow.emit(Resource.Loading())
         repository.searchMyDiary(contents).collect { myDiaryEntityList ->
             try {
-                searchMyDiaryFlow.emit(Resource.Success(myDiaryEntityList.map { it.myDiary }))
+                val diaryWithCategoryId = myDiaryEntityList.map { it.myDiary to findCategoryById(it.categoryEntityId) }
+                searchMyDiaryFlow.emit(Resource.Success(diaryWithCategoryId))
             } catch (e: Exception) {
                 searchMyDiaryFlow.emit(Resource.Error(e.localizedMessage ?: "search MyDiary error!!"))
             }
@@ -187,9 +191,9 @@ class MyDiaryViewModel(
             repository.deleteCategory(category)
         }
 
-    fun updateCategory(category: Category, preCategory: Category) =
+    fun updateCategory(category: Category, preCategory: Category, title: String) =
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateCategory(category, preCategory)
+            repository.updateCategory(category, preCategory, title)
         }
 
     fun onFirstItemClick(view: View) {

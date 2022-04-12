@@ -43,8 +43,8 @@ interface MyDiaryDao {
     @Query("DELETE FROM category_table WHERE category_column = :category")
     suspend fun deleteCategory(category: Category)
 
-    @Query("UPDATE category_table SET category_column = :category WHERE category_column = :preCategory")
-    suspend fun updateCategory(category: Category, preCategory: Category)
+    @Query("UPDATE category_table SET category_column = :category, title = :title WHERE category_column = :preCategory")
+    suspend fun updateCategory(category: Category, preCategory: Category, title: String)
 
     @Query("SELECT categoryId FROM category_table WHERE category_column = :category")
     fun getCategoryId(category: Category?): Int

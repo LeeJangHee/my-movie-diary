@@ -33,8 +33,8 @@ class MyDiaryRepository(
         db.dao().deleteCategory(category)
     }
 
-    suspend fun updateCategory(category: Category, preCategory: Category) {
-        db.dao().updateCategory(category, preCategory)
+    suspend fun updateCategory(category: Category, preCategory: Category, title: String) {
+        db.dao().updateCategory(category, preCategory, title)
     }
 
     fun getCategoryId(category: Category?): Int = db.dao().getCategoryId(category)

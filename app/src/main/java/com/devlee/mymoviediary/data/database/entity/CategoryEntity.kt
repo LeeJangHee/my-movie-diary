@@ -1,7 +1,5 @@
 package com.devlee.mymoviediary.data.database.entity
 
-import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
 import androidx.room.*
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.utils.Constants.CATEGORY_COLUMN_NAME
@@ -12,8 +10,6 @@ data class CategoryEntity(
     @PrimaryKey(autoGenerate = true)
     val categoryId: Int,
     val title: String,
-    val type: Int,
-    @ColorInt val color: Int?,
-    @DrawableRes val drawableRes: Int?,
-    @ColumnInfo(name = CATEGORY_COLUMN_NAME) val category: Category
+    @ColumnInfo(name = CATEGORY_COLUMN_NAME)
+    val category: Category
 )

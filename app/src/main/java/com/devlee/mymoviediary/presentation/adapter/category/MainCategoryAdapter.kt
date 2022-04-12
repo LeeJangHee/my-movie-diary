@@ -91,7 +91,7 @@ class MainCategoryAdapter(
                     color = categoryColor,
                     drawableRes = null
                 )
-                categoryViewModel.updateCategory(category, preCategory)
+                categoryViewModel.updateCategory(category, preCategory, category.title)
                 reset(categoryBinding)
             }
         }
@@ -152,9 +152,6 @@ class MainCategoryAdapter(
                     CategoryEntity(
                         categoryId = 0,
                         title = title,
-                        type = CategoryViewType.CATEGORY.type,
-                        color = categoryColor,
-                        drawableRes = null,
                         category = categoryData
                     )
                 )

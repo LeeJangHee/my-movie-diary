@@ -26,7 +26,7 @@
             style="@style/CreateCategoryDefaultStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/search_no_data_text"
+            android:text="@string/search_init_data_text"
             android:textColor="@color/color_c3c3c3"
             android:gravity="center"
             android:layout_marginHorizontal="@dimen/dp_16"

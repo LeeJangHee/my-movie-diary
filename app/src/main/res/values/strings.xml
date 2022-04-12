@@ -58,5 +58,6 @@
 
     <!--  검색  -->
     <string name="search_edit_hint">기억하고 싶은 순간들</string>
-    <string name="search_no_data_text">기억하고 싶은 순간을 검색해주세요.</string>
+    <string name="search_init_data_text">기억하고 싶은 순간을 검색해주세요.</string>
+    <string name="search_empty_data_text">검색 결과가 없습니다.</string>
 </resources>

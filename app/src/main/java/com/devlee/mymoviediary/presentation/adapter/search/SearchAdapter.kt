@@ -14,13 +14,14 @@ import com.devlee.mymoviediary.utils.recyclerview.MyDiaryDiffUtil
 class SearchAdapter(private val searchType: SearchType) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var searchCategoryItemList: List<Category> = emptyList()
-    private var searchMainItemList: List<MyDiary> = emptyList()
+    private var searchMainItemList: List<Pair<MyDiary, Category?>> = emptyList()
 
     inner class MainSearchViewHolder(private val binding: ItemLinearHomeBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(myDiary: MyDiary) {
+        fun bind(myDiary: Pair<MyDiary, Category?>) {
             binding.apply {
-                this.myDiary = myDiary
+                this.myDiary = myDiary.first
+                category = myDiary.second
                 executePendingBindings()
             }
         }
@@ -71,7 +72,7 @@ class SearchAdapter(private val searchType: SearchType) : RecyclerView.Adapter<R
         diffUtilResult.dispatchUpdatesTo(this)
     }
 
-    fun setSearchMainList(newItemList: List<MyDiary>) {
+    fun setSearchMainList(newItemList: List<Pair<MyDiary, Category?>>) {
         val searchDiffUtil = MyDiaryDiffUtil(searchMainItemList, newItemList)
         val diffUtilResult = DiffUtil.calculateDiff(searchDiffUtil)
         searchMainItemList = newItemList
