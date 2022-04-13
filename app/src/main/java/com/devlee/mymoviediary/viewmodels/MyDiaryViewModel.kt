@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 class MyDiaryViewModel(
-    private val repository: MyDiaryRepository
+    private val repository: MyDiaryRepository,
 ) : ViewModel() {
 
     companion object {
@@ -115,7 +115,7 @@ class MyDiaryViewModel(
         }
     }
 
-    private fun findCategoryById(categoryId: Int): Category? {
+    private fun findCategoryById(categoryId: Int?): Category? {
         return repository.getMyDiaryByCategory(categoryId)
     }
 
@@ -188,13 +188,15 @@ class MyDiaryViewModel(
 
     fun deleteCategory(category: Category) =
         viewModelScope.launch(Dispatchers.IO) {
+            val categoryEntityId = repository.getCategoryId(category)
+            deleteMyDiaryByCategoryId(categoryEntityId)
+
             repository.deleteCategory(category)
         }
 
     fun updateCategory(category: Category, preCategory: Category, title: String) =
         viewModelScope.launch(Dispatchers.IO) {
-            val id = repository.getCategoryId(preCategory)
-            repository.updateCategory(category, id, title)
+            repository.updateCategory(category, preCategory, title)
         }
 
     fun onFirstItemClick(view: View) {
@@ -210,6 +212,15 @@ class MyDiaryViewModel(
         launch(Dispatchers.Main) {
             callback.invoke()
         }
+    }
+
+    private fun deleteMyDiaryByCategoryId(categoryEntityId: Int?) = viewModelScope.launch(Dispatchers.IO) {
+        categoryEntityId ?: return@launch
+        repository.deleteMyDiaryByCategoryId(categoryEntityId)
+    }
+
+    fun deleteMyDiary(id: Int) = viewModelScope.launch(Dispatchers.IO) {
+        repository.deleteMyDiary(id)
     }
 
     fun onUserPickItemClick() {
