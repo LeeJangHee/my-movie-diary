@@ -11,6 +11,7 @@ import androidx.annotation.ColorRes
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.fetch.VideoFrameUriFetcher
 import coil.load
 import coil.request.videoFrameMillis
 import coil.size.Scale
@@ -232,6 +233,7 @@ fun View.setContentChoiceItem(data: ContentChoiceData) {
             } else {
                 scaleType = ImageView.ScaleType.CENTER_CROP
                 load(data.video) {
+                    fetcher(VideoFrameUriFetcher(context))
                     videoFrameMillis(0)
                 }
             }
@@ -288,6 +290,7 @@ fun ImageView.uriThumbnail(videoUri: List<String?>?, audioUri: List<String?>?) {
                     show()
                     scaleType = ImageView.ScaleType.CENTER_CROP
                     load(it) {
+                        fetcher(VideoFrameUriFetcher(context))
                         videoFrameMillis(0)
                     }
                 }
