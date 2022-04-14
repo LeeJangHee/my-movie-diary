@@ -86,4 +86,9 @@
             android:name="searchType"
             app:argType="com.devlee.mymoviediary.presentation.fragment.main_bottom.SearchType" />
     </fragment>
+    <fragment
+        android:id="@+id/myDiaryDetailFragment"
+        android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.mydiary.MyDiaryDetailFragment"
+        android:label="fragment_my_diary_detail"
+        tools:layout="@layout/fragment_my_diary_detail" />
 </navigation>

@@ -194,4 +194,10 @@
         <item name="android:textColor">@color/color_1c1c1c</item>
         <item name="android:textSize">15dp</item>
     </style>
+
+    <!--  MyDiaryDetail theme  -->
+    <style name="MyDiaryDetailCategoryTextStyle" parent="AppTheme.DefaultTextStyle">
+        <item name="android:textSize">13dp</item>
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+    </style>
 </resources>
