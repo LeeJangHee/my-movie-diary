@@ -170,4 +170,7 @@ dependencies {
     def paging_version = "3.1.0"
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
     implementation "androidx.paging:paging-guava:$paging_version"
+
+    // indicator
+    implementation 'me.relex:circleindicator:2.1.6'
 }
