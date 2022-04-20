@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_mainHomeFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_mainHomeFragment_to_myDiaryDetailFragment"
+            app:destination="@id/myDiaryDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/createMyDiaryFragment"

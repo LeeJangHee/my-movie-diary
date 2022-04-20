@@ -79,6 +79,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/diaryDetailFullScreen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/full_screen_icon"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    android:layout_marginBottom="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/diaryDetailViewPager" />
+
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/diaryDetailCountText"
                     style="@style/MyDiaryDetailCountTextStyle"
@@ -122,13 +132,15 @@
                     android:id="@+id/diaryDetailVideoGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:constraint_referenced_ids="diaryDetailViewPager, diaryDetailIndicator, diaryDetailCountText" />
+                    diaryDetailGroupType="@{myDiary}"
+                    app:constraint_referenced_ids="diaryDetailViewPager, diaryDetailIndicator, diaryDetailCountText, diaryDetailFullScreen" />
 
                 <!--    오디오 그룹    -->
                 <androidx.constraintlayout.widget.Group
                     android:id="@+id/diaryDetailRadioGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    diaryDetailGroupType="@{myDiary}"
                     app:constraint_referenced_ids="diaryDetailAudioRecycler" />
 
 

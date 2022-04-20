@@ -7,6 +7,9 @@ import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.devlee.mymoviediary.databinding.ItemPagingStateBinding
 
+/**
+ * 홈 화면을 페이징으로 사용 후 로딩 이미지를 넣기 위한 Adapter
+ */
 class MainHomeLoadStateAdapter(
     private val retry: () -> Unit
 ) : LoadStateAdapter<MainHomeLoadStateAdapter.StateHolder>() {

@@ -9,6 +9,8 @@ import android.widget.*
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.Group
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.fetch.VideoFrameUriFetcher
@@ -341,4 +343,28 @@ fun View.setPagingFooterState(isLoading: Boolean?) {
         }
 
     }
+}
+
+@BindingAdapter("diaryDetailGroupType")
+fun Group.isVisibleFileType(myDiary: MyDiary?) {
+    myDiary?.let {
+        when (id) {
+            R.id.diaryDetailVideoGroup -> {
+                if (it.video.isNullOrEmpty()) {
+                    gone()
+                } else {
+                    show()
+                }
+            }
+            R.id.diaryDetailRadioGroup -> {
+                if (it.recording.isNullOrEmpty()) {
+                    gone()
+                } else {
+                    show()
+                }
+            }
+        }
+    } ?: gone()
+
+
 }

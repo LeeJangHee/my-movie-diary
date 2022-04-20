@@ -2,11 +2,14 @@ package com.devlee.mymoviediary.presentation.adapter.home
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.data.model.MyDiary
 import com.devlee.mymoviediary.databinding.ItemGridHomeBinding
@@ -20,6 +23,11 @@ class MainHomeAdapter(
     private var layoutManager: GridLayoutManager? = null
 
     inner class MyLinearViewHolder(private val binding: ItemLinearHomeBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.root.setOnClickListener(::itemClickListener)
+        }
+
         fun bind(myDiary: Pair<MyDiary, Category?>) {
             binding.apply {
                 this.myDiary = myDiary.first
@@ -32,12 +40,20 @@ class MainHomeAdapter(
 
     inner class MyGirdViewHolder(private val binding: ItemGridHomeBinding) : RecyclerView.ViewHolder(binding.root) {
 
+        init {
+            binding.root.setOnClickListener(::itemClickListener)
+        }
+
         fun bind(myDiary: MyDiary) {
             binding.apply {
                 this.myDiary = myDiary
                 executePendingBindings()
             }
         }
+    }
+
+    private fun itemClickListener(v: View) {
+        v.findNavController().navigate(R.id.action_mainHomeFragment_to_myDiaryDetailFragment)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

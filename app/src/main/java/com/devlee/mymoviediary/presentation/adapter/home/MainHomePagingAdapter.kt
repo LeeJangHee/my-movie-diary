@@ -11,6 +11,9 @@ import com.devlee.mymoviediary.data.model.MyDiary
 import com.devlee.mymoviediary.databinding.ItemGridHomeBinding
 import com.devlee.mymoviediary.databinding.ItemLinearHomeBinding
 
+/**
+ * 홈 화면을 페이징으로 사용하려고 하였으나 사용하지 않음
+ */
 class MainHomePagingAdapter : PagingDataAdapter<MyDiary, RecyclerView.ViewHolder>(differCallback) {
 
     private var layoutManager: GridLayoutManager? = null
