@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.data.model.MyDiary
 import com.devlee.mymoviediary.databinding.ItemGridHomeBinding
 import com.devlee.mymoviediary.databinding.ItemLinearHomeBinding
+import com.devlee.mymoviediary.presentation.fragment.main_bottom.MainHomeFragmentDirections
 import com.devlee.mymoviediary.viewmodels.MyDiaryViewModel
 
 class MainHomeAdapter(
@@ -24,12 +24,11 @@ class MainHomeAdapter(
 
     inner class MyLinearViewHolder(private val binding: ItemLinearHomeBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        init {
-            binding.root.setOnClickListener(::itemClickListener)
-        }
-
         fun bind(myDiary: Pair<MyDiary, Category?>) {
             binding.apply {
+                root.setOnClickListener {
+                    itemClickListener(it, myDiary)
+                }
                 this.myDiary = myDiary.first
                 category = myDiary.second
                 viewModel = homeViewModel
@@ -40,26 +39,29 @@ class MainHomeAdapter(
 
     inner class MyGirdViewHolder(private val binding: ItemGridHomeBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        init {
-            binding.root.setOnClickListener(::itemClickListener)
-        }
-
-        fun bind(myDiary: MyDiary) {
+        fun bind(myDiary: Pair<MyDiary, Category?>) {
             binding.apply {
-                this.myDiary = myDiary
+                root.setOnClickListener {
+                    itemClickListener(it, myDiary)
+                }
+                this.myDiary = myDiary.first
                 executePendingBindings()
             }
         }
     }
 
-    private fun itemClickListener(v: View) {
-        v.findNavController().navigate(R.id.action_mainHomeFragment_to_myDiaryDetailFragment)
+    private fun itemClickListener(v: View, myDiary: Pair<MyDiary, Category?>) {
+        val action = MainHomeFragmentDirections.actionMainHomeFragmentToMyDiaryDetailFragment(
+            myDiary = myDiary.first,
+            category = myDiary.second
+        )
+        v.findNavController().navigate(action)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is MyLinearViewHolder -> getItem(position)?.let { holder.bind(it) }
-            is MyGirdViewHolder -> getItem(position)?.let { holder.bind(it.first) }
+            is MyGirdViewHolder -> getItem(position)?.let { holder.bind(it) }
         }
     }
 

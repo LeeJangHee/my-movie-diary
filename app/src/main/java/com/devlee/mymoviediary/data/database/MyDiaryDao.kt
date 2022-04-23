@@ -7,6 +7,7 @@ import androidx.room.Query
 import com.devlee.mymoviediary.data.database.entity.CategoryEntity
 import com.devlee.mymoviediary.data.database.entity.MyDiaryEntity
 import com.devlee.mymoviediary.data.model.Category
+import com.devlee.mymoviediary.data.model.MyDiary
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -21,6 +22,9 @@ interface MyDiaryDao {
 
     @Query("SELECT category_column FROM category_table WHERE categoryId = :categoryId")
     fun getMyDiaryByCategory(categoryId: Int?): Category?
+
+    @Query("SELECT * FROM mydiary_table WHERE id = :myDiaryId")
+    fun getMyDiaryById(myDiaryId: Int): MyDiary?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMyDiary(myDiaryEntity: MyDiaryEntity)

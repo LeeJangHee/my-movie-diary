@@ -4,6 +4,7 @@ import com.devlee.mymoviediary.data.database.MyDiaryDatabase
 import com.devlee.mymoviediary.data.database.entity.CategoryEntity
 import com.devlee.mymoviediary.data.database.entity.MyDiaryEntity
 import com.devlee.mymoviediary.data.model.Category
+import com.devlee.mymoviediary.data.model.MyDiary
 import kotlinx.coroutines.flow.Flow
 
 class MyDiaryRepository(
@@ -17,6 +18,8 @@ class MyDiaryRepository(
     suspend fun insertMyDiary(myDiaryEntity: MyDiaryEntity) = db.dao().insertMyDiary(myDiaryEntity)
 
     fun getMyDiaryByCategory(categoryId: Int?): Category? = db.dao().getMyDiaryByCategory(categoryId)
+
+    fun getMyDiaryOnce(myDiaryId: Int): MyDiary? = db.dao().getMyDiaryById(myDiaryId)
 
     suspend fun deleteMyDiaryByCategoryId(categoryEntityId: Int) {
         db.dao().deleteMyDiaryByCategoryId(categoryEntityId)

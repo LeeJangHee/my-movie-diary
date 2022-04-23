@@ -210,4 +210,11 @@
         <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
         <item name="android:textSize">16dp</item>
     </style>
+
+    <style name="MyDiaryDetailAudioTextStyle" parent="AppTheme.DefaultTextStyle">
+        <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+    </style>
 </resources>

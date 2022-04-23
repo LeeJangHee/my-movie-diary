@@ -93,5 +93,13 @@
         android:id="@+id/myDiaryDetailFragment"
         android:name="com.devlee.mymoviediary.presentation.fragment.main_bottom.mydiary.MyDiaryDetailFragment"
         android:label="fragment_my_diary_detail"
-        tools:layout="@layout/fragment_my_diary_detail" />
+        tools:layout="@layout/fragment_my_diary_detail" >
+        <argument
+            android:name="myDiary"
+            app:argType="com.devlee.mymoviediary.data.model.MyDiary" />
+        <argument android:name="category"
+            app:argType="com.devlee.mymoviediary.data.model.Category"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 </navigation>

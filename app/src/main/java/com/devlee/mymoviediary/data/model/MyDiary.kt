@@ -1,9 +1,11 @@
 package com.devlee.mymoviediary.data.model
 
+import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import com.devlee.mymoviediary.R
-import com.devlee.mymoviediary.utils.Constants.MEDIA_PREFIX
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class MyDiary(
     val date: String,                   // 날짜
     val contents: String? = null,       // 일기 내용
@@ -12,7 +14,7 @@ data class MyDiary(
     val star: Boolean = false,          // 즐겨찾기
     @DrawableRes
     val mood: Int? = Mood.NONE.resId    // 기분 이미지
-)
+): Parcelable
 
 enum class Mood(@DrawableRes val resId: Int?) {
     NONE(null),

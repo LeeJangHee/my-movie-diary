@@ -33,6 +33,7 @@
                 android:minHeight="39dp"
                 android:orientation="horizontal"
                 android:paddingHorizontal="@dimen/dp_16"
+                android:visibility="@{category != null ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toTopOf="@+id/diaryDetailMediaView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -57,10 +58,12 @@
                     android:layout_marginStart="9dp"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:text="@{category.title}"
                     tools:text="카테고리이름입니다." />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
+            <!--    비디오 or 오디오    -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/diaryDetailMediaView"
                 android:layout_width="match_parent"
@@ -78,29 +81,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/diaryDetailFullScreen"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/full_screen_icon"
-                    android:layout_marginEnd="@dimen/dp_16"
-                    android:layout_marginBottom="12dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="@+id/diaryDetailViewPager" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/diaryDetailCountText"
-                    style="@style/MyDiaryDetailCountTextStyle"
-                    android:layout_width="43dp"
-                    android:layout_height="21dp"
-                    android:layout_marginTop="@dimen/dp_16"
-                    android:layout_marginEnd="@dimen/dp_16"
-                    android:background="@drawable/mydiary_detail_count_text_bg"
-                    android:gravity="center"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/diaryDetailViewPager"
-                    tools:text="2/4" />
 
                 <me.relex.circleindicator.CircleIndicator
                     android:id="@+id/diaryDetailIndicator"
@@ -133,7 +113,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     diaryDetailGroupType="@{myDiary}"
-                    app:constraint_referenced_ids="diaryDetailViewPager, diaryDetailIndicator, diaryDetailCountText, diaryDetailFullScreen" />
+                    app:constraint_referenced_ids="diaryDetailViewPager, diaryDetailIndicator" />
 
                 <!--    오디오 그룹    -->
                 <androidx.constraintlayout.widget.Group
@@ -151,6 +131,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="28dp"
+                diaryDetailMood="@{myDiary.mood}"
                 app:layout_constraintBottom_toTopOf="@+id/myDiaryDetailContentsText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -165,6 +146,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="6dp"
                 android:paddingHorizontal="@dimen/dp_16"
+                android:text="@{myDiary.contents}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"

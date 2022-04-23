@@ -8,8 +8,8 @@ import android.view.View
 import android.widget.*
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Group
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -366,5 +366,12 @@ fun Group.isVisibleFileType(myDiary: MyDiary?) {
         }
     } ?: gone()
 
+}
 
+@BindingAdapter("diaryDetailMood")
+fun ImageView.setMood(@DrawableRes resId: Int?) {
+    resId?.let {
+        show()
+        load(it)
+    } ?: gone()
 }

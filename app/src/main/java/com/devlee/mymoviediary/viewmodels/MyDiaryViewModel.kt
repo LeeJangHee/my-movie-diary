@@ -120,6 +120,10 @@ class MyDiaryViewModel(
         return repository.getMyDiaryByCategory(categoryId)
     }
 
+    fun findMyDiaryById(myDiaryId: Int): MyDiary? {
+        return repository.getMyDiaryOnce(myDiaryId)
+    }
+
     private fun myDiaryPaging(myDiaryList: List<MyDiary>): Flow<PagingData<MyDiary>> {
         val myDiaryPagingSize = 10
         return Pager(PagingConfig(pageSize = myDiaryPagingSize, enablePlaceholders = false)) {
