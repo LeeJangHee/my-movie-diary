@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.core.net.toUri
 import androidx.core.view.setPadding
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -14,11 +15,16 @@ import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.database.MyDiaryDatabase
 import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.databinding.FragmentMyDiaryDetailBinding
+import com.devlee.mymoviediary.presentation.adapter.home.mydiary.MyDiaryDetailAudioAdapter
+import com.devlee.mymoviediary.presentation.adapter.home.mydiary.MyDiaryDetailVideoAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
 import com.devlee.mymoviediary.utils.dp
+import com.devlee.mymoviediary.utils.recyclerview.CustomDecoration
+import com.devlee.mymoviediary.utils.toDp
 import com.devlee.mymoviediary.viewmodels.MyDiaryViewModel
 import com.devlee.mymoviediary.viewmodels.ViewModelProviderFactory
+import com.google.android.material.tabs.TabLayoutMediator
 
 class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
 
@@ -32,6 +38,16 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
         val repository = MyDiaryRepository(MyDiaryDatabase.getInstance(requireActivity()))
         ViewModelProviderFactory(repository)
     }
+    private val detailAudioAdapter: MyDiaryDetailAudioAdapter by lazy { MyDiaryDetailAudioAdapter() }
+    private val detailVideoAdapter: MyDiaryDetailVideoAdapter by lazy { MyDiaryDetailVideoAdapter() }
+    private val audioItemDecoration by lazy {
+        CustomDecoration(
+            height = 1.toDp(),
+            paddingLeft = 16.toDp(),
+            paddingRight = 0f,
+            color = requireContext().resources.getColor(R.color.color_efefef, null)
+        )
+    }
 
     override fun setView() {
         setAppbar()
@@ -39,6 +55,26 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
             lifecycleOwner = viewLifecycleOwner
             myDiary = args.myDiary
             category = args.category
+            setRecyclerView()
+        }
+    }
+
+    private fun FragmentMyDiaryDetailBinding.setRecyclerView() {
+        diaryDetailViewPager.apply {
+            adapter = detailVideoAdapter
+            detailVideoAdapter.submitList(args.myDiary.video.map { it?.toUri() })
+        }
+
+        val tabView = ImageView(context).apply {
+            load(R.drawable.mydiary_detail_indicator_d)
+        }
+        TabLayoutMediator(diaryDetailIndicator, diaryDetailViewPager) { tab, pos ->
+            tab.customView = tabView
+        }.attach()
+
+        diaryDetailAudioRecycler.apply {
+            adapter = detailAudioAdapter
+            detailAudioAdapter.submitList(args.myDiary.recording.map { it?.toUri() })
         }
     }
 

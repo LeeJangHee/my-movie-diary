@@ -350,17 +350,15 @@ fun Group.isVisibleFileType(myDiary: MyDiary?) {
     myDiary?.let {
         when (id) {
             R.id.diaryDetailVideoGroup -> {
-                if (it.video.isNullOrEmpty()) {
-                    gone()
-                } else {
-                    show()
+                when {
+                    it.video.isNullOrEmpty() || it.video.firstOrNull() == null -> gone()
+                    else -> show()
                 }
             }
             R.id.diaryDetailRadioGroup -> {
-                if (it.recording.isNullOrEmpty()) {
-                    gone()
-                } else {
-                    show()
+                when {
+                    it.recording.isNullOrEmpty() || it.recording.firstOrNull() == null -> gone()
+                    else -> show()
                 }
             }
         }
