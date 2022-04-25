@@ -63,14 +63,8 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
         diaryDetailViewPager.apply {
             adapter = detailVideoAdapter
             detailVideoAdapter.submitList(args.myDiary.video.map { it?.toUri() })
+            diaryDetailIndicator3.setViewPager(this)
         }
-
-        val tabView = ImageView(context).apply {
-            load(R.drawable.mydiary_detail_indicator_d)
-        }
-        TabLayoutMediator(diaryDetailIndicator, diaryDetailViewPager) { tab, pos ->
-            tab.customView = tabView
-        }.attach()
 
         diaryDetailAudioRecycler.apply {
             adapter = detailAudioAdapter

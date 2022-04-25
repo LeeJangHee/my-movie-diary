@@ -77,10 +77,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    app:layout_constraintBottom_toTopOf="@+id/diaryDetailIndicator"
+                    app:layout_constraintBottom_toTopOf="@+id/diaryDetailIndicator3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <me.relex.circleindicator.CircleIndicator3
+                    android:id="@+id/diaryDetailIndicator3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="10dp"
+                    android:layout_marginTop="13dp"
+                    app:ci_drawable="@drawable/mydiary_detail_indicator_e"
+                    app:ci_drawable_unselected="@drawable/mydiary_detail_indicator_d"
+                    app:ci_margin="4dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/diaryDetailViewPager" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/diaryDetailCountText"
@@ -105,22 +119,6 @@
                     app:layout_constraintBottom_toBottomOf="@+id/diaryDetailViewPager"
                     app:layout_constraintEnd_toEndOf="parent" />
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/diaryDetailIndicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="13dp"
-                    app:tabGravity="fill"
-                    app:tabMode="fixed"
-                    app:tabBackground="@android:color/transparent"
-                    app:tabIndicator="@android:color/transparent"
-                    app:tabRippleColor="@android:color/transparent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/diaryDetailViewPager" />
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/diaryDetailAudioRecycler"
                     android:layout_width="match_parent"
@@ -144,7 +142,7 @@
                     android:layout_height="wrap_content"
                     android:visibility="gone"
                     diaryDetailGroupType="@{myDiary}"
-                    app:constraint_referenced_ids="diaryDetailViewPager, diaryDetailIndicator, diaryDetailFullScreen, diaryDetailCountText" />
+                    app:constraint_referenced_ids="diaryDetailViewPager, diaryDetailFullScreen, diaryDetailCountText, diaryDetailIndicator3" />
 
                 <!--    오디오 그룹    -->
                 <androidx.constraintlayout.widget.Group
