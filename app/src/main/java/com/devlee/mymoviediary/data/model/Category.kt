@@ -13,4 +13,10 @@ data class Category(
     val color: Int?,            // 색상
     @DrawableRes
     val drawableRes: Int?       // 이미지
-) : Parcelable
+) : Parcelable  {
+    override fun toString(): String {
+        return """
+            [title: $title, type: $type, color: $color, drawableRes: $drawableRes]
+        """.trimIndent()
+    }
+}

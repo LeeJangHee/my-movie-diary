@@ -13,6 +13,7 @@ class ViewModelProviderFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(MyDiaryViewModel::class.java) -> MyDiaryViewModel(myDiaryRepository) as T
+            modelClass.isAssignableFrom(MyDiaryDetailViewModel::class.java) -> MyDiaryDetailViewModel(myDiaryRepository) as T
             else -> ContentCreateViewModel(myDiaryRepository) as T
         }
     }

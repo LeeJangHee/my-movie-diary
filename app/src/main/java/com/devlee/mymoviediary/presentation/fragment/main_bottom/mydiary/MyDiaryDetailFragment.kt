@@ -7,6 +7,7 @@ import android.widget.LinearLayout
 import androidx.core.net.toUri
 import androidx.core.view.setPadding
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
@@ -22,9 +23,11 @@ import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
 import com.devlee.mymoviediary.utils.dp
 import com.devlee.mymoviediary.utils.recyclerview.CustomDecoration
 import com.devlee.mymoviediary.utils.toDp
-import com.devlee.mymoviediary.viewmodels.MyDiaryViewModel
+import com.devlee.mymoviediary.viewmodels.MyDiaryDetailViewModel
 import com.devlee.mymoviediary.viewmodels.ViewModelProviderFactory
-import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
 
@@ -34,7 +37,7 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
 
     private val starImage: ImageView by lazy { ImageView(requireContext()) }
     private val args: MyDiaryDetailFragmentArgs by navArgs()
-    private val diaryDetailViewModel: MyDiaryViewModel by viewModels {
+    private val diaryDetailViewModel: MyDiaryDetailViewModel by viewModels {
         val repository = MyDiaryRepository(MyDiaryDatabase.getInstance(requireActivity()))
         ViewModelProviderFactory(repository)
     }
@@ -56,6 +59,27 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
             myDiary = args.myDiary
             category = args.category
             setRecyclerView()
+        }
+        diaryDetailViewModel.setMyDiaryDetail(args.myDiary)
+        diaryDetailViewModel.setMyDiaryDetailCategory(args.category)
+        initData()
+    }
+
+    private fun initData() {
+        lifecycleScope.launchWhenResumed {
+            diaryDetailViewModel.apply {
+                myDiaryDetail.collectLatest { myDiary ->
+                    Log.d(TAG, "myDiaryDetail : $myDiary")
+                    binding.myDiary = myDiary
+                    detailVideoAdapter.submitList(myDiary.video.map { it?.toUri() })
+                    detailAudioAdapter.submitList(myDiary.recording.map { it?.toUri() })
+                }
+
+                myDiaryDetailCategory.collectLatest { category ->
+                    Log.d(TAG, "myDiaryDetailCategory : $category")
+                    binding.category = category
+                }
+            }
         }
     }
 
@@ -84,12 +108,27 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
         }
 
         starImage.apply {
+            val myDiary = args.myDiary
+            isSelected = myDiary.star
             load(R.drawable.selector_star_icon) {
                 scale(Scale.FILL)
             }
             setPadding(5.dp())
             setOnClickListener {
+                isSelected = !isSelected
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val myDiaryId = diaryDetailViewModel.getMyDiaryId(myDiary) ?: return@launch
+                    val categoryId = diaryDetailViewModel.getCategoryId(binding.category)
+                    Log.d(TAG, "star click : $myDiary")
 
+                    myDiary.star = isSelected
+
+                    diaryDetailViewModel.updateMyDiary(
+                        myDiaryId = myDiaryId,
+                        categoryId = categoryId,
+                        myDiary = myDiary
+                    )
+                }
             }
         }
 

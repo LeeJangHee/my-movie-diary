@@ -35,6 +35,21 @@ interface MyDiaryDao {
     @Query("DELETE FROM mydiary_table WHERE id = :id")
     suspend fun deleteMyDiary(id: Int)
 
+    @Query("UPDATE mydiary_table SET " +
+            "categoryEntityId = :categoryId, " +
+            "date = :date,"+
+            "contents = :contents, " +
+            "video = :video, " +
+            "recording = :recording, " +
+            "star = :star, " +
+            "mood = :mood " +
+            "WHERE id = :id")
+    suspend fun updateMyDiary(id: Int, categoryId: Int?, date: String, contents: String?, video: List<String?>, recording: List<String?>, star: Boolean?, mood: Int?)
+
+    @Query("SELECT id FROM mydiary_table " +
+            "WHERE date = :date AND (contents = :contents OR contents IS NULL) AND video = :video AND recording = :recording AND star = :star AND (mood = :mood OR mood IS NULL)")
+    fun getMyDiaryId(date: String, contents: String?, video: List<String?>, recording: List<String?>, star: Boolean?, mood: Int?): Int?
+
     /** Category */
     @Query("SELECT * FROM category_table")
     fun getCategoryAll(): Flow<List<CategoryEntity>>

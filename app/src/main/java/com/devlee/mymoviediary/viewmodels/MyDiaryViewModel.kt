@@ -228,6 +228,14 @@ class MyDiaryViewModel(
         repository.deleteMyDiary(id)
     }
 
+    fun getCategoryId(category: Category?): Int? {
+        return repository.getCategoryId(category)
+    }
+
+    fun getMyDiaryId(myDiary: MyDiary): Int? {
+        return repository.getMyDiaryId(myDiary)
+    }
+
     fun onUserPickItemClick() {
         categoryUserPickItemClick?.invoke()
     }

@@ -8,7 +8,7 @@ import com.devlee.mymoviediary.data.model.MyDiary
 import kotlinx.coroutines.flow.Flow
 
 class MyDiaryRepository(
-    private val db: MyDiaryDatabase
+    private val db: MyDiaryDatabase,
 ) {
     /** MyDiary Database */
     fun getMyDiaryAll(): Flow<List<MyDiaryEntity>> = db.dao().getMyDiaryAll()
@@ -27,6 +27,30 @@ class MyDiaryRepository(
 
     suspend fun deleteMyDiary(id: Int) {
         db.dao().deleteMyDiary(id)
+    }
+
+    suspend fun updateMyDiary(id: Int, categoryId: Int?, myDiary: MyDiary) {
+        db.dao().updateMyDiary(
+            id = id,
+            categoryId = categoryId,
+            date = myDiary.date,
+            contents = myDiary.contents,
+            video = myDiary.video,
+            recording = myDiary.recording,
+            star = myDiary.star,
+            mood = myDiary.mood
+        )
+    }
+
+    fun getMyDiaryId(myDiary: MyDiary): Int? {
+        return db.dao().getMyDiaryId(
+            date = myDiary.date,
+            contents = myDiary.contents,
+            video = myDiary.video,
+            recording = myDiary.recording,
+            star = myDiary.star,
+            mood = myDiary.mood
+        )
     }
 
     /** Category Database */
