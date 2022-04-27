@@ -60,4 +60,7 @@
     <string name="search_edit_hint">기억하고 싶은 순간들</string>
     <string name="search_init_data_text">기억하고 싶은 순간을 검색해주세요.</string>
     <string name="search_empty_data_text">검색 결과가 없습니다.</string>
+
+    <!--  마이다이어리 상세  -->
+    <string name="mydiary_detail_count_text">%d/%d</string>
 </resources>

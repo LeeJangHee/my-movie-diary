@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.viewpager2.widget.ViewPager2
 import coil.load
 import coil.size.Scale
 import com.devlee.mymoviediary.R
@@ -21,8 +22,7 @@ import com.devlee.mymoviediary.presentation.adapter.home.mydiary.MyDiaryDetailVi
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
 import com.devlee.mymoviediary.utils.dp
-import com.devlee.mymoviediary.utils.recyclerview.CustomDecoration
-import com.devlee.mymoviediary.utils.toDp
+import com.devlee.mymoviediary.utils.gone
 import com.devlee.mymoviediary.viewmodels.MyDiaryDetailViewModel
 import com.devlee.mymoviediary.viewmodels.ViewModelProviderFactory
 import kotlinx.coroutines.Dispatchers
@@ -43,14 +43,21 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
     }
     private val detailAudioAdapter: MyDiaryDetailAudioAdapter by lazy { MyDiaryDetailAudioAdapter() }
     private val detailVideoAdapter: MyDiaryDetailVideoAdapter by lazy { MyDiaryDetailVideoAdapter() }
-    private val audioItemDecoration by lazy {
-        CustomDecoration(
-            height = 1.toDp(),
-            paddingLeft = 16.toDp(),
-            paddingRight = 0f,
-            color = requireContext().resources.getColor(R.color.color_efefef, null)
-        )
+
+    private val viewPager2PageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            viewPagerCurrentPage = position + 1
+            viewPagerCurrentPage ?: return
+            Log.d(TAG, "onPageSelected() called pos = $position, currentPage = $viewPagerCurrentPage, adapterSize = ${binding.diaryDetailViewPager.childCount}")
+            if (detailVideoAdapter.itemCount == 1) {
+                binding.diaryDetailCountText.gone()
+                binding.diaryDetailIndicator3.gone()
+            }
+            binding.diaryDetailCountText.text = getString(R.string.mydiary_detail_count_text, viewPagerCurrentPage, detailVideoAdapter.itemCount)
+        }
     }
+    // 선택된 viewpager의 index
+    private var viewPagerCurrentPage: Int? = null
 
     override fun setView() {
         setAppbar()
@@ -88,6 +95,8 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
             adapter = detailVideoAdapter
             detailVideoAdapter.submitList(args.myDiary.video.map { it?.toUri() })
             diaryDetailIndicator3.setViewPager(this)
+            viewPagerCurrentPage = this.currentItem + 1
+            registerOnPageChangeCallback(viewPager2PageChangeCallback)
         }
 
         diaryDetailAudioRecycler.apply {
@@ -146,6 +155,11 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
         linearLayout.addView(moreImage)
         setMenuToolbar(type = AppToolbarLayout.RIGHT, view = linearLayout)
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.diaryDetailViewPager.unregisterOnPageChangeCallback(viewPager2PageChangeCallback)
     }
 
     override fun getLayoutId(): Int = R.layout.fragment_my_diary_detail
