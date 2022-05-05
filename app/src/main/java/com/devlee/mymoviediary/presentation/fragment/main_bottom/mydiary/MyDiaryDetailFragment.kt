@@ -21,6 +21,7 @@ import com.devlee.mymoviediary.presentation.adapter.home.mydiary.MyDiaryDetailAu
 import com.devlee.mymoviediary.presentation.adapter.home.mydiary.MyDiaryDetailVideoAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
+import com.devlee.mymoviediary.utils.Constants.MEDIA_PREFIX
 import com.devlee.mymoviediary.utils.dp
 import com.devlee.mymoviediary.utils.gone
 import com.devlee.mymoviediary.viewmodels.MyDiaryDetailViewModel
@@ -78,8 +79,8 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
                 myDiaryDetail.collectLatest { myDiary ->
                     Log.d(TAG, "myDiaryDetail : $myDiary")
                     binding.myDiary = myDiary
-                    detailVideoAdapter.submitList(myDiary.video.map { it?.toUri() })
-                    detailAudioAdapter.submitList(myDiary.recording.map { it?.toUri() })
+                    detailVideoAdapter.submitList(myDiary.video.map { it?.let { uriStr -> (MEDIA_PREFIX + uriStr).toUri() } })
+                    detailAudioAdapter.submitList(myDiary.recording.map { it?.let { uriStr -> (MEDIA_PREFIX + uriStr).toUri() } })
                 }
 
                 myDiaryDetailCategory.collectLatest { category ->
@@ -93,7 +94,7 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
     private fun FragmentMyDiaryDetailBinding.setRecyclerView() {
         diaryDetailViewPager.apply {
             adapter = detailVideoAdapter
-            detailVideoAdapter.submitList(args.myDiary.video.map { it?.toUri() })
+            detailVideoAdapter.submitList(args.myDiary.video.map { it?.let { uriStr -> (MEDIA_PREFIX + uriStr).toUri() } })
             diaryDetailIndicator3.setViewPager(this)
             viewPagerCurrentPage = this.currentItem + 1
             registerOnPageChangeCallback(viewPager2PageChangeCallback)
@@ -101,7 +102,7 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
 
         diaryDetailAudioRecycler.apply {
             adapter = detailAudioAdapter
-            detailAudioAdapter.submitList(args.myDiary.recording.map { it?.toUri() })
+            detailAudioAdapter.submitList(args.myDiary.recording.map { it?.let { uriStr -> (MEDIA_PREFIX + uriStr).toUri() } })
         }
     }
 
