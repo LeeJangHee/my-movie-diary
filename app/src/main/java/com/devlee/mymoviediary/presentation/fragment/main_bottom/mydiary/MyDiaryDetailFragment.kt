@@ -17,6 +17,7 @@ import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.database.MyDiaryDatabase
 import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.databinding.FragmentMyDiaryDetailBinding
+import com.devlee.mymoviediary.domain.use_case.ContentType
 import com.devlee.mymoviediary.presentation.adapter.home.mydiary.MyDiaryDetailAudioAdapter
 import com.devlee.mymoviediary.presentation.adapter.home.mydiary.MyDiaryDetailVideoAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
@@ -26,6 +27,10 @@ import com.devlee.mymoviediary.utils.dp
 import com.devlee.mymoviediary.utils.gone
 import com.devlee.mymoviediary.viewmodels.MyDiaryDetailViewModel
 import com.devlee.mymoviediary.viewmodels.ViewModelProviderFactory
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.ui.PlayerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -43,7 +48,7 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
         ViewModelProviderFactory(repository)
     }
     private val detailAudioAdapter: MyDiaryDetailAudioAdapter by lazy { MyDiaryDetailAudioAdapter() }
-    private val detailVideoAdapter: MyDiaryDetailVideoAdapter by lazy { MyDiaryDetailVideoAdapter() }
+    private val detailVideoAdapter: MyDiaryDetailVideoAdapter by lazy { MyDiaryDetailVideoAdapter(diaryDetailViewModel) }
 
     private val viewPager2PageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
@@ -57,8 +62,12 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
             binding.diaryDetailCountText.text = getString(R.string.mydiary_detail_count_text, viewPagerCurrentPage, detailVideoAdapter.itemCount)
         }
     }
+
     // 선택된 viewpager의 index
     private var viewPagerCurrentPage: Int? = null
+
+    private val exoPlayer: ExoPlayer by lazy { ExoPlayer.Builder(requireContext()).build() }
+    private val updateSeekRunnable = Runnable { updateSeekBar() }
 
     override fun setView() {
         setAppbar()
@@ -68,9 +77,35 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
             category = args.category
             setRecyclerView()
         }
-        diaryDetailViewModel.setMyDiaryDetail(args.myDiary)
-        diaryDetailViewModel.setMyDiaryDetailCategory(args.category)
+
+        // DiaryDetailViewModel set
+        diaryDetailViewModel.apply {
+            setMyDiaryDetail(args.myDiary)
+            setMyDiaryDetailCategory(args.category)
+
+            videoPlayerCallback = { videoPlayer, mediaItem ->
+                Log.d(TAG, "videoPlayerCallback-(): $videoPlayer, ${mediaItem.mediaMetadata.artworkUri}")
+                videoPlayer.playing(mediaItem)
+            }
+        }
         initData()
+        initExoplayer()
+    }
+
+    private fun initExoplayer() {
+        exoPlayer.addListener(object : Player.Listener {
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                super.onPlaybackStateChanged(playbackState)
+                updateSeekBar()
+
+                diaryDetailViewModel.videoPlayButtonCallback?.invoke(false)
+                when (playbackState) {
+                    Player.STATE_IDLE, Player.STATE_ENDED -> {
+                        diaryDetailViewModel.videoPlayButtonCallback?.invoke(true)
+                    }
+                }
+            }
+        })
     }
 
     private fun initData() {
@@ -103,6 +138,57 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
         diaryDetailAudioRecycler.apply {
             adapter = detailAudioAdapter
             detailAudioAdapter.submitList(args.myDiary.recording.map { it?.let { uriStr -> (MEDIA_PREFIX + uriStr).toUri() } })
+        }
+    }
+
+    private fun PlayerView.playing(mediaItem: MediaItem) {
+
+        fun currentIsPlaying() {
+            val pvPlayer = player ?: return
+            Log.d(TAG, "currentIsPlaying: ${pvPlayer.currentMediaItem}")
+            diaryDetailViewModel.videoPlayButtonCallback?.invoke(true)
+        }
+
+        exoPlayer.apply {
+            setMediaItem(mediaItem)
+            prepare()
+            play()
+            playWhenReady = true
+        }
+
+        player = exoPlayer
+        currentIsPlaying()
+    }
+
+    private fun updateSeekBar() {
+        val duration = if (exoPlayer.duration >= 0) exoPlayer.duration else 0
+        val pos = exoPlayer.currentPosition
+
+        updateSeekUi(duration, pos)
+
+        val state = exoPlayer.playbackState
+        binding.root.removeCallbacks(updateSeekRunnable)
+        if (state != Player.STATE_IDLE && state != Player.STATE_ENDED) {
+            binding.root.postDelayed(updateSeekRunnable, 300L)
+        }
+    }
+
+    private fun updateSeekUi(duration: Long, pos: Long) = when (binding.type) {
+        ContentType.VIDEO -> {
+//            with(binding.contentChoiceSeekBar) {
+//                max = (duration / 300).toInt()
+//                progress = (pos / 300).toInt()
+//            }
+        }
+        else -> {
+//            with(binding) {
+//                contentChoiceAudioSeekbar.apply {
+//                    max = (duration / 300).toInt()
+//                    progress = (pos / 300).toInt()
+//                }
+//                currentTimeline.text = DateFormatUtil.getAudioTimeLine(pos)
+//                totalTimeline.text = DateFormatUtil.getAudioTimeLine(duration)
+//            }
         }
     }
 
@@ -158,9 +244,15 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
 
     }
 
+    private fun releaseVideo() {
+        exoPlayer.release()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         binding.diaryDetailViewPager.unregisterOnPageChangeCallback(viewPager2PageChangeCallback)
+        binding.root.removeCallbacks(updateSeekRunnable)
+        releaseVideo()
     }
 
     override fun getLayoutId(): Int = R.layout.fragment_my_diary_detail

@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.devlee.mymoviediary.data.model.Category
 import com.devlee.mymoviediary.data.model.MyDiary
 import com.devlee.mymoviediary.data.repository.MyDiaryRepository
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.ui.PlayerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -23,6 +25,10 @@ class MyDiaryDetailViewModel(val repository: MyDiaryRepository) : ViewModel() {
 
     private var _myDiaryDetailCategory: MutableSharedFlow<Category?> = MutableSharedFlow()
     val myDiaryDetailCategory get() = _myDiaryDetailCategory.asSharedFlow()
+
+    // Video player callback
+    var videoPlayerCallback: ((PlayerView, MediaItem) -> Unit)? = null
+    var videoPlayButtonCallback: ((Boolean) -> Unit)? = null
 
 
     fun setMyDiaryDetail(myDiary: MyDiary) = viewModelScope.launch(Dispatchers.IO) {
@@ -57,5 +63,9 @@ class MyDiaryDetailViewModel(val repository: MyDiaryRepository) : ViewModel() {
 
     fun deleteMyDiary(id: Int) = viewModelScope.launch(Dispatchers.IO) {
         repository.deleteMyDiary(id)
+    }
+
+    fun changeVideoPlayer(playerView: PlayerView, mediaItem: MediaItem) {
+        videoPlayerCallback?.invoke(playerView, mediaItem)
     }
 }
