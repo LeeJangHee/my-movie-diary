@@ -1,7 +1,6 @@
 package com.devlee.mymoviediary.presentation.adapter.home.mydiary
 
 import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -11,7 +10,9 @@ import coil.load
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.ItemMydiaryDetailVideoBinding
 import com.devlee.mymoviediary.viewmodels.MyDiaryDetailViewModel
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerView
 
 class MyDiaryDetailVideoAdapter(
@@ -19,6 +20,8 @@ class MyDiaryDetailVideoAdapter(
 ) : ListAdapter<Uri?, MyDiaryDetailVideoAdapter.VideoHolder>(diffCallback) {
 
     inner class VideoHolder(val binding: ItemMydiaryDetailVideoBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        private val exoPlayer: ExoPlayer = ExoPlayer.Builder(binding.root.context).build()
 
         init {
             binding.diaryDetailPlayButton.setOnClickListener {
@@ -30,7 +33,7 @@ class MyDiaryDetailVideoAdapter(
             binding.apply {
                 uri?.let {
                     val mediaItem = MediaItem.fromUri(it)
-                    viewModel.changeVideoPlayer(diaryDetailPreviewVideo, mediaItem)
+                    diaryDetailPreviewVideo.init(mediaItem)
                 }
                 viewModel.videoPlayButtonCallback = {
                     val playButtonImage = if (it) {
@@ -43,6 +46,18 @@ class MyDiaryDetailVideoAdapter(
                 }
                 executePendingBindings()
             }
+        }
+
+        private fun PlayerView.init(mediaItem: MediaItem) {
+            exoPlayer.apply {
+                setMediaItem(mediaItem)
+                prepare()
+                play()
+                playWhenReady = true
+                repeatMode = Player.REPEAT_MODE_ALL
+            }
+
+            player = exoPlayer
         }
     }
 

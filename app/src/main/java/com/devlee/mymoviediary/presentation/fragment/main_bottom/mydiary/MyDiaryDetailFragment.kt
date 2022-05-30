@@ -17,7 +17,6 @@ import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.data.database.MyDiaryDatabase
 import com.devlee.mymoviediary.data.repository.MyDiaryRepository
 import com.devlee.mymoviediary.databinding.FragmentMyDiaryDetailBinding
-import com.devlee.mymoviediary.domain.use_case.ContentType
 import com.devlee.mymoviediary.presentation.adapter.home.mydiary.MyDiaryDetailAudioAdapter
 import com.devlee.mymoviediary.presentation.adapter.home.mydiary.MyDiaryDetailVideoAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
@@ -173,23 +172,8 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
         }
     }
 
-    private fun updateSeekUi(duration: Long, pos: Long) = when (binding.type) {
-        ContentType.VIDEO -> {
-//            with(binding.contentChoiceSeekBar) {
-//                max = (duration / 300).toInt()
-//                progress = (pos / 300).toInt()
-//            }
-        }
-        else -> {
-//            with(binding) {
-//                contentChoiceAudioSeekbar.apply {
-//                    max = (duration / 300).toInt()
-//                    progress = (pos / 300).toInt()
-//                }
-//                currentTimeline.text = DateFormatUtil.getAudioTimeLine(pos)
-//                totalTimeline.text = DateFormatUtil.getAudioTimeLine(duration)
-//            }
-        }
+    private fun updateSeekUi(duration: Long, pos: Long) {
+        // TODO: 인터페이스를 Adapter로 전송
     }
 
     private fun setAppbar() {
