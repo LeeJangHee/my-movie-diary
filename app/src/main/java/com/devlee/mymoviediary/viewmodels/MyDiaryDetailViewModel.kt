@@ -28,7 +28,6 @@ class MyDiaryDetailViewModel(val repository: MyDiaryRepository) : ViewModel() {
 
     // Video player callback
     var videoPlayerCallback: ((PlayerView, MediaItem) -> Unit)? = null
-    var videoPlayButtonCallback: ((Boolean) -> Unit)? = null
 
 
     fun setMyDiaryDetail(myDiary: MyDiary) = viewModelScope.launch(Dispatchers.IO) {

@@ -110,16 +110,6 @@
                     app:layout_constraintTop_toTopOf="@+id/diaryDetailViewPager"
                     tools:text="2/4" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/diaryDetailFullScreen"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dp_16"
-                    android:layout_marginBottom="12dp"
-                    android:src="@drawable/full_screen_icon"
-                    app:layout_constraintBottom_toBottomOf="@+id/diaryDetailViewPager"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/diaryDetailAudioRecycler"
                     android:layout_width="match_parent"
@@ -143,7 +133,7 @@
                     android:layout_height="wrap_content"
                     android:visibility="gone"
                     diaryDetailGroupType="@{myDiary}"
-                    app:constraint_referenced_ids="diaryDetailViewPager, diaryDetailFullScreen, diaryDetailCountText, diaryDetailIndicator3" />
+                    app:constraint_referenced_ids="diaryDetailViewPager, diaryDetailCountText, diaryDetailIndicator3" />
 
                 <!--    오디오 그룹    -->
                 <androidx.constraintlayout.widget.Group

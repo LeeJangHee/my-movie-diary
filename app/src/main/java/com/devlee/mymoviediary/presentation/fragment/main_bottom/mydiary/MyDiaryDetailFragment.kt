@@ -97,10 +97,8 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
                 super.onPlaybackStateChanged(playbackState)
                 updateSeekBar()
 
-                diaryDetailViewModel.videoPlayButtonCallback?.invoke(false)
                 when (playbackState) {
                     Player.STATE_IDLE, Player.STATE_ENDED -> {
-                        diaryDetailViewModel.videoPlayButtonCallback?.invoke(true)
                     }
                 }
             }
@@ -145,7 +143,6 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
         fun currentIsPlaying() {
             val pvPlayer = player ?: return
             Log.d(TAG, "currentIsPlaying: ${pvPlayer.currentMediaItem}")
-            diaryDetailViewModel.videoPlayButtonCallback?.invoke(true)
         }
 
         exoPlayer.apply {

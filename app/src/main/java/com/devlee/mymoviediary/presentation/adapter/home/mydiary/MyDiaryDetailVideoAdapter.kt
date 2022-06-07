@@ -6,9 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.ItemMydiaryDetailVideoBinding
+import com.devlee.mymoviediary.utils.second
 import com.devlee.mymoviediary.viewmodels.MyDiaryDetailViewModel
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -24,9 +23,7 @@ class MyDiaryDetailVideoAdapter(
         private val exoPlayer: ExoPlayer = ExoPlayer.Builder(binding.root.context).build()
 
         init {
-            binding.diaryDetailPlayButton.setOnClickListener {
 
-            }
         }
 
         fun bind(uri: Uri?) {
@@ -35,20 +32,14 @@ class MyDiaryDetailVideoAdapter(
                     val mediaItem = MediaItem.fromUri(it)
                     diaryDetailPreviewVideo.init(mediaItem)
                 }
-                viewModel.videoPlayButtonCallback = {
-                    val playButtonImage = if (it) {
-                        R.drawable.detail_video_play_icon
-                    } else {
-                        R.drawable.detail_video_pause_icon
-                    }
 
-                    diaryDetailPlayButton.load(playButtonImage)
-                }
                 executePendingBindings()
             }
         }
 
         private fun PlayerView.init(mediaItem: MediaItem) {
+            controllerShowTimeoutMs = 1.second
+
             exoPlayer.apply {
                 setMediaItem(mediaItem)
                 prepare()

@@ -107,3 +107,13 @@ fun List<String?>.toUri(): List<Uri?> {
     }
     return uriList
 }
+
+/** 시간 관련 */
+val Int.second get() = this * 1000
+val Long.second get() = this * 1000
+
+val Int.minute get() = this.second * 60
+val Long.minute get() = this.second * 60
+
+val Int.hour get() = this.minute * 60
+val Long.hour get() = this.minute * 60
