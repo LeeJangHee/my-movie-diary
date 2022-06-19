@@ -2,6 +2,7 @@ package com.devlee.mymoviediary.presentation.fragment.main_bottom.mydiary
 
 import android.util.Log
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.net.toUri
@@ -21,15 +22,10 @@ import com.devlee.mymoviediary.presentation.adapter.home.mydiary.MyDiaryDetailAu
 import com.devlee.mymoviediary.presentation.adapter.home.mydiary.MyDiaryDetailVideoAdapter
 import com.devlee.mymoviediary.presentation.fragment.BaseFragment
 import com.devlee.mymoviediary.presentation.layout.AppToolbarLayout
+import com.devlee.mymoviediary.utils.*
 import com.devlee.mymoviediary.utils.Constants.MEDIA_PREFIX
-import com.devlee.mymoviediary.utils.dp
-import com.devlee.mymoviediary.utils.gone
 import com.devlee.mymoviediary.viewmodels.MyDiaryDetailViewModel
 import com.devlee.mymoviediary.viewmodels.ViewModelProviderFactory
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.ui.PlayerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -54,9 +50,23 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
             viewPagerCurrentPage = position + 1
             viewPagerCurrentPage ?: return
             Log.d(TAG, "onPageSelected() called pos = $position, currentPage = $viewPagerCurrentPage, adapterSize = ${binding.diaryDetailViewPager.childCount}")
+            val anim = AnimationUtil.fadeOut(requireContext()).apply {
+                duration = 1L.second
+                setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(animation: Animation?) {}
+                    override fun onAnimationEnd(animation: Animation?) {
+                        binding.diaryDetailCountText.gone()
+                    }
+                    override fun onAnimationRepeat(animation: Animation?) {}
+                })
+            }
+
             if (detailVideoAdapter.itemCount == 1) {
                 binding.diaryDetailCountText.gone()
                 binding.diaryDetailIndicator3.gone()
+            } else {
+                binding.diaryDetailCountText.animation = anim
+                binding.diaryDetailCountText.show()
             }
             binding.diaryDetailCountText.text = getString(R.string.mydiary_detail_count_text, viewPagerCurrentPage, detailVideoAdapter.itemCount)
         }
@@ -65,8 +75,7 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
     // 선택된 viewpager의 index
     private var viewPagerCurrentPage: Int? = null
 
-    private val exoPlayer: ExoPlayer by lazy { ExoPlayer.Builder(requireContext()).build() }
-    private val updateSeekRunnable = Runnable { updateSeekBar() }
+    private val updateSeekRunnable = Runnable {  }
 
     override fun setView() {
         setAppbar()
@@ -82,27 +91,8 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
             setMyDiaryDetail(args.myDiary)
             setMyDiaryDetailCategory(args.category)
 
-            videoPlayerCallback = { videoPlayer, mediaItem ->
-                Log.d(TAG, "videoPlayerCallback-(): $videoPlayer, ${mediaItem.mediaMetadata.artworkUri}")
-                videoPlayer.playing(mediaItem)
-            }
         }
         initData()
-        initExoplayer()
-    }
-
-    private fun initExoplayer() {
-        exoPlayer.addListener(object : Player.Listener {
-            override fun onPlaybackStateChanged(playbackState: Int) {
-                super.onPlaybackStateChanged(playbackState)
-                updateSeekBar()
-
-                when (playbackState) {
-                    Player.STATE_IDLE, Player.STATE_ENDED -> {
-                    }
-                }
-            }
-        })
     }
 
     private fun initData() {
@@ -126,6 +116,7 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
     private fun FragmentMyDiaryDetailBinding.setRecyclerView() {
         diaryDetailViewPager.apply {
             adapter = detailVideoAdapter
+            offscreenPageLimit = 1
             detailVideoAdapter.submitList(args.myDiary.video.map { it?.let { uriStr -> (MEDIA_PREFIX + uriStr).toUri() } })
             diaryDetailIndicator3.setViewPager(this)
             viewPagerCurrentPage = this.currentItem + 1
@@ -138,40 +129,6 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
         }
     }
 
-    private fun PlayerView.playing(mediaItem: MediaItem) {
-
-        fun currentIsPlaying() {
-            val pvPlayer = player ?: return
-            Log.d(TAG, "currentIsPlaying: ${pvPlayer.currentMediaItem}")
-        }
-
-        exoPlayer.apply {
-            setMediaItem(mediaItem)
-            prepare()
-            play()
-            playWhenReady = true
-        }
-
-        player = exoPlayer
-        currentIsPlaying()
-    }
-
-    private fun updateSeekBar() {
-        val duration = if (exoPlayer.duration >= 0) exoPlayer.duration else 0
-        val pos = exoPlayer.currentPosition
-
-        updateSeekUi(duration, pos)
-
-        val state = exoPlayer.playbackState
-        binding.root.removeCallbacks(updateSeekRunnable)
-        if (state != Player.STATE_IDLE && state != Player.STATE_ENDED) {
-            binding.root.postDelayed(updateSeekRunnable, 300L)
-        }
-    }
-
-    private fun updateSeekUi(duration: Long, pos: Long) {
-        // TODO: 인터페이스를 Adapter로 전송
-    }
 
     private fun setAppbar() {
         setTitleToolbar(title = args.myDiary.date)
@@ -225,15 +182,11 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
 
     }
 
-    private fun releaseVideo() {
-        exoPlayer.release()
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding.diaryDetailViewPager.unregisterOnPageChangeCallback(viewPager2PageChangeCallback)
         binding.root.removeCallbacks(updateSeekRunnable)
-        releaseVideo()
     }
 
     override fun getLayoutId(): Int = R.layout.fragment_my_diary_detail
