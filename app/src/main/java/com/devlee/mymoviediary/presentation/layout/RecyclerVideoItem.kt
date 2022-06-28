@@ -6,7 +6,6 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.devlee.mymoviediary.databinding.ItemMydiaryDetailVideoBinding
 import com.devlee.mymoviediary.utils.second
@@ -27,11 +26,6 @@ class RecyclerVideoItem : ConstraintLayout {
 
     private var mUri: Uri? = null
 
-    constructor(context: Context, parent: ViewGroup?) : super(context) {
-        Log.d(TAG, "null() called with: context = $context, parent = $parent")
-        initView(parent)
-    }
-
     constructor(context: Context) : super(context) {
         Log.d(TAG, "null() called with: context = $context")
         initView()
@@ -47,7 +41,7 @@ class RecyclerVideoItem : ConstraintLayout {
     }
 
 
-    fun initView(parent: ViewGroup? = null) {
+    private fun initView() {
         layoutParams = LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT)
 
         Log.d(TAG, "initView() called")
@@ -73,8 +67,7 @@ class RecyclerVideoItem : ConstraintLayout {
         exoPlayer.apply {
             setMediaItem(mediaItem)
             prepare()
-            play()
-            playWhenReady = true
+            playWhenReady = false
         }
 
         player = exoPlayer

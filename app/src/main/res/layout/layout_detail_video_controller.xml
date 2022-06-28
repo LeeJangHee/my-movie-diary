@@ -35,7 +35,50 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="12dp"
         android:src="@drawable/full_screen_icon"
+        app:layout_constraintBottom_toTopOf="@+id/exo_progress"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/exo_progress">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/exo_position"
+            style="@style/MyDiaryDetailExoPlayerTimerTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:text="3:21" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/MyDiaryDetailExoPlayerTimerTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/color_b8b8b8"
+            android:text=" / " />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/exo_duration"
+            style="@style/MyDiaryDetailExoPlayerTimerTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/color_b8b8b8"
+            tools:text="10:23" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <com.google.android.exoplayer2.ui.DefaultTimeBar
+        android:id="@+id/exo_progress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
 

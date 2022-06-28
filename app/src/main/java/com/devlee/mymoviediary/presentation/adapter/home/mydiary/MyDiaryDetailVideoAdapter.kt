@@ -20,7 +20,7 @@ class MyDiaryDetailVideoAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoHolder {
-        val itemView = RecyclerVideoItem(parent.context, parent)
+        val itemView = RecyclerVideoItem(parent.context)
         return VideoHolder(itemView)
     }
 

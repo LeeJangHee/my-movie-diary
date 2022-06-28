@@ -9,7 +9,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <!--    비디오 플레이어    -->
         <com.google.android.exoplayer2.ui.PlayerView
@@ -17,32 +17,14 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/diaryDetailSeekBar"
+            app:controller_layout_id="@layout/layout_detail_video_controller"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:use_artwork="true"
-            app:controller_layout_id="@layout/layout_detail_video_controller" />
-
-
-        <androidx.appcompat.widget.AppCompatSeekBar
-            android:id="@+id/diaryDetailSeekBar"
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:clipChildren="false"
-            android:paddingStart="0dp"
-            android:paddingEnd="0dp"
-            android:progressDrawable="@drawable/video_seek_bar_drawable"
-            android:thumb="@drawable/video_seek_thumb"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/diaryDetailPreviewVideo"
-            tools:progress="40" />
+            app:use_artwork="true" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
