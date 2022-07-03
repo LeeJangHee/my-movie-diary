@@ -1,6 +1,7 @@
 package com.devlee.mymoviediary.presentation.layout
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.util.AttributeSet
 import android.util.Log
@@ -11,6 +12,8 @@ import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.ItemMydiaryDetailVideoBinding
+import com.devlee.mymoviediary.presentation.activity.fullscreen.FullScreenActivity
+import com.devlee.mymoviediary.utils.Constants.FULLSCREEN_URI
 import com.devlee.mymoviediary.utils.gone
 import com.devlee.mymoviediary.utils.second
 import com.devlee.mymoviediary.utils.show
@@ -31,6 +34,8 @@ class RecyclerVideoItem : ConstraintLayout {
 
     private var mUri: Uri? = null
     private var isFullScreen = false
+
+    private val controllerView by lazy { binding.diaryDetailPreviewVideo }
 
     constructor(context: Context) : super(context) {
         Log.d(TAG, "null() called with: context = $context")
@@ -54,21 +59,23 @@ class RecyclerVideoItem : ConstraintLayout {
 
         val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         binding = ItemMydiaryDetailVideoBinding.inflate(layoutInflater, this, false)
-        val controllerView = binding.diaryDetailPreviewVideo
 
-        // FullScreen check
+        // FullScreen Button
         validateFullScreen()
 
-        binding.diaryDetailPreviewVideo.findViewById<FrameLayout>(R.id.exo_fullScreen_layout).setOnClickListener {
-            isFullScreen = !isFullScreen
-            validateFullScreen()
+        controllerView.findViewById<FrameLayout>(R.id.exo_fullScreen_layout).setOnClickListener {
+            binding.diaryDetailPreviewVideo.player?.pause()
+            val intent = Intent(this.context, FullScreenActivity::class.java).apply {
+                putExtra(FULLSCREEN_URI, mUri)
+            }
+            this.context.startActivity(intent)
+
         }
 
         if (mView == null) {
             mView = binding.root
             addView(mView)
         }
-        exoPlayer = ExoPlayer.Builder(context).build()
     }
 
     fun setMediaData(uri: Uri?) {
@@ -90,49 +97,31 @@ class RecyclerVideoItem : ConstraintLayout {
 
     override fun onAttachedToWindow() {
         Log.d(TAG, "onAttachedToWindow() called")
-        super.onAttachedToWindow()
         exoPlayer = ExoPlayer.Builder(context).build()
         mUri?.let {
             binding.diaryDetailPreviewVideo.init(MediaItem.fromUri(it))
         }
+        super.onAttachedToWindow()
     }
 
     override fun onDetachedFromWindow() {
         Log.d(TAG, "onDetachedFromWindow() called")
-        super.onDetachedFromWindow()
         exoPlayer.release()
+        super.onDetachedFromWindow()
     }
 
     private fun validateFullScreen() {
         if (isFullScreen) {
-            binding.diaryDetailPreviewVideo.apply {
+            controllerView.apply {
                 findViewById<ImageView>(R.id.exo_minimal_fullscreen).show()
                 findViewById<ImageView>(R.id.exo_fullscreen).gone()
             }
         } else {
-            binding.diaryDetailPreviewVideo.apply {
+            controllerView.apply {
                 findViewById<ImageView>(R.id.exo_minimal_fullscreen).gone()
                 findViewById<ImageView>(R.id.exo_fullscreen).show()
             }
         }
-        changeViewSize()
         requestLayout()
-    }
-
-    private fun changeViewSize() {
-        (binding.diaryDetailPreviewVideo.layoutParams as ConstraintLayout.LayoutParams).apply {
-            if (isFullScreen) {
-                width = FullScreenType.FULL_SCREEN.width
-                height = FullScreenType.FULL_SCREEN.height
-            } else {
-                width = FullScreenType.MINIMAL_SCREEN.width
-                height = FullScreenType.MINIMAL_SCREEN.height
-            }
-        }
-    }
-
-    enum class FullScreenType(val width: Int, val height: Int) {
-        FULL_SCREEN(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT),
-        MINIMAL_SCREEN(ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, ConstraintLayout.LayoutParams.MATCH_CONSTRAINT)
     }
 }

@@ -12,4 +12,6 @@ object Constants {
 
     const val MEDIA_PAGE_SIZE = 15
     const val MEDIA_PREFIX = "content://media"
+
+    const val FULLSCREEN_URI = "fullscreen_uri"
 }

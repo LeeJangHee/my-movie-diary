@@ -75,8 +75,6 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
     // 선택된 viewpager의 index
     private var viewPagerCurrentPage: Int? = null
 
-    private val updateSeekRunnable = Runnable {  }
-
     override fun setView() {
         setAppbar()
         binding.apply {
@@ -186,7 +184,6 @@ class MyDiaryDetailFragment : BaseFragment<FragmentMyDiaryDetailBinding>() {
     override fun onDestroyView() {
         super.onDestroyView()
         binding.diaryDetailViewPager.unregisterOnPageChangeCallback(viewPager2PageChangeCallback)
-        binding.root.removeCallbacks(updateSeekRunnable)
     }
 
     override fun getLayoutId(): Int = R.layout.fragment_my_diary_detail

@@ -17,6 +17,7 @@ import com.devlee.mymoviediary.databinding.LayoutAppbarSearchBinding
 import com.devlee.mymoviediary.databinding.LayoutAppbarTitleBinding
 import com.devlee.mymoviediary.utils.dp
 import com.devlee.mymoviediary.utils.gone
+import com.devlee.mymoviediary.utils.show
 
 class AppToolbarLayout(
     private val context: Context,
@@ -162,6 +163,10 @@ class AppToolbarLayout(
 
     fun gone() {
         binding.root.gone()
+    }
+
+    fun show() {
+        binding.root.show()
     }
 
     fun clearView() {

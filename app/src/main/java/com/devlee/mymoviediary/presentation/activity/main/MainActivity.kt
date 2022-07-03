@@ -1,8 +1,6 @@
 package com.devlee.mymoviediary.presentation.activity.main
 
 import android.os.Bundle
-import android.view.View
-import androidx.core.view.forEach
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -12,7 +10,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.ActivityMainBinding
 import com.devlee.mymoviediary.presentation.activity.BaseActivity
-import com.devlee.mymoviediary.utils.isMainBottomNavLayout
 import com.devlee.mymoviediary.utils.show
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
