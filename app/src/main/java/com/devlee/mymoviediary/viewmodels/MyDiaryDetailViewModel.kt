@@ -1,4 +1,4 @@
-package com.devlee.mymoviediary.viewmodels
+    package com.devlee.mymoviediary.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

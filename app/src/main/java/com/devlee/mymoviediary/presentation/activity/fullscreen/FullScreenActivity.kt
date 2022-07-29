@@ -15,6 +15,7 @@ import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.ActivityFullScreenBinding
 import com.devlee.mymoviediary.presentation.activity.BaseActivity
 import com.devlee.mymoviediary.utils.Constants.FULLSCREEN_URI
+import com.devlee.mymoviediary.utils.Constants.SAVE_PLAY_TIME
 import com.devlee.mymoviediary.utils.gone
 import com.devlee.mymoviediary.utils.show
 import com.google.android.exoplayer2.ExoPlayer
@@ -31,13 +32,17 @@ class FullScreenActivity : BaseActivity<ActivityFullScreenBinding>() {
     private var mUri: Uri? = null
     private lateinit var exoPlayer: ExoPlayer
 
+    private var savePlayTimePosition: Long = 0L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.FullScreenActivityTheme)
 
         bottomNavLayout?.gone()
         appToolbarLayout?.gone()
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        // 엑티비티 회전 설정
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+
         WindowCompat.setDecorFitsSystemWindows(window, false)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             window.attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
@@ -49,6 +54,11 @@ class FullScreenActivity : BaseActivity<ActivityFullScreenBinding>() {
 
         exoPlayer = ExoPlayer.Builder(this).build()
         mUri = intent.getParcelableExtra(FULLSCREEN_URI)
+        savePlayTimePosition = intent.getLongExtra(SAVE_PLAY_TIME, 0L)
+
+        if (savedInstanceState != null) {
+            savePlayTimePosition = savedInstanceState.getLong(SAVE_PLAY_TIME, 0L)
+        }
 
         binding.apply {
             lifecycleOwner = this@FullScreenActivity
@@ -73,6 +83,10 @@ class FullScreenActivity : BaseActivity<ActivityFullScreenBinding>() {
             setMediaItem(mediaItem)
             prepare()
             playWhenReady = true
+
+            if (savePlayTimePosition > 0) {
+                seekTo(savePlayTimePosition)
+            }
         }
 
         player = exoPlayer
@@ -80,6 +94,12 @@ class FullScreenActivity : BaseActivity<ActivityFullScreenBinding>() {
 
     override fun onResume() {
         super.onResume()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putLong(SAVE_PLAY_TIME, binding.fullScreenPlayerView.player?.currentPosition ?: 0L)
+        Log.e(TAG, "onSaveInstanceState() called with: currentTimeline.windowCount --> ${binding.fullScreenPlayerView.player?.currentPosition}")
     }
 
     override fun onDestroy() {

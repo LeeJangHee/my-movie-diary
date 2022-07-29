@@ -14,4 +14,5 @@ object Constants {
     const val MEDIA_PREFIX = "content://media"
 
     const val FULLSCREEN_URI = "fullscreen_uri"
+    const val SAVE_PLAY_TIME = "current_play_time"
 }

@@ -6,12 +6,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.devlee.mymoviediary.presentation.layout.RecyclerVideoItem
-import com.devlee.mymoviediary.viewmodels.MyDiaryDetailViewModel
 
-class MyDiaryDetailVideoAdapter(
-    private val viewModel: MyDiaryDetailViewModel,
-) : ListAdapter<Uri?, MyDiaryDetailVideoAdapter.VideoHolder>(diffCallback) {
-    
+class MyDiaryDetailVideoAdapter : ListAdapter<Uri?, MyDiaryDetailVideoAdapter.VideoHolder>(diffCallback) {
+
     inner class VideoHolder(itemView: RecyclerVideoItem) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(uri: Uri?) {

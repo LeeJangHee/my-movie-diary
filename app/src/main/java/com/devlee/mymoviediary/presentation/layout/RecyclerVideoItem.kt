@@ -14,6 +14,7 @@ import com.devlee.mymoviediary.R
 import com.devlee.mymoviediary.databinding.ItemMydiaryDetailVideoBinding
 import com.devlee.mymoviediary.presentation.activity.fullscreen.FullScreenActivity
 import com.devlee.mymoviediary.utils.Constants.FULLSCREEN_URI
+import com.devlee.mymoviediary.utils.Constants.SAVE_PLAY_TIME
 import com.devlee.mymoviediary.utils.gone
 import com.devlee.mymoviediary.utils.second
 import com.devlee.mymoviediary.utils.show
@@ -67,6 +68,7 @@ class RecyclerVideoItem : ConstraintLayout {
             binding.diaryDetailPreviewVideo.player?.pause()
             val intent = Intent(this.context, FullScreenActivity::class.java).apply {
                 putExtra(FULLSCREEN_URI, mUri)
+                putExtra(SAVE_PLAY_TIME, binding.diaryDetailPreviewVideo.player?.currentPosition)
             }
             this.context.startActivity(intent)
 
