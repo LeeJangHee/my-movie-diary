@@ -1,4 +1,4 @@
-package com.devlee.mymoviediary.presentation.layout
+package com.devlee.mymoviediary.presentation.adapter.home.mydiary.item
 
 import android.content.Context
 import android.content.Intent

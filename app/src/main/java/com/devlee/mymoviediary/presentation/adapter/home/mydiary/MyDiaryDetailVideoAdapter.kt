@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.devlee.mymoviediary.presentation.layout.RecyclerVideoItem
+import com.devlee.mymoviediary.presentation.adapter.home.mydiary.item.RecyclerVideoItem
 
 class MyDiaryDetailVideoAdapter : ListAdapter<Uri?, MyDiaryDetailVideoAdapter.VideoHolder>(diffCallback) {
 
